@@ -1,10 +1,9 @@
-gdweb
+# gdweb
+> [!WARNING]
+This is not a mirror of [geometrydash.com/game](geometrydash.com/game), there are slight modifications made to the project.
 
-WARNING: this is not a mirror! the files have been edited
-A browser-based Geometry Dash web demo, featuring the first level of the game
-play here: https://geometrydash.com/game/index.html
+The 4/3/2026 Geometry Dash web demo, containing the first level of the game, "Stereo Madness".<br>
+Play here: [geometrydash.com/game](geometrydash.com/game)
 
-
-because the game uses a js module, you must serve the directory with a local web server instead of opening `index.html` directly.
-
-personal use only
+## Setup
+Because the game uses JavaScript modules, serve the directory with a local web server instead of opening `index.html` directly.
