@@ -1,5 +1,5 @@
 /*
-    an audio that handles hardcoded music, sfx, etc.
+    an audio handler that handles hardcoded music, sfx, etc.
 */
 class AudioClass {
     constructor(scene) {
