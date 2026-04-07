@@ -23,3 +23,5 @@ To compile the game into a single optimized file:
 2. Build the project: `npm run build`
 
 The final game will be generated in the `dist` folder. The contents in `src` will be compiled into one file, located in `dist/assets` called `index-game.js`.
+
+> **Note:** The original domain lock present in `main.js` was commented out.
