@@ -8,7 +8,7 @@ import { GameState } from '../systems/GameState.js';
 import { us } from '../objects/Ground.js';
 import { ps } from '../objects/Player.js';
 import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/ColorManager.js';
-import { ys } from '../systems/AudioManager.js';
+import { AudioClass } from '../systems/AudioManager.js';
 import { _s, ws } from '../effects.js';
 
 class gameScene extends Phaser.Scene {
@@ -25,7 +25,7 @@ class gameScene extends Phaser.Scene {
                 return this._v;
             },
             '_v': -PLAYER_GAME_CAMERA_X
-        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new ys(this);
+        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new AudioClass(this);
         let _0x591888 = this.cache.text.get("level_1");
         _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = GROUND_BOUNDS_Y, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
             'frame': 'square.png',
