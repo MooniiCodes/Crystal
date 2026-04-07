@@ -1,5 +1,5 @@
 /*
-    player physics scene helpers
+    player physics and scene helpers
 */
 class GameState {
     constructor() {

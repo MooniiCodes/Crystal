@@ -9,7 +9,7 @@ import { us } from '../objects/Ground.js';
 import { ps } from '../objects/Player.js';
 import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/ColorManager.js';
 import { AudioClass } from '../systems/AudioManager.js';
-import { _s, ws } from '../effects.js';
+import { emitCircleEffect, emitWinBurst } from '../effects.js';
 
 class gameScene extends Phaser.Scene {
     constructor() {
@@ -677,8 +677,8 @@ class gameScene extends Phaser.Scene {
     _levelComplete() {
         const _0x356782 = this._level.endXPos - this._cameraX,
             _0x2d967b = b(this._endPortalGameY) + this._cameraY;
-        for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => _s(this, _0x356782, _0x2d967b, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
-        _s(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, COLOR_GREEN), this._showCompleteEffect();
+        for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => emitCircleEffect(this, _0x356782, _0x2d967b, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
+        emitCircleEffect(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, COLOR_GREEN), this._showCompleteEffect();
     }
     _showCompleteEffect() {
         this._audio.fadeOutMusic(1500), this.sound.play("endStart_02", {
@@ -805,11 +805,11 @@ class gameScene extends Phaser.Scene {
         }).setScrollFactor(0).setDepth(59);
         const _0x2eadf2 = this._level.endXPos - this._cameraX,
             _0x380b24 = b(this._endPortalGameY) + this._cameraY;
-        _s(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN), _s(this, _0x56628c, 250, 10, 1000, 800, true, false, COLOR_GREEN);
-        for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => _s(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
+        emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN), emitCircleEffect(this, _0x56628c, 250, 10, 1000, 800, true, false, COLOR_GREEN);
+        for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
         for (let _0x429722 = 0; _0x429722 < 10; _0x429722++) {
             const _0xbf7dd0 = 150 * _0x429722 + (160 * Math.random() - 80);
-            this.time.delayedCall(Math.max(0, _0xbf7dd0), () => ws(this, COLOR_GREEN, COLOR_BLUE));
+            this.time.delayedCall(Math.max(0, _0xbf7dd0), () => emitWinBurst(this, COLOR_GREEN, COLOR_BLUE));
         }
         this.time.delayedCall(1500, () => this._showEndLayer());
     }

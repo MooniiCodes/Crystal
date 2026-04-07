@@ -1,67 +1,95 @@
 /*
     effects like the ring effect
 */
-import { SCREEN_WIDTH, BLEND_ADD } from './constants.js';
+import { SCREEN_WIDTH, BLEND_ADD, BLEND_NORMAL } from './constants.js';
 
-function _s(_0xae9c8f, _0xe5190e, _0x399b97, _0x3f3165, _0x1f56bc, _0x560f20, _0xb730d4 = false, _0x550b4a = false, _0x4ee8d6 = 16777215) {
-    const _0x18a510 = _0xae9c8f.add.graphics().setScrollFactor(0).setDepth(55).setBlendMode(BLEND_ADD),
-        _0x3dff3a = {
-            'r': _0x3f3165,
-            't': 0
+// an expanding circle effect (ring or filled), shows up when completing level
+/* params:
+    scene: the scene to add the effect to
+    x, y: the center of the effect
+    startRadius, endRadius: the starting and ending radius of the circle
+    duration: how long the effect lasts in ms
+    filled: whether the circle is filled or just an outline
+    pingPong: TODO
+    color: the color of the effect in hex (default: white)
+*/
+function emitCircleEffect(scene, x, y, startRadius, endRadius, duration, filled = false, pingPong = false, color = 0xFFFFFF) {
+    const thisGraphics = scene.add.graphics()
+        .setScrollFactor(0)
+        .setDepth(55)
+        .setBlendMode(BLEND_ADD),
+        
+        state = {
+            r: startRadius,
+            t: 0
         };
-    _0xae9c8f.tweens.add({
-        'targets': _0x3dff3a,
-        'r': _0x1f56bc,
-        't': 1,
-        duration: _0x560f20,
-        ease: _0xb730d4 && !_0x550b4a ? 'Quad.Out' : "Linear",
+
+    scene.tweens.add({
+        targets: state,
+        r: endRadius,
+        t: 1,
+        duration: duration,
+        ease: filled && !pingPong ? 'Quad.Out' : "Linear",
         onUpdate: () => {
-            const _0x25e581 = _0x3dff3a.t,
-                _0x344671 = _0x550b4a ? _0x25e581 < 0.5 ? 2 * _0x25e581 : 2 * (1 - _0x25e581) : 1 - _0x25e581;
-            _0x18a510.clear(), _0xb730d4 ? (_0x18a510.fillStyle(_0x4ee8d6, Math.max(0, _0x344671)), _0x18a510.fillCircle(_0xe5190e, _0x399b97, _0x3dff3a.r)) : (_0x18a510.lineStyle(4, _0x4ee8d6, Math.max(0, _0x344671)), _0x18a510.strokeCircle(_0xe5190e, _0x399b97, _0x3dff3a.r));
+            const progress = state.t,
+                alpha = pingPong ? progress < 0.5 ? 2 * progress : 2 * (1 - progress) : 1 - progress;
+            thisGraphics.clear(),
+            
+            filled ? (
+                thisGraphics.fillStyle(color, Math.max(0, alpha)),
+                thisGraphics.fillCircle(x, y, state.r)
+            ) : (
+                thisGraphics.lineStyle(4, color, Math.max(0, alpha)),
+                thisGraphics.strokeCircle(x, y, state.r)
+            );
         },
-        onComplete: () => _0x18a510.destroy()
+        onComplete: () => thisGraphics.destroy()
     });
 }
 
-function ws(_0x13c75c, _0x23c5aa = 16777215, _0x52bb5b = 16777215) {
-    const _0x2076d4 = 200,
-        _0x4eb200 = _0x2076d4 + (SCREEN_WIDTH - 400) * Math.random(),
-        _0x126811 = _0x2076d4 + 240 * Math.random();
-    _s(_0x13c75c, _0x4eb200, _0x126811, 40, 140 + 60 * Math.random(), 500, true, true, _0x52bb5b), _0x13c75c.add.particles(_0x4eb200, _0x126811, "GJ_WebSheet", {
-        'frame': "square.png",
-        'speed': {
-            'min': 520,
-            'max': 920
+// a burst of circles, shows up after the win animation plays
+function emitWinBurst(scene, squareColor = 0xFFFFFF, colorCircle = 0xFFFFFF) {
+    const margin = 200,
+        burstX = margin + (SCREEN_WIDTH - 400) * Math.random(),
+        burstY = margin + 240 * Math.random();
+        
+    emitCircleEffect(scene, burstX, burstY, 40, 140 + 60 * Math.random(), 500, true, true, colorCircle),
+    
+    // the particles that spawn inside the circle burst
+    scene.add.particles(burstX, burstY, "GJ_WebSheet", {
+        frame: "square.png",
+        speed: {
+            min: 520,
+            max: 920
         },
-        'angle': {
-            'min': 0,
-            'max': 360
+        angle: {
+            min: 0,
+            max: 360
         },
-        'scale': {
-            'start': 0.4,
-            'end': 0.13
+        scale: {
+            start: 0.4,
+            end: 0.13
         },
-        'alpha': {
-            'start': 1,
-            'end': 0
+        alpha: {
+            start: 1,
+            end: 0
         },
-        'lifespan': {
-            'min': 0,
-            'max': 500
+        lifespan: {
+            min: 0,
+            max: 500
         },
-        'stopAfter': 25,
-        'blendMode': BLEND_ADD,
-        'tint': _0x23c5aa,
-        'x': {
-            'min': -20,
-            'max': 20
+        stopAfter: 25,
+        blendMode: BLEND_ADD,
+        tint: squareColor,
+        x: {
+            min: -20,
+            max: 20
         },
-        'y': {
-            'min': -20,
-            'max': 20
+        y: {
+            min: -20,
+            max: 20
         }
     }).setScrollFactor(0).setDepth(57);
 }
 
-export { _s, ws };
+export { emitCircleEffect, emitWinBurst };
