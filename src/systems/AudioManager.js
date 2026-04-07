@@ -42,15 +42,15 @@ class ys {
         }), this._music.play(), this._setupAnalyser(), this._scene.tweens.add({
             'targets': this._music,
             'volume': this._effectiveVolume(),
-            'duration': _0x3eff28
+            duration: _0x3eff28
         });
     }
     fadeOutMusic(_0x43835d = 1500) {
         this._music && this._music.isPlaying && (this._music.setLoop(false), this._scene.tweens.add({
             'targets': this._music,
             'volume': 0,
-            'duration': _0x43835d,
-            'onComplete': () => {
+            duration: _0x43835d,
+            onComplete: () => {
                 this._music && this._music.stop();
             }
         }));

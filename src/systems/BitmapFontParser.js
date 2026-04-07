@@ -1,7 +1,9 @@
 /*
     angelcode bmfont parser
 */
-function C(_0x4e6e71, _0x5059cd, _0x3a0583) {
+
+// parses a .fnt file and adds the font to the cache
+function parseBMFont(_0x4e6e71, _0x5059cd, _0x3a0583) {
     const _0x4adbf2 = _0x4e6e71.textures.get(_0x5059cd),
         _0x39d5fe = _0x4adbf2.source[0],
         _0x177755 = _0x39d5fe.width,
@@ -73,4 +75,4 @@ function C(_0x4e6e71, _0x5059cd, _0x3a0583) {
     });
 }
 
-export { C };
+export { parseBMFont };

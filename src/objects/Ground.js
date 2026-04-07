@@ -185,7 +185,7 @@ class us {
                         'g': parseInt(_0x1b937f._raw[8] ?? 255, 10),
                         'b': parseInt(_0x1b937f._raw[9] ?? 255, 10)
                     },
-                    'duration': parseFloat(_0x1b937f._raw[10] ?? 0),
+                    duration: parseFloat(_0x1b937f._raw[10] ?? 0),
                     'tintGround': '1' === _0x1b937f._raw[14]
                 }), _0x24471f.enterEffect && this._enterEffectTriggers.push({
                     'x': 2 * _0x1b937f.x,

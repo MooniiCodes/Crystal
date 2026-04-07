@@ -311,14 +311,14 @@ class ps {
         _0x3f4b84.tweens.add({
             'targets': _0x4683eb,
             't': 1,
-            'duration': 500,
-            'ease': 'Quad.Out',
-            'onUpdate': () => {
+            duration: 500,
+            ease: 'Quad.Out',
+            onUpdate: () => {
                 const _0x39f32 = 18 + 144 * _0x4683eb.t,
                     _0xc8c1 = 1 - _0x4683eb.t;
                 _0x438d80.clear(), _0x438d80.fillStyle(v, _0xc8c1), _0x438d80.fillCircle(_0x3f0446, _0x53ac5b, _0x39f32);
             },
-            'onComplete': () => _0x438d80.destroy()
+            onComplete: () => _0x438d80.destroy()
         }), this._createExplosionPieces(_0x3f0446, _0x53ac5b, _0x281e43), this.setCubeVisible(false), this.setShipVisible(false);
     }
     _createExplosionPieces(_0x49be85, _0x13b56e, _0x349a09) {
@@ -468,13 +468,13 @@ class ps {
                     'from': 0,
                     'to': 1
                 },
-                'duration': 50,
-                'onComplete': () => {
+                duration: 50,
+                onComplete: () => {
                     _0x4ed8ff.tweens.add({
                         'targets': _0x34645e,
                         'alpha': 0,
-                        'duration': 400,
-                        'onComplete': () => _0x34645e.destroy()
+                        duration: 400,
+                        onComplete: () => _0x34645e.destroy()
                     });
                 }
             });
@@ -694,9 +694,9 @@ class ps {
         _0x3729ef.tweens.add({
             'targets': _0x51c4a8,
             'val': 1,
-            'duration': 1000,
-            'ease': _0x23df59 => Math.pow(_0x23df59, 1.2),
-            'onUpdate': () => {
+            duration: 1000,
+            ease: _0x23df59 => Math.pow(_0x23df59, 1.2),
+            onUpdate: () => {
                 const _0x3eda1c = _0x51c4a8.val,
                     _0x2478d6 = (1 - _0x3eda1c) ** 3 * _0x1295ea + 3 * (1 - _0x3eda1c) ** 2 * _0x3eda1c * _0x1295ea + 3 * (1 - _0x3eda1c) * _0x3eda1c ** 2 * _0x1f2e19 + _0x3eda1c ** 3 * _0x457676,
                     _0x148e69 = (1 - _0x3eda1c) ** 3 * _0x47ae60 + 3 * (1 - _0x3eda1c) ** 2 * _0x3eda1c * _0x47ae60 + 3 * (1 - _0x3eda1c) * _0x3eda1c ** 2 * _0x8bc9f4 + _0x3eda1c ** 3 * _0x3ade39,
@@ -713,7 +713,7 @@ class ps {
                 }
                 _0x3e35e7.setPosition(_0x2478d6, b(_0x148e69)), _0x3e35e7.update(_0x3729ef.game.loop.delta / 1000);
             },
-            'onComplete': () => {
+            onComplete: () => {
                 for (const _0x4fce42 of _0x3fc5a5) _0x4fce42.spr.setVisible(false);
                 _0x3e35e7.stop(), _0x3e35e7.reset(), _0x281588();
             }
@@ -721,8 +721,8 @@ class ps {
         for (const _0x25f8c5 of _0x11b580) _0x3729ef.tweens.add({
             'targets': _0x25f8c5,
             'angle': _0x25f8c5.angle + 360,
-            'duration': 1000,
-            'ease': _0x228c03 => Math.pow(_0x228c03, 1.5)
+            duration: 1000,
+            ease: _0x228c03 => Math.pow(_0x228c03, 1.5)
         });
     }
     reset() {

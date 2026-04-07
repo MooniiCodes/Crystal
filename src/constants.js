@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 
-let r = Math.round(10240 / 9);
+let r = Math.round(10240 / 9); // 1138
 const n = 640,
     a = 60,
     o = 180;
@@ -30,8 +30,8 @@ function b(_0x3ed2c6) {
 let S = Phaser.BlendModes.ADD,
     E = Phaser.BlendModes.NORMAL;
 
-function setS(_0x) { S = _0x; }
-function setE(_0x) { E = _0x; }
+function setBlendModeAdd(_0x) { S = _0x; }
+function setBlendModeNormal(_0x) { E = _0x; }
 
 // stuff from level data used in both ground and, level data of course
 const Ji = "solid",
@@ -46,6 +46,6 @@ const Ji = "solid",
     as = "cube"
 
 export {
-        r, n, a, o, h, l, u, c, d, p, f, g, v, m, y, x, _, w, T, b, S, E, setS, setE,
+        r, n, a, o, h, l, u, c, d, p, f, g, v, m, y, x, _, w, T, b, S, E, setBlendModeAdd, setBlendModeNormal,
         Ji, Qi, $i, ts, es, is, ss, rs, ns, as
     };

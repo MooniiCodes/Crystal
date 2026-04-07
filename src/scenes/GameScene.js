@@ -11,7 +11,7 @@ import { fs, gs, ms } from '../systems/ColorManager.js';
 import { ys } from '../systems/AudioManager.js';
 import { _s, ws } from '../effects.js';
 
-class xs extends Phaser.Scene {
+class gameScene extends Phaser.Scene {
     constructor() {
         super({
             'key': "GameScene"
@@ -59,7 +59,7 @@ class xs extends Phaser.Scene {
             'url': "https://store.steampowered.com/app/322170/Geometry_Dash"
         }, {
             'key': 'downloadGoogle_001',
-            'url': "https://brokemutt.net/"
+            'url': "https://play.google.com/store/apps/details?id=com.robtopx.geometryjump&hl=en"
         }, {
             'key': "downloadApple_001",
             'url': 'https://apps.apple.com/us/app/geometry-dash/id625334537'
@@ -280,15 +280,15 @@ class xs extends Phaser.Scene {
             _0xda0c21 && !_0xda0c21() || (_0x4b8c6e._pressed = true, this.tweens.killTweensOf(_0x4b8c6e, "scale"), this.tweens.add({
                 'targets': _0x4b8c6e,
                 'scale': _0x396ca0,
-                'duration': 300,
-                'ease': "Bounce.Out"
+                duration: 300,
+                ease: "Bounce.Out"
             }));
         }), _0x4b8c6e.on("pointerout", () => {
             _0x4b8c6e._pressed && (_0x4b8c6e._pressed = false, this.tweens.killTweensOf(_0x4b8c6e, "scale"), this.tweens.add({
                 'targets': _0x4b8c6e,
                 'scale': _0x57b645,
-                'duration': 400,
-                'ease': "Bounce.Out"
+                duration: 400,
+                ease: "Bounce.Out"
             }));
         }), _0x4b8c6e.on('pointerup', () => {
             _0x4b8c6e._pressed && (_0x4b8c6e._pressed = false, this.tweens.killTweensOf(_0x4b8c6e, "scale"), _0x4b8c6e.setScale(_0x57b645), _0x2f13d0());
@@ -407,67 +407,67 @@ class xs extends Phaser.Scene {
         if (this._menuActive = false, this._slideIn = true, this._menuGlitter && (this._menuGlitter.destroy(), this._menuGlitter = null), this._playBtn && (this.tweens.killTweensOf(this._playBtn), this.tweens.add({
                 'targets': this._playBtn,
                 'scale': 0.01,
-                'duration': 200,
-                'ease': "Quad.In",
-                'onComplete': () => {
+                duration: 200,
+                ease: "Quad.In",
+                onComplete: () => {
                     this._playBtn.destroy(), this._playBtn = null;
                 }
             })), this._robLogo && this.tweens.add({
                 'targets': this._robLogo,
                 'y': n + this._robLogo.height,
-                'duration': 300,
-                'ease': "Quad.In",
-                'onComplete': () => {
+                duration: 300,
+                ease: "Quad.In",
+                onComplete: () => {
                     this._robLogo.destroy(), this._robLogo = null;
                 }
             }), this._copyrightText && this.tweens.add({
                 'targets': this._copyrightText,
                 'y': 680,
-                'duration': 300,
-                'ease': 'Quad.In',
-                'onComplete': () => {
+                duration: 300,
+                ease: 'Quad.In',
+                onComplete: () => {
                     this._copyrightText.destroy(), this._copyrightText = null;
                 }
             }), this._menuFsBtn && this.tweens.add({
                 'targets': this._menuFsBtn,
                 'y': -this._menuFsBtn.height,
-                'duration': 300,
-                'ease': "Quad.In",
-                'onComplete': () => {
+                duration: 300,
+                ease: "Quad.In",
+                onComplete: () => {
                     this._menuFsBtn.destroy(), this._menuFsBtn = null;
                 }
             }), this._menuInfoBtn && this.tweens.add({
                 'targets': this._menuInfoBtn,
                 'y': -this._menuInfoBtn.height,
-                'duration': 300,
-                'ease': 'Quad.In',
-                'onComplete': () => {
+                duration: 300,
+                ease: 'Quad.In',
+                onComplete: () => {
                     this._menuInfoBtn.destroy(), this._menuInfoBtn = null;
                 }
             }), this._closeInfoPopup(), this._tryMeImg && this.tweens.add({
                 'targets': this._tryMeImg,
                 'y': -this._tryMeImg.height,
-                'duration': 300,
-                'ease': "Quad.In",
-                'onComplete': () => {
+                duration: 300,
+                ease: "Quad.In",
+                onComplete: () => {
                     this._tryMeImg.destroy(), this._tryMeImg = null;
                 }
             }), this._downloadBtns) {
             for (const _0xaa3a95 of this._downloadBtns) this.tweens.killTweensOf(_0xaa3a95), this.tweens.add({
                 'targets': _0xaa3a95,
                 'y': n + _0xaa3a95.height,
-                'duration': 300,
-                'ease': "Quad.In",
-                'onComplete': () => _0xaa3a95.destroy()
+                duration: 300,
+                ease: "Quad.In",
+                onComplete: () => _0xaa3a95.destroy()
             });
             this._downloadBtns = null;
         }
         this._logo && this.tweens.add({
             'targets': this._logo,
             'y': -this._logo.height,
-            'duration': 300,
-            'ease': "Quad.In",
-            'onComplete': () => {
+            duration: 300,
+            ease: "Quad.In",
+            onComplete: () => {
                 this._logo.destroy(), this._logo = null;
             }
         }), this._cameraX = -h, this._cameraY = 0, this._cameraXRef._v = this._cameraX, this._prevCameraX = this._cameraX;
@@ -488,8 +488,8 @@ class xs extends Phaser.Scene {
         if (this._logo && (this._logo.x = _0x1e5db8), this._menuInfoBtn && (this._menuInfoBtn.x = r - 30 - 3), this._copyrightText && (this._copyrightText.x = r - 20), this._tryMeImg && (this._tryMeImg.x = _0x1e5db8 + 175), this._menuGlitter && (this._menuGlitter.x = _0x1e5db8, this._menuGlitter.y = 320), this._playBtn && (this._playBtn.x = _0x1e5db8, this.tweens.killTweensOf(this._playBtn, 'y'), this._playBtn.y = 320, this.tweens.add({
                 'targets': this._playBtn,
                 'y': 324,
-                'duration': 750,
-                'ease': 'Quad.InOut',
+                duration: 750,
+                ease: 'Quad.InOut',
                 'yoyo': true,
                 'repeat': -1
             })), this._downloadBtns) {
@@ -573,7 +573,7 @@ class xs extends Phaser.Scene {
                 this._level.shiftGroundTiles(_0x490749), this._firstPlay && (this._firstPlay = false, this._audio.startMusic()), this._pauseBtn.setVisible(true).setAlpha(0), this.tweens.add({
                     'targets': this._pauseBtn,
                     'alpha': 75 / 255,
-                    'duration': 500
+                    duration: 500
                 });
             }
             return;
@@ -629,8 +629,8 @@ class xs extends Phaser.Scene {
                     }, this.tweens.add({
                         'targets': this._endCamTween,
                         'p': 1,
-                        'duration': 1200,
-                        'ease': _0x41f777
+                        duration: 1200,
+                        ease: _0x41f777
                     });
                 } else this._cameraX = _0xe48698;
             } else this._cameraX = _0xe48698;
@@ -654,17 +654,17 @@ class xs extends Phaser.Scene {
         this.tweens.add({
             'targets': _0x326cb9,
             'scale': 1,
-            'duration': 400,
-            'ease': 'Elastic.Out',
+            duration: 400,
+            ease: 'Elastic.Out',
             'easeParams': [1, 0.6],
-            'onComplete': () => {
+            onComplete: () => {
                 this.tweens.add({
                     'targets': _0x326cb9,
                     'scale': 0.01,
-                    'duration': 200,
+                    duration: 200,
                     'delay': 700,
-                    'ease': 'Quad.In',
-                    'onComplete': () => {
+                    ease: 'Quad.In',
+                    onComplete: () => {
                         _0x326cb9.setVisible(false), _0x326cb9.destroy();
                     }
                 });
@@ -725,9 +725,9 @@ class xs extends Phaser.Scene {
                         'targets': _0x496d96,
                         'h': _0x232789,
                         'w': _0x6eb03a,
-                        'duration': _0x2e9531,
-                        'ease': "Quad.Out",
-                        'onUpdate': () => {
+                        duration: _0x2e9531,
+                        ease: "Quad.Out",
+                        onUpdate: () => {
                             const _0x2db3d7 = _0x2cc21f + (_0x496d96.w - _0x2cc21f) / 4;
                             _0xf33b0d.clear(), _0xf33b0d.fillStyle(_0x4b5e5b, 1), _0xf33b0d.beginPath(), _0xf33b0d.moveTo(-_0x2db3d7 / 2, 0), _0xf33b0d.lineTo(_0x2db3d7 / 2, 0), _0xf33b0d.lineTo(_0x496d96.w / 2, _0x496d96.h), _0xf33b0d.lineTo(-_0x496d96.w / 2, _0x496d96.h), _0xf33b0d.closePath(), _0xf33b0d.fillPath();
                         }
@@ -742,8 +742,8 @@ class xs extends Phaser.Scene {
                         'targets': _0x15b95e,
                         'alpha': 0,
                         'delay': _0x51b5fc,
-                        'duration': _0x3ed1de,
-                        'onComplete': () => _0x15b95e.destroy()
+                        duration: _0x3ed1de,
+                        onComplete: () => _0x15b95e.destroy()
                     });
                 }
             });
@@ -755,17 +755,17 @@ class xs extends Phaser.Scene {
         this.tweens.add({
             'targets': _0x45ab26,
             'scale': 1.1,
-            'duration': 660,
-            'ease': 'Elastic.Out',
+            duration: 660,
+            ease: 'Elastic.Out',
             'easeParams': [1, 0.6],
-            'onComplete': () => {
+            onComplete: () => {
                 this.tweens.add({
                     'targets': _0x45ab26,
                     'scale': 0.01,
-                    'duration': 220,
+                    duration: 220,
                     'delay': 880,
-                    'ease': 'Quad.In',
-                    'onComplete': () => {
+                    ease: 'Quad.In',
+                    onComplete: () => {
                         _0x45ab26.setVisible(false), _0x45ab26.destroy();
                     }
                 });
@@ -817,14 +817,14 @@ class xs extends Phaser.Scene {
         this._pauseBtn && this.tweens.add({
             'targets': this._pauseBtn,
             'alpha': 0,
-            'duration': 300
+            duration: 300
         });
         const _0x384f9e = r / 2,
             _0x1aa656 = 320;
         this._endLayerOverlay = this.add.rectangle(_0x384f9e, _0x1aa656, r, n, 0, 0).setScrollFactor(0).setDepth(200).setInteractive(), (this._endLayerInternal = this.add.container(0, -640).setScrollFactor(0).setDepth(201), this.tweens.add({
             'targets': this._endLayerOverlay,
             'alpha': 100 / 255,
-            'duration': 1000
+            duration: 1000
         }));
         const _0x59b9ab = {
             'p': 0
@@ -832,12 +832,12 @@ class xs extends Phaser.Scene {
         this.tweens.add({
             'targets': _0x59b9ab,
             'p': 1,
-            'duration': 1000,
-            'ease': "Bounce.Out",
-            'onUpdate': () => {
+            duration: 1000,
+            ease: "Bounce.Out",
+            onUpdate: () => {
                 this._endLayerInternal.y = 650 * _0x59b9ab.p - 640;
             },
-            'onComplete': () => this._playStarAward()
+            onComplete: () => this._playStarAward()
         });
         const _0x595215 = 712,
             _0x950c8d = 460,
@@ -911,9 +911,9 @@ class xs extends Phaser.Scene {
             'targets': _0x453043,
             'scale': 0.8,
             'alpha': 1,
-            'duration': 300,
+            duration: 300,
             'delay': 0,
-            'ease': "Bounce.Out"
+            ease: "Bounce.Out"
         }), this.time.delayedCall(100, () => {
             this._audio.playEffect("highscoreGet02");
             const _0x1204d3 = _0x4edc03,
@@ -952,12 +952,12 @@ class xs extends Phaser.Scene {
             this.tweens.add({
                 'targets': _0x403316,
                 't': 1,
-                'duration': 400,
-                'ease': "Quad.Out",
-                'onUpdate': () => {
+                duration: 400,
+                ease: "Quad.Out",
+                onUpdate: () => {
                     _0x43203f.clear(), _0x43203f.fillStyle(16776960, 1 - _0x403316.t), _0x43203f.fillCircle(_0x1204d3, _0x96e3b2, 20 + 200 * _0x403316.t);
                 },
-                'onComplete': () => _0x43203f.destroy()
+                onComplete: () => _0x43203f.destroy()
             });
         });
     }
@@ -969,20 +969,20 @@ class xs extends Phaser.Scene {
         this.tweens.add({
             'targets': _0x1215e0,
             'p': 1,
-            'duration': 500,
-            'ease': _0xc1c75 => _0xc1c75 < 0.5 ? Math.pow(2 * _0xc1c75, 2) / 2 : 1 - Math.pow(2 * (1 - _0xc1c75), 2) / 2,
-            'onUpdate': () => {
+            duration: 500,
+            ease: _0xc1c75 => _0xc1c75 < 0.5 ? Math.pow(2 * _0xc1c75, 2) / 2 : 1 - Math.pow(2 * (1 - _0xc1c75), 2) / 2,
+            onUpdate: () => {
                 this._endLayerInternal.y = -640 * _0x1215e0.p;
             },
-            'onComplete': () => {
+            onComplete: () => {
                 this._endLayerInternal.destroy(), this._endLayerInternal = null, this._endLayerOverlay && (this._endLayerOverlay.destroy(), this._endLayerOverlay = null), _0x272eb1 && _0x272eb1();
             }
         }), this.tweens.add({
             'targets': this._endLayerOverlay,
             'alpha': 0,
-            'duration': 500
+            duration: 500
         });
     }
 }
 
-export { xs };
+export { gameScene };

@@ -13,14 +13,14 @@ function _s(_0xae9c8f, _0xe5190e, _0x399b97, _0x3f3165, _0x1f56bc, _0x560f20, _0
         'targets': _0x3dff3a,
         'r': _0x1f56bc,
         't': 1,
-        'duration': _0x560f20,
-        'ease': _0xb730d4 && !_0x550b4a ? 'Quad.Out' : "Linear",
-        'onUpdate': () => {
+        duration: _0x560f20,
+        ease: _0xb730d4 && !_0x550b4a ? 'Quad.Out' : "Linear",
+        onUpdate: () => {
             const _0x25e581 = _0x3dff3a.t,
                 _0x344671 = _0x550b4a ? _0x25e581 < 0.5 ? 2 * _0x25e581 : 2 * (1 - _0x25e581) : 1 - _0x25e581;
             _0x18a510.clear(), _0xb730d4 ? (_0x18a510.fillStyle(_0x4ee8d6, Math.max(0, _0x344671)), _0x18a510.fillCircle(_0xe5190e, _0x399b97, _0x3dff3a.r)) : (_0x18a510.lineStyle(4, _0x4ee8d6, Math.max(0, _0x344671)), _0x18a510.strokeCircle(_0xe5190e, _0x399b97, _0x3dff3a.r));
         },
-        'onComplete': () => _0x18a510.destroy()
+        onComplete: () => _0x18a510.destroy()
     });
 }
 
