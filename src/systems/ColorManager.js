@@ -1,80 +1,90 @@
 /*
     manages colors and such
-    fs = background
-    gs = ground
 */
-const fs = 1000,
-    gs = 1001;
-class vs {
-    constructor(_0x268d66, _0x3664f8, _0x4b756c) {
+
+// enums
+const ID_BACKGROUND_COLOR = 1000,
+    ID_GROUND_COLOR = 1001;
+
+// color transition class that interpolates between two colors over a duration
+class ColorTransition {
+    // from & to are colors
+    constructor(from, to, duration) {
         this.from = {
-            ..._0x268d66
-        }, this.to = {
-            ..._0x3664f8
-        }, this.duration = _0x4b756c, this.elapsed = 0, this.done = _0x4b756c <= 0, this.current = _0x4b756c <= 0 ? {
-            ..._0x3664f8
-        } : {
-            ..._0x268d66
-        };
+            ...from
+        },
+        this.to = {
+            ...to
+        },
+        this.duration = duration,
+        this.elapsed = 0,
+        this.done = duration <= 0,
+        this.current = duration <= 0 ? { ...to } : { ...from };
     }
-    step(_0x4559d6) {
+    step(deltaTime) {
         if (this.done) return;
-        this.elapsed += _0x4559d6;
-        let _0xe145bf = this.duration > 0 ? Math.min(this.elapsed / this.duration, 1) : 1;
-        _0xe145bf >= 1 ? (this.current = {
-            ...this.to
-        }, this.done = true) : this.current = {
-            'r': Math.round(this.from.r + (this.to.r - this.from.r) * _0xe145bf),
-            'g': Math.round(this.from.g + (this.to.g - this.from.g) * _0xe145bf),
-            'b': Math.round(this.from.b + (this.to.b - this.from.b) * _0xe145bf)
+        this.elapsed += deltaTime;
+        let time = this.duration > 0 ? Math.min(this.elapsed / this.duration, 1) : 1;
+        // nasty looking if else
+        time >= 1 ? (
+            this.current = { ...this.to }, 
+            this.done = true
+        )
+        : this.current = {
+            'r': Math.round(this.from.r + (this.to.r - this.from.r) * time),
+            'g': Math.round(this.from.g + (this.to.g - this.from.g) * time),
+            'b': Math.round(this.from.b + (this.to.b - this.from.b) * time)
         };
     }
 }
-class ms {
+
+// ColorManager class
+class ColorManager {
     constructor() {
         this.reset();
     }
     reset() {
         this._colors = {
-            [fs]: {
-                'r': 0,
-                'g': 102,
-                'b': 255
+            // the default geometry dash blues we all luv 💖
+            [ID_BACKGROUND_COLOR]: {
+                r: 0, g: 102, b: 255
             },
-            [gs]: {
-                'r': 0,
-                'g': 68,
-                'b': 170
+            [ID_GROUND_COLOR]: {
+                r: 0, g: 68, b: 170
             }
-        }, this._actions = {};
+        },
+        this._actions = {};
     }
-    triggerColor(_0x917b29, _0x2cdda0, _0x10a755) {
-        let _0x16f9f0 = {
-            ...this.getColor(_0x917b29)
-        };
-        this._actions[_0x917b29] = new vs(_0x16f9f0, _0x2cdda0, _0x10a755), _0x10a755 <= 0 && (this._colors[_0x917b29] = {
-            ..._0x2cdda0
+    // triggers a color transition for a color id, from its current color to the target color, over the duration
+    triggerColor(colorId, targetColor, duration) {
+        // the color colorId corresponds to
+        let from = { ...this.getColor(colorId) };
+        this._actions[colorId] = new ColorTransition(from, targetColor, duration),
+        duration <= 0 && (this._colors[colorId] = {
+            ...targetColor
         });
     }
-    step(_0x15fa55) {
-        for (let _0x2d0367 in this._actions) {
-            let _0x26a8a0 = this._actions[_0x2d0367];
-            _0x26a8a0.step(_0x15fa55), this._colors[_0x2d0367] = {
-                ..._0x26a8a0.current
-            }, _0x26a8a0.done && delete this._actions[_0x2d0367];
+    step(deltaTime) {
+        for (let colorId in this._actions) {
+            let transition = this._actions[colorId];
+            transition.step(deltaTime), this._colors[colorId] = {
+                ...transition.current
+            }, transition.done && delete this._actions[colorId];
         }
     }
-    getColor(_0xb3f1d9) {
-        return this._colors[_0xb3f1d9] || {
+    // get color by id, returns white if color doesn't exist
+    getColor(colorId) {
+        return this._colors[colorId] || {
             'r': 255,
             'g': 255,
             'b': 255
         };
     }
-    getHex(_0x32378c) {
-        let _0x25f448 = this.getColor(_0x32378c);
-        return _0x25f448.r << 16 | _0x25f448.g << 8 | _0x25f448.b;
+    // gets the color as a hex
+    getHex(colorId) {
+        let color = this.getColor(colorId);
+        return color.r << 16 | color.g << 8 | color.b;
     }
 }
 
-export { fs, gs, vs, ms };
+export { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorTransition, ColorManager };

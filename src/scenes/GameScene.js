@@ -7,7 +7,7 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT, o, PLAYER_GAME_CAMERA_X, u, c, d, JUMP_VEL
 import { GameState } from '../systems/GameState.js';
 import { us } from '../objects/Ground.js';
 import { ps } from '../objects/Player.js';
-import { fs, gs, ms } from '../systems/ColorManager.js';
+import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/ColorManager.js';
 import { ys } from '../systems/AudioManager.js';
 import { _s, ws } from '../effects.js';
 
@@ -25,7 +25,7 @@ class gameScene extends Phaser.Scene {
                 return this._v;
             },
             '_v': -PLAYER_GAME_CAMERA_X
-        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ms(), this._audio = new ys(this);
+        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new ys(this);
         let _0x591888 = this.cache.text.get("level_1");
         _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = GROUND_BOUNDS_Y, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
             'frame': 'square.png',
@@ -49,7 +49,7 @@ class gameScene extends Phaser.Scene {
             'emitCallback': _0x3c2a3e => {
                 _0x3c2a3e.x = this._glitterCenterX + (2 * Math.random() - 1) * (SCREEN_WIDTH / 1.8), _0x3c2a3e.y = this._glitterCenterY + 320 * (2 * Math.random() - 1);
             }
-        }), this._level.additiveContainer.add(this._glitterEmitter), this._bg.setTint(this._colorManager.getHex(fs)), this._level.setGroundColor(this._colorManager.getHex(gs)), this._level.additiveContainer.setVisible(false), this._level.container.setVisible(false), this._level.topContainer.setVisible(false), this._attempts = 1, this._bestPercent = 0, this._lastPercent = 0, this._endPortalGameY = 240, this._resetGameplayState(), this._totalJumps = 0, this._playTime = 0, this._menuActive = true, this._slideIn = false, this._slideGroundX = null, this._firstPlay = true, this._player.setCubeVisible(false), this._player.setShipVisible(false), (this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30), this._robLogo = this.add.image(160, 555, "GJ_WebSheet", 'RobTopLogoBig_001.png').setScrollFactor(0).setDepth(30).setScale(0.9), this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
+        }), this._level.additiveContainer.add(this._glitterEmitter), this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)), this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)), this._level.additiveContainer.setVisible(false), this._level.container.setVisible(false), this._level.topContainer.setVisible(false), this._attempts = 1, this._bestPercent = 0, this._lastPercent = 0, this._endPortalGameY = 240, this._resetGameplayState(), this._totalJumps = 0, this._playTime = 0, this._menuActive = true, this._slideIn = false, this._slideGroundX = null, this._firstPlay = true, this._player.setCubeVisible(false), this._player.setShipVisible(false), (this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30), this._robLogo = this.add.image(160, 555, "GJ_WebSheet", 'RobTopLogoBig_001.png').setScrollFactor(0).setDepth(30).setScale(0.9), this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
             'fontSize': "14px",
             'color': "#ffffff",
             'fontFamily': "Arial"
@@ -641,8 +641,8 @@ class gameScene extends Phaser.Scene {
         }
         this._cameraXRef._v = this._cameraX, this._endCameraOverride || this._updateCameraY(_0x30fa5d), this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY;
         let _0x5464ab = this._playerWorldX;
-        for (let _0x2001f6 of this._level.checkColorTriggers(_0x5464ab)) this._colorManager.triggerColor(_0x2001f6.index, _0x2001f6.color, _0x2001f6.duration), _0x2001f6.tintGround && this._colorManager.triggerColor(gs, _0x2001f6.color, _0x2001f6.duration);
-        this._colorManager.step(_0xaf2ffd / 1000), this._bg.setTint(this._colorManager.getHex(fs)), this._level.setGroundColor(this._colorManager.getHex(gs)), this._level.updateVisibility(this._cameraX), this._level.checkEnterEffectTriggers(_0x5464ab), this._level.applyEnterEffects(this._cameraX), this._glitterCenterX = this._cameraX + SCREEN_WIDTH / 2, this._glitterCenterY = GROUND_BOUNDS_Y - this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._state.isFlying && this._player.updateShipRotation(_0x30fa5d);
+        for (let _0x2001f6 of this._level.checkColorTriggers(_0x5464ab)) this._colorManager.triggerColor(_0x2001f6.index, _0x2001f6.color, _0x2001f6.duration), _0x2001f6.tintGround && this._colorManager.triggerColor(ID_GROUND_COLOR, _0x2001f6.color, _0x2001f6.duration);
+        this._colorManager.step(_0xaf2ffd / 1000), this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)), this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)), this._level.updateVisibility(this._cameraX), this._level.checkEnterEffectTriggers(_0x5464ab), this._level.applyEnterEffects(this._cameraX), this._glitterCenterX = this._cameraX + SCREEN_WIDTH / 2, this._glitterCenterY = GROUND_BOUNDS_Y - this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._state.isFlying && this._player.updateShipRotation(_0x30fa5d);
         const _0x259e68 = this._playerWorldX - this._cameraX;
         this._player.syncSprites(this._cameraX, this._cameraY, _0xaf2ffd / 1000, _0x259e68);
     }
