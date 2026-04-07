@@ -1,6 +1,6 @@
 import { PLAYER_GAME_CAMERA_X, d, JUMP_VELOCITY, g, COLOR_GREEN, COLOR_BLUE, y, x, _, w, b, BLEND_ADD } from '../constants.js';
 import { findAtlasFrame } from '../systems/GameState.js';
-import { cs, ds } from './PlayerVisuals.js';
+import { StreakClass, createSpriteLayer } from './PlayerVisuals.js';
 
 class ps {
     constructor(_0x5b73d2, _0x3f50cc, _0x2811e1) {
@@ -10,14 +10,14 @@ class ps {
         const _0x1872a7 = this._scene,
             _0x28689a = b(this.p.y),
             _0xf42f36 = PLAYER_GAME_CAMERA_X;
-        if (this._playerGlowLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "player_01_glow_001.png", 9, false), this._playerSpriteLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, 'player_01_001.png', 10, true), this._playerOverlayLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "player_01_2_001.png", 8, true), this._playerExtraLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "player_01_extra_001.png", 12, true), this._playerGlowLayer && (this._playerGlowLayer.sprite.setTint(COLOR_BLUE), this._playerGlowLayer.sprite._glowEnabled = false), this._playerSpriteLayer) this._playerSpriteLayer.sprite.setTint(COLOR_GREEN);
+        if (this._playerGlowLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "player_01_glow_001.png", 9, false), this._playerSpriteLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, 'player_01_001.png', 10, true), this._playerOverlayLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "player_01_2_001.png", 8, true), this._playerExtraLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "player_01_extra_001.png", 12, true), this._playerGlowLayer && (this._playerGlowLayer.sprite.setTint(COLOR_BLUE), this._playerGlowLayer.sprite._glowEnabled = false), this._playerSpriteLayer) this._playerSpriteLayer.sprite.setTint(COLOR_GREEN);
         else {
             let _0x3aecd9 = _0x1872a7.add.rectangle(_0xf42f36, _0x28689a, g, g, COLOR_GREEN);
             _0x3aecd9.setDepth(10), this._playerSpriteLayer = {
                 'sprite': _0x3aecd9
             };
         }
-        if (this._playerOverlayLayer && this._playerOverlayLayer.sprite.setTint(COLOR_BLUE), this._shipGlowLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_glow_001.png", 9, false), this._shipSpriteLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_001.png", 10, false), this._shipOverlayLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, 'ship_01_2_001.png', 8, false), this._shipExtraLayer = ds(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_extra_001.png", 12, false), this._shipGlowLayer && (this._shipGlowLayer.sprite.setTint(COLOR_BLUE), this._shipGlowLayer.sprite._glowEnabled = false), this._shipSpriteLayer) this._shipSpriteLayer.sprite.setTint(COLOR_GREEN);
+        if (this._playerOverlayLayer && this._playerOverlayLayer.sprite.setTint(COLOR_BLUE), this._shipGlowLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_glow_001.png", 9, false), this._shipSpriteLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_001.png", 10, false), this._shipOverlayLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, 'ship_01_2_001.png', 8, false), this._shipExtraLayer = createSpriteLayer(_0x1872a7, _0xf42f36, _0x28689a, "ship_01_extra_001.png", 12, false), this._shipGlowLayer && (this._shipGlowLayer.sprite.setTint(COLOR_BLUE), this._shipGlowLayer.sprite._glowEnabled = false), this._shipSpriteLayer) this._shipSpriteLayer.sprite.setTint(COLOR_GREEN);
         else {
             let _0x100643 = _0x1872a7.add.polygon(_0xf42f36, _0x28689a, [{
                 'x': -72,
@@ -185,7 +185,7 @@ class ps {
             ..._0x57911a
         }), this._landEmitter2 = _0x538533.add.particles(0, 0, "GJ_WebSheet", {
             ..._0x57911a
-        }), this._aboveContainer = _0x538533.add.container(0, 0), this._aboveContainer.setDepth(13), this._aboveContainer.add(this._landEmitter1), this._aboveContainer.add(this._landEmitter2), this._landIdx = false, this._streak = new cs(this._scene, "streak_01", 0.231, 10, 8, 100, COLOR_BLUE, 0.7), this._streak.addToContainer(this._gameLayer.container, 8);
+        }), this._aboveContainer = _0x538533.add.container(0, 0), this._aboveContainer.setDepth(13), this._aboveContainer.add(this._landEmitter1), this._aboveContainer.add(this._landEmitter2), this._landIdx = false, this._streak = new StreakClass(this._scene, "streak_01", 0.231, 10, 8, 100, COLOR_BLUE, 0.7), this._streak.addToContainer(this._gameLayer.container, 8);
     }
     _updateParticles(_0xc43238, _0x52b718, _0x5af874) {
         if (this.p.isDead) return;
