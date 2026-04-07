@@ -3,8 +3,8 @@
     includes main game loop and title screen and all that stuff, in 1 scene
 */
 import * as Phaser from 'phaser';
-import { r, n, o, h, u, c, d, p, v, m, y, x, w, T, S, b, l } from '../constants.js';
-import { M } from '../systems/GameState.js';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, o, PLAYER_GAME_CAMERA_X, u, c, d, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, y, x, w, GROUND_BOUNDS_Y, BLEND_ADD, b, setScreenWidth } from '../constants.js';
+import { GameState } from '../systems/GameState.js';
 import { us } from '../objects/Ground.js';
 import { ps } from '../objects/Player.js';
 import { fs, gs, ms } from '../systems/ColorManager.js';
@@ -18,16 +18,16 @@ class gameScene extends Phaser.Scene {
         });
     }
     create() {
-        this._bgSpeedX = 0.1, this._bgSpeedY = 0.1, this._menuCameraX = -h, this._prevCameraX = -h, this._bg = this.add.tileSprite(0, 0, r, n, "game_bg_01").setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
+        this._bgSpeedX = 0.1, this._bgSpeedY = 0.1, this._menuCameraX = -PLAYER_GAME_CAMERA_X, this._prevCameraX = -PLAYER_GAME_CAMERA_X, this._bg = this.add.tileSprite(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, "game_bg_01").setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
         const _0x15d27a = this.textures.get('game_bg_01').source[0].height;
-        this._bgInitY = _0x15d27a - n - o, this._cameraX = -h, this._cameraY = 0, this._cameraXRef = {
+        this._bgInitY = _0x15d27a - SCREEN_HEIGHT - o, this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef = {
             get 'value'() {
                 return this._v;
             },
-            '_v': -h
-        }, this._state = new M(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ms(), this._audio = new ys(this);
+            '_v': -PLAYER_GAME_CAMERA_X
+        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ms(), this._audio = new ys(this);
         let _0x591888 = this.cache.text.get("level_1");
-        _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = T, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
+        _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = GROUND_BOUNDS_Y, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
             'frame': 'square.png',
             'speed': 0,
             'scale': {
@@ -43,11 +43,11 @@ class gameScene extends Phaser.Scene {
                 'max': 1800
             },
             'frequency': 60,
-            'blendMode': S,
-            'tint': v,
+            'blendMode': BLEND_ADD,
+            'tint': COLOR_GREEN,
             'emitting': false,
             'emitCallback': _0x3c2a3e => {
-                _0x3c2a3e.x = this._glitterCenterX + (2 * Math.random() - 1) * (r / 1.8), _0x3c2a3e.y = this._glitterCenterY + 320 * (2 * Math.random() - 1);
+                _0x3c2a3e.x = this._glitterCenterX + (2 * Math.random() - 1) * (SCREEN_WIDTH / 1.8), _0x3c2a3e.y = this._glitterCenterY + 320 * (2 * Math.random() - 1);
             }
         }), this._level.additiveContainer.add(this._glitterEmitter), this._bg.setTint(this._colorManager.getHex(fs)), this._level.setGroundColor(this._colorManager.getHex(gs)), this._level.additiveContainer.setVisible(false), this._level.container.setVisible(false), this._level.topContainer.setVisible(false), this._attempts = 1, this._bestPercent = 0, this._lastPercent = 0, this._endPortalGameY = 240, this._resetGameplayState(), this._totalJumps = 0, this._playTime = 0, this._menuActive = true, this._slideIn = false, this._slideGroundX = null, this._firstPlay = true, this._player.setCubeVisible(false), this._player.setShipVisible(false), (this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30), this._robLogo = this.add.image(160, 555, "GJ_WebSheet", 'RobTopLogoBig_001.png').setScrollFactor(0).setDepth(30).setScale(0.9), this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
             'fontSize': "14px",
@@ -74,7 +74,7 @@ class gameScene extends Phaser.Scene {
         this._menuFsBtn = this.add.image(33, 33, "GJ_WebSheet", _0x28fa5b ? 'toggleFullscreenOff_001.png' : "toggleFullscreenOn_001.png").setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(), this._expandHitArea(this._menuFsBtn, 1.5), this._makeBouncyButton(this._menuFsBtn, 0.64, () => {
             const _0x26b7c = !this.scale.isFullscreen;
             this._menuFsBtn.setTexture("GJ_WebSheet", _0x26b7c ? "toggleFullscreenOff_001.png" : 'toggleFullscreenOn_001.png'), this._expandHitArea(this._menuFsBtn, 1.5), this._toggleFullscreen();
-        }, () => this._menuActive), this._menuInfoBtn = this.add.image(r - 30 - 3, 33, "GJ_WebSheet", "GJ_infoIcon_001.png").setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(), this._expandHitArea(this._menuInfoBtn, 1.5), this._makeBouncyButton(this._menuInfoBtn, 0.64, () => {
+        }, () => this._menuActive), this._menuInfoBtn = this.add.image(SCREEN_WIDTH - 30 - 3, 33, "GJ_WebSheet", "GJ_infoIcon_001.png").setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(), this._expandHitArea(this._menuInfoBtn, 1.5), this._makeBouncyButton(this._menuInfoBtn, 0.64, () => {
             this._buildInfoPopup();
         }, () => this._menuActive && !this._infoPopup), this._menuGlitter = this.add.particles(0, 0, "GJ_WebSheet", {
             'frame': "square.png",
@@ -92,7 +92,7 @@ class gameScene extends Phaser.Scene {
                 'max': 2000
             },
             'frequency': 35,
-            'blendMode': S,
+            'blendMode': BLEND_ADD,
             'tint': 20670,
             'x': {
                 'min': -130,
@@ -106,7 +106,7 @@ class gameScene extends Phaser.Scene {
             this._audio.playEffect("playSound_01", {
                 'volume': 1
             }), this._startGame();
-        }, () => this._menuActive && !this._playBtnPressed), this._positionMenuItems(), this._spaceWasDown = false, this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), this._upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP), this._pauseBtn = this.add.image(r - 30, 30, "GJ_WebSheet", "GJ_pauseBtn_clean_001.png").setScrollFactor(0).setDepth(30).setAlpha(75 / 255).setVisible(false), this._pauseBtn.setInteractive(), this._expandHitArea(this._pauseBtn, 2), this._pauseBtn.on("pointerdown", () => this._pauseGame()), this._escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC), this._escKey.on("down", () => {
+        }, () => this._menuActive && !this._playBtnPressed), this._positionMenuItems(), this._spaceWasDown = false, this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), this._upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP), this._pauseBtn = this.add.image(SCREEN_WIDTH - 30, 30, "GJ_WebSheet", "GJ_pauseBtn_clean_001.png").setScrollFactor(0).setDepth(30).setAlpha(75 / 255).setVisible(false), this._pauseBtn.setInteractive(), this._expandHitArea(this._pauseBtn, 2), this._pauseBtn.on("pointerdown", () => this._pauseGame()), this._escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC), this._escKey.on("down", () => {
             this._paused ? this._resumeGame() : this._menuActive || this._slideIn || this._state.isDead || this._levelWon || this._pauseGame();
         }), this._paused = false, this._pauseContainer = null, this._sfxVolume = this.game.registry.get("userSfxVol") ?? 1, this.input.on("pointerdown", () => {
             this._menuActive || this._paused || this._pushButton();
@@ -121,7 +121,7 @@ class gameScene extends Phaser.Scene {
         }), this.game.registry.get("fadeInFromBlack") && (this.game.registry.remove("fadeInFromBlack"), this.cameras.main.fadeIn(400, 0, 0, 0));
     }
     _buildHUD() {
-        this._attemptsLabel = this.add.bitmapText(0, 0, "bigFont", 'Attempt\x201', 65).setOrigin(0.5, 0.5).setVisible(false), this._level.topContainer.add(this._attemptsLabel), this._positionAttemptsLabel(), this._fpsText = this.add.text(r - 20, 10, '', {
+        this._attemptsLabel = this.add.bitmapText(0, 0, "bigFont", 'Attempt\x201', 65).setOrigin(0.5, 0.5).setVisible(false), this._level.topContainer.add(this._attemptsLabel), this._positionAttemptsLabel(), this._fpsText = this.add.text(SCREEN_WIDTH - 20, 10, '', {
             'fontSize': "28px",
             'fill': "#ff0000",
             'fontFamily': "Arial"
@@ -145,11 +145,11 @@ class gameScene extends Phaser.Scene {
         this._paused && (this._setParticleTimeScale(1), this._paused = false, this._pauseBtn.setVisible(true).setAlpha(75 / 255), this._audio.resumeMusic(), this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null));
     }
     _buildPauseOverlay() {
-        const _0x13af33 = r / 2,
+        const _0x13af33 = SCREEN_WIDTH / 2,
             _0xf70e04 = 320,
-            _0x4eb71b = r - 40;
+            _0x4eb71b = SCREEN_WIDTH - 40;
         this._pauseContainer = this.add.container(0, 0).setScrollFactor(0).setDepth(100);
-        const _0x505665 = this.add.rectangle(_0x13af33, _0xf70e04, r, n, 0, 75 / 255);
+        const _0x505665 = this.add.rectangle(_0x13af33, _0xf70e04, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 75 / 255);
         _0x505665.setInteractive(), this._pauseContainer.add(_0x505665);
         const _0x103191 = 0.325 * this.textures.get("square04_001").source[0].width,
             _0x954813 = this._drawScale9(_0x13af33, _0xf70e04, _0x4eb71b, 600, 'square04_001', _0x103191, 0, 150 / 255);
@@ -226,11 +226,11 @@ class gameScene extends Phaser.Scene {
     }
     _buildInfoPopup() {
         if (this._infoPopup) return;
-        const _0xd1c6c2 = r / 2,
+        const _0xd1c6c2 = SCREEN_WIDTH / 2,
             _0x4c3182 = 320,
             _0xe2830b = 336;
         this._infoPopup = this.add.container(0, 0).setScrollFactor(0).setDepth(200);
-        const _0x249eb7 = this.add.rectangle(_0xd1c6c2, _0x4c3182, r, n, 0, 100 / 255);
+        const _0x249eb7 = this.add.rectangle(_0xd1c6c2, _0x4c3182, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 100 / 255);
         _0x249eb7.setInteractive(), this._infoPopup.add(_0x249eb7);
         const _0x14e46f = 0.325 * this.textures.get("GJ_square02").source[0].width,
             _0x2c64c2 = this._drawScale9(_0xd1c6c2, _0x4c3182, 480, _0xe2830b, 'GJ_square02', _0x14e46f, 16777215, 1);
@@ -414,7 +414,7 @@ class gameScene extends Phaser.Scene {
                 }
             })), this._robLogo && this.tweens.add({
                 'targets': this._robLogo,
-                'y': n + this._robLogo.height,
+                'y': SCREEN_HEIGHT + this._robLogo.height,
                 duration: 300,
                 ease: "Quad.In",
                 onComplete: () => {
@@ -455,7 +455,7 @@ class gameScene extends Phaser.Scene {
             }), this._downloadBtns) {
             for (const _0xaa3a95 of this._downloadBtns) this.tweens.killTweensOf(_0xaa3a95), this.tweens.add({
                 'targets': _0xaa3a95,
-                'y': n + _0xaa3a95.height,
+                'y': SCREEN_HEIGHT + _0xaa3a95.height,
                 duration: 300,
                 ease: "Quad.In",
                 onComplete: () => _0xaa3a95.destroy()
@@ -470,7 +470,7 @@ class gameScene extends Phaser.Scene {
             onComplete: () => {
                 this._logo.destroy(), this._logo = null;
             }
-        }), this._cameraX = -h, this._cameraY = 0, this._cameraXRef._v = this._cameraX, this._prevCameraX = this._cameraX;
+        }), this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef._v = this._cameraX, this._prevCameraX = this._cameraX;
         const _0x22e36e = this._cameraX - (this._menuCameraX || 0);
         this._level.shiftGroundTiles(_0x22e36e), this._playerWorldX = this._cameraX, this._state.y = 30, this._state.onGround = true, this._level.additiveContainer.setVisible(true), this._level.container.setVisible(true), this._level.topContainer.setVisible(true), this._player.setCubeVisible(true), this._player.reset(), this._attemptsLabel.setVisible(this._attempts > 1), this._positionAttemptsLabel();
     }
@@ -484,8 +484,8 @@ class gameScene extends Phaser.Scene {
         this._state.upKeyDown = false, this._state.upKeyPressed = false;
     }
     _positionMenuItems() {
-        const _0x1e5db8 = r / 2;
-        if (this._logo && (this._logo.x = _0x1e5db8), this._menuInfoBtn && (this._menuInfoBtn.x = r - 30 - 3), this._copyrightText && (this._copyrightText.x = r - 20), this._tryMeImg && (this._tryMeImg.x = _0x1e5db8 + 175), this._menuGlitter && (this._menuGlitter.x = _0x1e5db8, this._menuGlitter.y = 320), this._playBtn && (this._playBtn.x = _0x1e5db8, this.tweens.killTweensOf(this._playBtn, 'y'), this._playBtn.y = 320, this.tweens.add({
+        const _0x1e5db8 = SCREEN_WIDTH / 2;
+        if (this._logo && (this._logo.x = _0x1e5db8), this._menuInfoBtn && (this._menuInfoBtn.x = SCREEN_WIDTH - 30 - 3), this._copyrightText && (this._copyrightText.x = SCREEN_WIDTH - 20), this._tryMeImg && (this._tryMeImg.x = _0x1e5db8 + 175), this._menuGlitter && (this._menuGlitter.x = _0x1e5db8, this._menuGlitter.y = 320), this._playBtn && (this._playBtn.x = _0x1e5db8, this.tweens.killTweensOf(this._playBtn, 'y'), this._playBtn.y = 320, this.tweens.add({
                 'targets': this._playBtn,
                 'y': 324,
                 duration: 750,
@@ -493,18 +493,18 @@ class gameScene extends Phaser.Scene {
                 'yoyo': true,
                 'repeat': -1
             })), this._downloadBtns) {
-            const _0x285ef7 = r - 130,
+            const _0x285ef7 = SCREEN_WIDTH - 130,
                 _0x4a8263 = 555,
                 _0x23d03e = 210;
             for (let _0x1bdfae = 0; _0x1bdfae < this._downloadBtns.length; _0x1bdfae++) this._downloadBtns[_0x1bdfae].setPosition(_0x285ef7 - _0x1bdfae * _0x23d03e, _0x4a8263);
         }
     }
     _positionAttemptsLabel() {
-        let _0xdbdd91 = this._cameraX + r / 2;
+        let _0xdbdd91 = this._cameraX + SCREEN_WIDTH / 2;
         this._attempts > 1 && (_0xdbdd91 += 100), this._attemptsLabel.setPosition(_0xdbdd91, 150);
     }
     _resetGameplayState() {
-        this._cameraX = -h, this._cameraY = 0, this._cameraXRef._v = -h, this._prevCameraX = -h, this._playerWorldX = 0, this._deltaBuffer = 0, this._deathTimer = 0, this._deathSoundPlayed = false, this._newBestShown = false, this._hadNewBest = false, this._levelWon = false, this._endCameraOverride = false, this._endCamTween = null, this._spaceWasDown = false;
+        this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef._v = -PLAYER_GAME_CAMERA_X, this._prevCameraX = -PLAYER_GAME_CAMERA_X, this._playerWorldX = 0, this._deltaBuffer = 0, this._deathTimer = 0, this._deathSoundPlayed = false, this._newBestShown = false, this._hadNewBest = false, this._levelWon = false, this._endCameraOverride = false, this._endCamTween = null, this._spaceWasDown = false;
     }
     _restartLevel() {
         this._attempts++;
@@ -512,16 +512,16 @@ class gameScene extends Phaser.Scene {
         this._resetGameplayState(), this._state.reset(), this._player.reset(), this._glitterEmitter.stop(), this._level.resetObjects(), this._level.shiftGroundTiles(this._cameraX - _0x2ba78a), this._level.resetGroundState(), this._level.resetColorTriggers(), this._level.resetEnterEffectTriggers(), this._level.resetVisibility(), this._colorManager.reset(), this._audio.reset(), this._audio.startMusic(), this._paused = false, this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null), this._pauseBtn.setVisible(true).setAlpha(75 / 255), this._attemptsLabel.setText("Attempt " + this._attempts), this._attemptsLabel.setVisible(true), this._positionAttemptsLabel();
     }
     _onFullscreenChange(_0x310c5b) {
-        _0x310c5b || l(1138), this.time.delayedCall(200, () => this._applyScreenResize());
+        _0x310c5b || setScreenWidth(1138), this.time.delayedCall(200, () => this._applyScreenResize());
     }
     _applyScreenResize() {
         if (this.scale.isFullscreen) {
             const _0x5bc34b = window.innerWidth / window.innerHeight;
-            l(Math.round(n * _0x5bc34b));
+            setScreenWidth(Math.round(SCREEN_HEIGHT * _0x5bc34b));
         }
-        if (this.scale.setGameSize(r, n), this.scale.refresh(), this._bg.setSize(r, n), this._pauseBtn.x = r - 30, this._menuActive && this._positionMenuItems(), this._paused && this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null, this._buildPauseOverlay()), this._level.resizeScreen(), !this._menuActive) {
+        if (this.scale.setGameSize(SCREEN_WIDTH, SCREEN_HEIGHT), this.scale.refresh(), this._bg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT), this._pauseBtn.x = SCREEN_WIDTH - 30, this._menuActive && this._positionMenuItems(), this._paused && this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null, this._buildPauseOverlay()), this._level.resizeScreen(), !this._menuActive) {
             const _0x56287b = this._cameraX;
-            this._cameraX = this._playerWorldX - h, this._cameraXRef._v = this._cameraX, this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._level.shiftGroundTiles(this._cameraX - _0x56287b), this._level.updateGroundTiles(this._cameraY), this._level.updateVisibility(this._cameraX), this._level.applyEnterEffects(this._cameraX);
+            this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X, this._cameraXRef._v = this._cameraX, this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._level.shiftGroundTiles(this._cameraX - _0x56287b), this._level.updateGroundTiles(this._cameraY), this._level.updateVisibility(this._cameraX), this._level.applyEnterEffects(this._cameraX);
             const _0xde8a1a = this._playerWorldX - this._cameraX;
             this._player.syncSprites(this._cameraX, this._cameraY, 0, _0xde8a1a);
         }
@@ -568,7 +568,7 @@ class gameScene extends Phaser.Scene {
             this._slideGroundX = (this._slideGroundX || this._cameraX) + _0x3c9318 * c * d * _0x4f81e7, this._cameraXRef._v = this._slideGroundX;
             const _0x95cc4f = this._playerWorldX - this._cameraX;
             if (this._player.updateGroundRotation(_0x3c9318 * d), this._player.syncSprites(this._cameraX, this._cameraY, _0xaf2ffd / 1000, _0x95cc4f), this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._level.updateVisibility(this._cameraX), this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._playerWorldX >= 0) {
-                this._slideIn = false, this._deltaBuffer = 0, this._playerWorldX = 0, this._cameraX = this._playerWorldX - h, this._cameraXRef._v = this._cameraX;
+                this._slideIn = false, this._deltaBuffer = 0, this._playerWorldX = 0, this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X, this._cameraXRef._v = this._cameraX;
                 const _0x490749 = this._cameraX - this._slideGroundX;
                 this._level.shiftGroundTiles(_0x490749), this._firstPlay && (this._firstPlay = false, this._audio.startMusic()), this._pauseBtn.setVisible(true).setAlpha(0), this.tweens.add({
                     'targets': this._pauseBtn,
@@ -610,11 +610,11 @@ class gameScene extends Phaser.Scene {
         let _0x426602 = _0x5efc2d > 0 ? _0x30fa5d / _0x5efc2d : 0,
             _0x5caeb1 = _0x426602 * d;
         const _0x23505e = this._state.y;
-        for (let _0x26d5d6 = 0; _0x26d5d6 < _0x5efc2d; _0x26d5d6++) this._state.lastY = this._state.y, this._player.updateJump(_0x5caeb1), this._state.y += this._state.yVelocity * _0x5caeb1, this._player.checkCollisions(this._playerWorldX - h), this._playerWorldX += _0x426602 * c * d, this._state.isFlying || (this._state.onGround ? this._player.updateGroundRotation(_0x5caeb1) : this._player.rotateActionActive && this._player.updateRotateAction(u));
+        for (let _0x26d5d6 = 0; _0x26d5d6 < _0x5efc2d; _0x26d5d6++) this._state.lastY = this._state.y, this._player.updateJump(_0x5caeb1), this._state.y += this._state.yVelocity * _0x5caeb1, this._player.checkCollisions(this._playerWorldX - PLAYER_GAME_CAMERA_X), this._playerWorldX += _0x426602 * c * d, this._state.isFlying || (this._state.onGround ? this._player.updateGroundRotation(_0x5caeb1) : this._player.rotateActionActive && this._player.updateRotateAction(u));
         if (this._state.lastY = _0x23505e, !this._endCameraOverride) {
-            const _0xe48698 = this._playerWorldX - h;
+            const _0xe48698 = this._playerWorldX - PLAYER_GAME_CAMERA_X;
             if (this._level.endXPos > 0) {
-                const _0x24670d = this._level.endXPos - r;
+                const _0x24670d = this._level.endXPos - SCREEN_WIDTH;
                 if (_0xe48698 >= _0x24670d - 200) {
                     this._endCameraOverride = true, this._cameraX = _0xe48698;
                     const _0x2e3f0a = -140 + (this._level._endPortalGameY || 240),
@@ -642,12 +642,12 @@ class gameScene extends Phaser.Scene {
         this._cameraXRef._v = this._cameraX, this._endCameraOverride || this._updateCameraY(_0x30fa5d), this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY;
         let _0x5464ab = this._playerWorldX;
         for (let _0x2001f6 of this._level.checkColorTriggers(_0x5464ab)) this._colorManager.triggerColor(_0x2001f6.index, _0x2001f6.color, _0x2001f6.duration), _0x2001f6.tintGround && this._colorManager.triggerColor(gs, _0x2001f6.color, _0x2001f6.duration);
-        this._colorManager.step(_0xaf2ffd / 1000), this._bg.setTint(this._colorManager.getHex(fs)), this._level.setGroundColor(this._colorManager.getHex(gs)), this._level.updateVisibility(this._cameraX), this._level.checkEnterEffectTriggers(_0x5464ab), this._level.applyEnterEffects(this._cameraX), this._glitterCenterX = this._cameraX + r / 2, this._glitterCenterY = T - this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._state.isFlying && this._player.updateShipRotation(_0x30fa5d);
+        this._colorManager.step(_0xaf2ffd / 1000), this._bg.setTint(this._colorManager.getHex(fs)), this._level.setGroundColor(this._colorManager.getHex(gs)), this._level.updateVisibility(this._cameraX), this._level.checkEnterEffectTriggers(_0x5464ab), this._level.applyEnterEffects(this._cameraX), this._glitterCenterX = this._cameraX + SCREEN_WIDTH / 2, this._glitterCenterY = GROUND_BOUNDS_Y - this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._state.isFlying && this._player.updateShipRotation(_0x30fa5d);
         const _0x259e68 = this._playerWorldX - this._cameraX;
         this._player.syncSprites(this._cameraX, this._cameraY, _0xaf2ffd / 1000, _0x259e68);
     }
     _showNewBest() {
-        let _0x9f2437 = r / 2,
+        let _0x9f2437 = SCREEN_WIDTH / 2,
             _0x12bde3 = this.add.image(0, 0, "GJ_WebSheet", "GJ_newBest_001.png").setOrigin(0.5, 1),
             _0x544c9c = this.add.bitmapText(0, 2, "bigFont", this._lastPercent + '%', 65).setOrigin(0.5, 0).setScale(1.1),
             _0x326cb9 = this.add.container(_0x9f2437, 300, [_0x12bde3, _0x544c9c]).setScrollFactor(0).setDepth(60).setScale(0.01);
@@ -677,8 +677,8 @@ class gameScene extends Phaser.Scene {
     _levelComplete() {
         const _0x356782 = this._level.endXPos - this._cameraX,
             _0x2d967b = b(this._endPortalGameY) + this._cameraY;
-        for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => _s(this, _0x356782, _0x2d967b, 10, r, 500, false, true, v));
-        _s(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, v), this._showCompleteEffect();
+        for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => _s(this, _0x356782, _0x2d967b, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
+        _s(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, COLOR_GREEN), this._showCompleteEffect();
     }
     _showCompleteEffect() {
         this._audio.fadeOutMusic(1500), this.sound.play("endStart_02", {
@@ -689,7 +689,7 @@ class gameScene extends Phaser.Scene {
                 _0x2cc21f = 1 * _0x29d856,
                 _0x26b2b1 = 30 * _0x29d856,
                 _0x6f49c1 = 20 * _0x29d856,
-                _0x232789 = Math.round(Math.sqrt(r ** 2 + 102400)) + 32.5 * _0x29d856,
+                _0x232789 = Math.round(Math.sqrt(SCREEN_WIDTH ** 2 + 102400)) + 32.5 * _0x29d856,
                 _0x1c105b = 180,
                 _0x586720 = 40,
                 _0x57b9ff = 195,
@@ -715,15 +715,15 @@ class gameScene extends Phaser.Scene {
                     _0x2e9531 = _0x1c105b + _0x586720 * (2 * Math.random() - 1),
                     _0x28e7b3 = Math.min(1, Math.max(0, _0x4da54f + _0x20decf * (2 * Math.random() - 1))),
                     _0x34147c = _0x44369e[_0x104cbb] + _0x323ded * Math.random() + 180,
-                    _0xf33b0d = _0x3f5321.add.graphics().setScrollFactor(0).setDepth(-1).setBlendMode(S).setPosition(_0x8f5267, _0x2f1e2d).setAngle(_0x34147c).setAlpha(_0x28e7b3).setVisible(false),
+                    _0xf33b0d = _0x3f5321.add.graphics().setScrollFactor(0).setDepth(-1).setBlendMode(BLEND_ADD).setPosition(_0x8f5267, _0x2f1e2d).setAngle(_0x34147c).setAlpha(_0x28e7b3).setVisible(false),
                     _0x496d96 = {
-                        'h': 1,
+                        'PLAYER_GAME_CAMERA_X': 1,
                         'w': _0x2cc21f
                     };
                 _0x3f5321.time.delayedCall(Math.max(0, _0x1a79fc), () => {
                     _0xf33b0d.setVisible(true), _0x3f5321.tweens.add({
                         'targets': _0x496d96,
-                        'h': _0x232789,
+                        'PLAYER_GAME_CAMERA_X': _0x232789,
                         'w': _0x6eb03a,
                         duration: _0x2e9531,
                         ease: "Quad.Out",
@@ -747,10 +747,10 @@ class gameScene extends Phaser.Scene {
                     });
                 }
             });
-        }(this, this._level.endXPos - this._cameraX + 60, b(this._endPortalGameY) + this._cameraY, v), this.cameras.main.shake(1950, 0.004), this.time.delayedCall(1950, () => this._showCompleteText()));
+        }(this, this._level.endXPos - this._cameraX + 60, b(this._endPortalGameY) + this._cameraY, COLOR_GREEN), this.cameras.main.shake(1950, 0.004), this.time.delayedCall(1950, () => this._showCompleteText()));
     }
     _showCompleteText() {
-        const _0x56628c = r / 2,
+        const _0x56628c = SCREEN_WIDTH / 2,
             _0x45ab26 = this.add.image(_0x56628c, 250, 'GJ_WebSheet', "GJ_levelComplete_001.png").setScrollFactor(0).setDepth(60).setScale(0.01);
         this.tweens.add({
             'targets': _0x45ab26,
@@ -771,7 +771,7 @@ class gameScene extends Phaser.Scene {
                 });
             }
         });
-        const _0x2884ff = [v, 16777215];
+        const _0x2884ff = [COLOR_GREEN, 16777215];
         for (let _0x5f16c8 = 0; _0x5f16c8 < 2; _0x5f16c8++) this.add.particles(_0x56628c, 250, "GJ_WebSheet", {
             'frame': "square.png",
             'speed': {
@@ -792,7 +792,7 @@ class gameScene extends Phaser.Scene {
             },
             'quantity': 50,
             'stopAfter': 200,
-            'blendMode': S,
+            'blendMode': BLEND_ADD,
             'tint': _0x2884ff[_0x5f16c8],
             'x': {
                 'min': -800,
@@ -805,11 +805,11 @@ class gameScene extends Phaser.Scene {
         }).setScrollFactor(0).setDepth(59);
         const _0x2eadf2 = this._level.endXPos - this._cameraX,
             _0x380b24 = b(this._endPortalGameY) + this._cameraY;
-        _s(this, _0x2eadf2, _0x380b24, 10, r, 800, true, false, v), _s(this, _0x56628c, 250, 10, 1000, 800, true, false, v);
-        for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => _s(this, _0x2eadf2, _0x380b24, 10, r, 500, false, true, v));
+        _s(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN), _s(this, _0x56628c, 250, 10, 1000, 800, true, false, COLOR_GREEN);
+        for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => _s(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
         for (let _0x429722 = 0; _0x429722 < 10; _0x429722++) {
             const _0xbf7dd0 = 150 * _0x429722 + (160 * Math.random() - 80);
-            this.time.delayedCall(Math.max(0, _0xbf7dd0), () => ws(this, v, m));
+            this.time.delayedCall(Math.max(0, _0xbf7dd0), () => ws(this, COLOR_GREEN, COLOR_BLUE));
         }
         this.time.delayedCall(1500, () => this._showEndLayer());
     }
@@ -819,9 +819,9 @@ class gameScene extends Phaser.Scene {
             'alpha': 0,
             duration: 300
         });
-        const _0x384f9e = r / 2,
+        const _0x384f9e = SCREEN_WIDTH / 2,
             _0x1aa656 = 320;
-        this._endLayerOverlay = this.add.rectangle(_0x384f9e, _0x1aa656, r, n, 0, 0).setScrollFactor(0).setDepth(200).setInteractive(), (this._endLayerInternal = this.add.container(0, -640).setScrollFactor(0).setDepth(201), this.tweens.add({
+        this._endLayerOverlay = this.add.rectangle(_0x384f9e, _0x1aa656, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0).setScrollFactor(0).setDepth(200).setInteractive(), (this._endLayerInternal = this.add.container(0, -640).setScrollFactor(0).setDepth(201), this.tweens.add({
             'targets': this._endLayerOverlay,
             'alpha': 100 / 255,
             duration: 1000
@@ -841,7 +841,7 @@ class gameScene extends Phaser.Scene {
         });
         const _0x595215 = 712,
             _0x950c8d = 460,
-            _0x2a115c = (r - _0x595215) / 2;
+            _0x2a115c = (SCREEN_WIDTH - _0x595215) / 2;
         this._endLayerInternal.add(this.add.rectangle(_0x2a115c + 356, 310, _0x595215, _0x950c8d, 0, 180 / 255));
         const _0x43f2e3 = this.textures.getFrame("GJ_WebSheet", "GJ_table_side_001.png"),
             _0x3feccc = _0x43f2e3 ? _0x950c8d / _0x43f2e3.height : 1;
@@ -942,10 +942,10 @@ class gameScene extends Phaser.Scene {
                 },
                 'quantity': 30,
                 'stopAfter': 30,
-                'blendMode': S,
+                'blendMode': BLEND_ADD,
                 'tint': 16776960
             }).setScrollFactor(0).setDepth(202);
-            const _0x43203f = this.add.graphics().setScrollFactor(0).setDepth(202).setBlendMode(S),
+            const _0x43203f = this.add.graphics().setScrollFactor(0).setDepth(202).setBlendMode(BLEND_ADD),
                 _0x403316 = {
                     't': 0
                 };

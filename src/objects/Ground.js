@@ -2,10 +2,10 @@
     ground and level objects
 */
 import * as Phaser from 'phaser';
-import { r, a, o, h, f, g, v, y, x, _, w, b, S, E,
+import { SCREEN_WIDTH, a, o, PLAYER_GAME_CAMERA_X, FLY_CEILING, g, COLOR_GREEN, y, x, _, w, b, BLEND_ADD, BLEND_NORMAL,
     Ji, Qi, $i, ts, es, is, ss, rs, ns, as
  } from '../constants.js';
-import { R, L, O } from '../systems/GameState.js';
+import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/GameState.js';
 import { Zi, ls } from '../level/LevelData.js';
 
 class us {
@@ -22,9 +22,9 @@ class us {
         const _0x73ae12 = this._scene,
             _0x3bff90 = _0x73ae12.textures.getFrame('GJ_WebSheet', 'groundSquare_01_001.png');
         this._tileW = _0x3bff90 ? _0x3bff90.width : 1012, this._groundTiles = [], this._ceilingTiles = [];
-        let _0x5bf5f8 = Math.ceil(r / this._tileW) + 2,
+        let _0x5bf5f8 = Math.ceil(SCREEN_WIDTH / this._tileW) + 2,
             _0x428d85 = b(0);
-        const _0x239f13 = -h;
+        const _0x239f13 = -PLAYER_GAME_CAMERA_X;
         for (let _0x3a0baf = 0; _0x3a0baf < _0x5bf5f8; _0x3a0baf++) {
             let _0x4cea14 = _0x239f13 + _0x3a0baf * this._tileW,
                 _0x929a9b = _0x73ae12.add.image(0, _0x428d85, "GJ_WebSheet", 'groundSquare_01_001.png');
@@ -35,16 +35,16 @@ class us {
         this._maxGroundWorldX = _0x239f13 + (_0x5bf5f8 - 1) * this._tileW;
         const _0x42704c = _0x73ae12.textures.getFrame('GJ_WebSheet', "floorLine_01_001.png"),
             _0x37a2ff = _0x42704c ? _0x42704c.width : 888,
-            _0x578262 = r / _0x37a2ff;
-        this._groundLine = _0x73ae12.add.image(r / 2, _0x428d85 - 1, 'GJ_WebSheet', 'floorLine_01_001.png').setOrigin(0.5, 0).setScale(_0x578262, 1).setBlendMode(S).setDepth(21).setScrollFactor(0), this._ceilingLine = _0x73ae12.add.image(r / 2, _0x428d85 + 1, "GJ_WebSheet", 'floorLine_01_001.png').setOrigin(0.5, 1).setScale(_0x578262, 1).setFlipY(true).setBlendMode(S).setDepth(21).setScrollFactor(0).setVisible(false);
+            _0x578262 = SCREEN_WIDTH / _0x37a2ff;
+        this._groundLine = _0x73ae12.add.image(SCREEN_WIDTH / 2, _0x428d85 - 1, 'GJ_WebSheet', 'floorLine_01_001.png').setOrigin(0.5, 0).setScale(_0x578262, 1).setBlendMode(BLEND_ADD).setDepth(21).setScrollFactor(0), this._ceilingLine = _0x73ae12.add.image(SCREEN_WIDTH / 2, _0x428d85 + 1, "GJ_WebSheet", 'floorLine_01_001.png').setOrigin(0.5, 1).setScale(_0x578262, 1).setFlipY(true).setBlendMode(BLEND_ADD).setDepth(21).setScrollFactor(0).setVisible(false);
         const _0x4ff823 = 100 / 255;
-        this._groundShadowL = _0x73ae12.add.image(-1, _0x428d85, "GJ_WebSheet", "groundSquareShadow_001.png").setOrigin(0, 0).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setBlendMode(E), this._groundShadowR = _0x73ae12.add.image(r + 1, _0x428d85, 'GJ_WebSheet', "groundSquareShadow_001.png").setOrigin(1, 0).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipX(true).setBlendMode(E), this._ceilingShadowL = _0x73ae12.add.image(-1, _0x428d85, "GJ_WebSheet", 'groundSquareShadow_001.png').setOrigin(0, 1).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipY(true).setBlendMode(E).setVisible(false), this._ceilingShadowR = _0x73ae12.add.image(r + 1, _0x428d85, "GJ_WebSheet", 'groundSquareShadow_001.png').setOrigin(1, 1).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipX(true).setFlipY(true).setBlendMode(E).setVisible(false);
+        this._groundShadowL = _0x73ae12.add.image(-1, _0x428d85, "GJ_WebSheet", "groundSquareShadow_001.png").setOrigin(0, 0).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setBlendMode(BLEND_NORMAL), this._groundShadowR = _0x73ae12.add.image(SCREEN_WIDTH + 1, _0x428d85, 'GJ_WebSheet', "groundSquareShadow_001.png").setOrigin(1, 0).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipX(true).setBlendMode(BLEND_NORMAL), this._ceilingShadowL = _0x73ae12.add.image(-1, _0x428d85, "GJ_WebSheet", 'groundSquareShadow_001.png').setOrigin(0, 1).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipY(true).setBlendMode(BLEND_NORMAL).setVisible(false), this._ceilingShadowR = _0x73ae12.add.image(SCREEN_WIDTH + 1, _0x428d85, "GJ_WebSheet", 'groundSquareShadow_001.png').setOrigin(1, 1).setScrollFactor(0).setDepth(22).setAlpha(_0x4ff823).setScale(0.7, 1).setFlipX(true).setFlipY(true).setBlendMode(BLEND_NORMAL).setVisible(false);
     }
     resizeScreen() {
         var _0xdc60af, _0x493047;
         const _0x1f0ac2 = this._scene,
             _0x495be2 = this._tileW,
-            _0x546bad = Math.ceil(r / _0x495be2) + 2,
+            _0x546bad = Math.ceil(SCREEN_WIDTH / _0x495be2) + 2,
             _0x4f87d5 = b(0);
         for (; this._groundTiles.length < _0x546bad;) {
             const _0x596be1 = this._maxGroundWorldX + _0x495be2;
@@ -54,8 +54,8 @@ class us {
             _0x6e7d76.setOrigin(0, 1).setFlipY(true).setTint((null == (_0x493047 = this._groundTiles[0]) ? undefined : _0x493047.tintTopLeft) || 17578).setDepth(20).setVisible(false), _0x6e7d76._worldX = _0x596be1, this._ceilingTiles.push(_0x6e7d76), this._maxGroundWorldX = _0x596be1;
         }
         const _0x51125e = this._scene.textures.getFrame("GJ_WebSheet", "floorLine_01_001.png"),
-            _0x1c38c3 = r / (_0x51125e ? _0x51125e.width : 888);
-        this._groundLine.x = r / 2, this._groundLine.setScale(_0x1c38c3, 1), this._ceilingLine.x = r / 2, this._ceilingLine.setScale(_0x1c38c3, 1), this._groundShadowR.x = r + 1, this._ceilingShadowR.x = r + 1;
+            _0x1c38c3 = SCREEN_WIDTH / (_0x51125e ? _0x51125e.width : 888);
+        this._groundLine.x = SCREEN_WIDTH / 2, this._groundLine.setScale(_0x1c38c3, 1), this._ceilingLine.x = SCREEN_WIDTH / 2, this._ceilingLine.setScale(_0x1c38c3, 1), this._groundShadowR.x = SCREEN_WIDTH + 1, this._ceilingShadowR.x = SCREEN_WIDTH + 1;
     }
     updateGroundTiles(_0x14aed2 = 0) {
         const _0x3d0974 = this._cameraXRef.value,
@@ -96,7 +96,7 @@ class us {
         let _0x4dd75a = _0x804885 - 300;
         return _0x4dd75a = Math.floor(_0x4dd75a / a) * a, _0x4dd75a = Math.max(0, _0x4dd75a), {
             'floorY': _0x4dd75a,
-            'ceilingY': _0x4dd75a + f
+            'ceilingY': _0x4dd75a + FLY_CEILING
         };
     }
     setFlyMode(_0x4a6d9a, _0x3a58e7) {
@@ -127,7 +127,7 @@ class us {
             dx: _0x4aea8a,
             dy: _0x545b71
         } = function(_0x221968, _0xce6477) {
-            let _0x3a4f77 = R(_0x221968, _0xce6477);
+            let _0x3a4f77 = findAtlasFrame(_0x221968, _0xce6477);
             if (!_0x3a4f77) return {
                 'dx': 0,
                 'dy': 0
@@ -158,7 +158,7 @@ class us {
         0 !== _0x249260 && _0x2d433c.setAngle(_0x249260), 1 !== _0x5eb2df.scale && _0x2d433c.setScale(_0x5eb2df.scale), _0x450956 && (undefined !== _0x450956.tint ? _0x2d433c.setTint(_0x450956.tint) : _0x450956.black && _0x2d433c.setTint(0));
     }
     _addVisualSprite(_0x2edd38, _0x55b8b6 = null) {
-        _0x2edd38 && (_0x55b8b6 && "additive" === _0x55b8b6.blend ? (_0x2edd38.setBlendMode(S), _0x2edd38._eeLayer = 0) : _0x55b8b6 && _0x55b8b6._portalFront ? _0x2edd38._eeLayer = 2 : _0x55b8b6 && undefined !== _0x55b8b6.z && _0x55b8b6.z < 0 ? _0x2edd38._eeLayer = 0 : _0x2edd38._eeLayer = 1);
+        _0x2edd38 && (_0x55b8b6 && "additive" === _0x55b8b6.blend ? (_0x2edd38.setBlendMode(BLEND_ADD), _0x2edd38._eeLayer = 0) : _0x55b8b6 && _0x55b8b6._portalFront ? _0x2edd38._eeLayer = 2 : _0x55b8b6 && undefined !== _0x55b8b6.z && _0x55b8b6.z < 0 ? _0x2edd38._eeLayer = 0 : _0x2edd38._eeLayer = 1);
     }
     _getGlowFrameName(_0x40f97f) {
         return _0x40f97f && _0x40f97f.endsWith("_001.png") ? _0x40f97f.replace('_001.png', '_glow_001.png') : null;
@@ -166,9 +166,9 @@ class us {
     _addGlowSprite(_0x2fb4ca, _0xad3348, _0x5d6f6f, _0x3d09ed, _0x330e58, _0x3f8eef) {
         let _0xa6570d = this._getGlowFrameName(_0x3d09ed);
         if (!_0xa6570d) return;
-        if (!R(_0x2fb4ca, _0xa6570d) && !_0x2fb4ca.textures.exists(_0xa6570d)) return;
-        let _0x3a5f29 = L(_0x2fb4ca, _0xad3348, _0x5d6f6f, _0xa6570d);
-        _0x3a5f29 && (this._applyVisualProps(_0x2fb4ca, _0x3a5f29, _0xa6570d, _0x330e58), _0x3a5f29.setBlendMode(S), _0x3a5f29._eeLayer = 0, undefined !== _0x3f8eef && (_0x3a5f29._eeWorldX = _0x3f8eef, _0x3a5f29._eeBaseY = _0x5d6f6f, this._addToSection(_0x3a5f29)));
+        if (!findAtlasFrame(_0x2fb4ca, _0xa6570d) && !_0x2fb4ca.textures.exists(_0xa6570d)) return;
+        let _0x3a5f29 = createImageFromAtlas(_0x2fb4ca, _0xad3348, _0x5d6f6f, _0xa6570d);
+        _0x3a5f29 && (this._applyVisualProps(_0x2fb4ca, _0x3a5f29, _0xa6570d, _0x330e58), _0x3a5f29.setBlendMode(BLEND_ADD), _0x3a5f29._eeLayer = 0, undefined !== _0x3f8eef && (_0x3a5f29._eeWorldX = _0x3f8eef, _0x3a5f29._eeBaseY = _0x5d6f6f, this._addToSection(_0x3a5f29)));
     }
     _spawnLevelObjects(_0x35f1ae) {
         const _0xd15974 = this._scene;
@@ -203,7 +203,7 @@ class us {
                 const _0x501fde = (_0x24471f.type === ts || _0x24471f.type === rs) && _0x4c7589.includes("_front_");
                 if (_0x501fde) {
                     const _0x32e8a1 = _0x4c7589.replace('_front_', "_back_");
-                    let _0x517b49 = L(_0xd15974, _0x2ddc05, _0x1b10a0, _0x32e8a1);
+                    let _0x517b49 = createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x32e8a1);
                     _0x517b49 && (this._applyVisualProps(_0xd15974, _0x517b49, _0x32e8a1, _0x1b937f), _0x517b49._eeLayer = 1, _0x517b49._eeWorldX = _0x173c58, _0x517b49._eeBaseY = _0x1b10a0, this._addToSection(_0x517b49));
                 }
                 _0x24471f.glow && this._addGlowSprite(_0xd15974, _0x2ddc05, _0x1b10a0, _0x4c7589, _0x1b937f, _0x173c58);
@@ -211,10 +211,10 @@ class us {
                     ..._0x24471f,
                     '_portalFront': true
                 } : _0x24471f;
-                let _0x554e0e = L(_0xd15974, _0x2ddc05, _0x1b10a0, _0x4c7589);
+                let _0x554e0e = createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x4c7589);
                 if (_0x554e0e && (this._applyVisualProps(_0xd15974, _0x554e0e, _0x4c7589, _0x1b937f, _0x24471f), this._addVisualSprite(_0x554e0e, _0x36f679), _0x554e0e._eeWorldX = _0x173c58, _0x554e0e._eeBaseY = _0x1b10a0, this._addToSection(_0x554e0e)), _0x24471f && (_0x24471f.type === Ji || _0x24471f.type === Qi)) {
                     let _0x47077e = _0x4c7589.replace("_001.png", "_2_001.png"),
-                        _0xe3eaec = R(_0xd15974, _0x47077e) ? L(_0xd15974, _0x2ddc05, _0x1b10a0, _0x47077e) : null;
+                        _0xe3eaec = findAtlasFrame(_0xd15974, _0x47077e) ? createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x47077e) : null;
                     _0xe3eaec && (this._applyVisualProps(_0xd15974, _0xe3eaec, _0x47077e, _0x1b937f), this._addVisualSprite(_0xe3eaec), _0xe3eaec._eeWorldX = _0x173c58, _0xe3eaec._eeBaseY = _0x1b10a0, this._addToSection(_0xe3eaec));
                 }
                 if (_0x24471f.children)
@@ -228,7 +228,7 @@ class us {
                             let _0x3e62f2 = (_0x1b937f.rot || 0) * Math.PI / 180;
                             _0x3b4e8c = _0x38902b * Math.cos(_0x3e62f2) - _0x256a8e * Math.sin(_0x3e62f2), _0x172131 = _0x38902b * Math.sin(_0x3e62f2) + _0x256a8e * Math.cos(_0x3e62f2);
                         }
-                        let _0x42173e = L(_0xd15974, _0x2ddc05 + _0x3b4e8c, _0x1b10a0 + _0x172131, _0x2ca803.frame);
+                        let _0x42173e = createImageFromAtlas(_0xd15974, _0x2ddc05 + _0x3b4e8c, _0x1b10a0 + _0x172131, _0x2ca803.frame);
                         _0x42173e && (this._applyVisualProps(_0xd15974, _0x42173e, _0x2ca803.frame, _0x1b937f, _0x2ca803), _0x2ca803.audioScale && (_0x42173e.setScale(0.1), _0x42173e.setAlpha(0.9), _0x42173e._eeAudioScale = true, this._audioScaleSprites.push(_0x42173e)), (undefined !== _0x2ca803.z ? _0x2ca803.z : -1) < 0 ? (_0x42173e._eeLayer = 1, _0x42173e._eeBehindParent = true) : this._addVisualSprite(_0x42173e, _0x2ca803), _0x42173e._eeWorldX = _0x173c58 + _0x3b4e8c, _0x42173e._eeBaseY = _0x1b10a0 + _0x172131, this._addToSection(_0x42173e));
                     }
             } else _0x24471f || _0x443c50.add(_0x1b937f.id);
@@ -285,14 +285,14 @@ class us {
                 if (_0x24471f.type === Ji && _0x24471f.gridW > 0 && _0x24471f.gridH > 0) {
                     let _0x10e5ae = _0x24471f.gridW * a,
                         _0x11e08d = _0x24471f.gridH * a,
-                        _0x4628ff = new O(y, _0x173c58, _0x7ab528, _0x10e5ae, _0x11e08d);
+                        _0x4628ff = new GameObject(y, _0x173c58, _0x7ab528, _0x10e5ae, _0x11e08d);
                     this.objects.push(_0x4628ff), this._addCollisionToSection(_0x4628ff);
                 } else {
                     if (_0x24471f.type === Qi) {
                         let _0x3f8c4f = 0,
                             _0x2a123d = 0;
                         if (_0x24471f.spriteW > 0 && _0x24471f.spriteH > 0 && undefined !== _0x24471f.hitboxScaleX && undefined !== _0x24471f.hitboxScaleY ? (_0x3f8c4f = _0x24471f.spriteW * _0x24471f.hitboxScaleX * 2, _0x2a123d = _0x24471f.spriteH * _0x24471f.hitboxScaleY * 2) : _0x24471f.gridW > 0 && _0x24471f.gridH > 0 && (_0x3f8c4f = 12 * _0x24471f.gridW, _0x2a123d = 24 * _0x24471f.gridH), _0x3f8c4f > 0 && _0x2a123d > 0) {
-                            let _0x3c84ad = new O(x, _0x173c58, _0x7ab528, _0x3f8c4f, _0x2a123d);
+                            let _0x3c84ad = new GameObject(x, _0x173c58, _0x7ab528, _0x3f8c4f, _0x2a123d);
                             this.objects.push(_0x3c84ad), this._addCollisionToSection(_0x3c84ad);
                         }
                     } else {
@@ -301,7 +301,7 @@ class us {
                                 _0x2c2226 = _0x24471f.gridH * a,
                                 _0x25452a = null;
                             if ("fly" === _0x24471f.sub ? _0x25452a = _ : 'cube' === _0x24471f.sub && (_0x25452a = w), _0x25452a) {
-                                let _0x4bd7bc = new O(_0x25452a, _0x173c58, _0x7ab528, _0xad0974, _0x2c2226);
+                                let _0x4bd7bc = new GameObject(_0x25452a, _0x173c58, _0x7ab528, _0xad0974, _0x2c2226);
                                 _0x4bd7bc.portalY = _0x7ab528, this.objects.push(_0x4bd7bc), this._addCollisionToSection(_0x4bd7bc);
                             }
                         }
@@ -309,7 +309,7 @@ class us {
                 }
             }
         }
-        _0x443c50.size, this._colorTriggers.sort((_0x359c7f, _0x28dd8b) => _0x359c7f.x - _0x28dd8b.x), this._enterEffectTriggers.sort((_0x3e43f2, _0x5e3d9a) => _0x3e43f2.x - _0x5e3d9a.x), this.endXPos = Math.max(r + 1200, this._lastObjectX + 680);
+        _0x443c50.size, this._colorTriggers.sort((_0x359c7f, _0x28dd8b) => _0x359c7f.x - _0x28dd8b.x), this._enterEffectTriggers.sort((_0x3e43f2, _0x5e3d9a) => _0x3e43f2.x - _0x5e3d9a.x), this.endXPos = Math.max(SCREEN_WIDTH + 1200, this._lastObjectX + 680);
     }
     createEndPortal(_0x41fbdb) {
         var _0x400605;
@@ -324,7 +324,7 @@ class us {
         }
         this.container.add(this._endPortalContainer), this._endPortalShine = _0x41fbdb.add.image(_0x3b56d4 - 58, _0x1c3aea, 'GJ_WebSheet', 'gradientBar.png');
         const _0x3e25a9 = (null == (_0x400605 = _0x41fbdb.textures.getFrame("GJ_WebSheet", "gradientBar.png")) ? undefined : _0x400605.height) || 64;
-        this._endPortalShine.setBlendMode(S), this._endPortalShine.setTint(v), this._endPortalShine.setScale(1, 960 / _0x3e25a9), this.additiveContainer.add(this._endPortalShine);
+        this._endPortalShine.setBlendMode(BLEND_ADD), this._endPortalShine.setTint(COLOR_GREEN), this._endPortalShine.setScale(1, 960 / _0x3e25a9), this.additiveContainer.add(this._endPortalShine);
         const _0x58cedb = _0x3b56d4 - 30,
             _0x4f52b7 = {
                 'getRandomPoint': _0x4f04dd => {
@@ -348,7 +348,7 @@ class us {
                 'start': 1,
                 'end': 0
             },
-            'tint': v,
+            'tint': COLOR_GREEN,
             'blendMode': Phaser.BlendModes.ADD,
             'frequency': 10,
             'maxParticles': 100,
@@ -413,7 +413,7 @@ class us {
         const _0x1dce22 = this._sectionContainers.length - 1;
         if (_0x1dce22 < 0) return;
         const _0x5b29dd = Math.max(0, Math.floor((_0xa5f1e1 - 140) / 400)),
-            _0x3b33db = Math.min(_0x1dce22, Math.floor((_0xa5f1e1 + r + 140) / 400)),
+            _0x3b33db = Math.min(_0x1dce22, Math.floor((_0xa5f1e1 + SCREEN_WIDTH + 140) / 400)),
             _0x1800fc = this._visMinSec,
             _0xc31046 = this._visMaxSec;
         if (_0x1800fc < 0) {
@@ -474,8 +474,8 @@ class us {
             _0xa24372 = 140,
             _0x5e9f2a = 200,
             _0x29a51b = _0x2f36ed,
-            _0x548004 = _0x2f36ed + r,
-            _0x49c6d8 = _0x2f36ed + r / 2,
+            _0x548004 = _0x2f36ed + SCREEN_WIDTH,
+            _0x49c6d8 = _0x2f36ed + SCREEN_WIDTH / 2,
             _0x2d8f53 = Math.max(0, Math.floor((_0x29a51b - _0xa24372) / _0x221c93)),
             _0x2b19db = Math.min(this._sections.length - 1, Math.floor((_0x548004 + _0xa24372) / _0x221c93));
         for (let _0x1bd44f = _0x2d8f53; _0x1bd44f <= _0x2b19db; _0x1bd44f++) {

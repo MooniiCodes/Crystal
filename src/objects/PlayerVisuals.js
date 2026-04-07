@@ -2,7 +2,7 @@
     visual helper for player object
 */
 import * as Phaser from 'phaser';
-import { R } from '../systems/GameState.js';
+import { findAtlasFrame } from '../systems/GameState.js';
 
 class cs {
     constructor(_0x9c2356, _0x171c7f, _0x49d49a, _0xb01616, _0x5aac4b, _0x293ce3, _0x5c7bc5 = 16777215, _0x5a3e29 = 1) {
@@ -71,7 +71,7 @@ class cs {
 }
 
 function ds(_0x415536, _0x592bc1, _0x4d69dc, _0xfb965c, _0x43d3fd, _0x5bbdf1) {
-    let _0x221d10 = R(_0x415536, _0xfb965c);
+    let _0x221d10 = findAtlasFrame(_0x415536, _0xfb965c);
     if (!_0x221d10) return null;
     let _0x38da45 = _0x415536.add.image(_0x592bc1, _0x4d69dc, _0x221d10.atlas, _0x221d10.frame);
     return _0x38da45.setDepth(_0x43d3fd), _0x38da45.setVisible(_0x5bbdf1), {

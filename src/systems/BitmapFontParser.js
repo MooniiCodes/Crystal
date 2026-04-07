@@ -2,7 +2,7 @@
     angelcode bmfont parser
 */
 
-// parses a .fnt file and adds the font to the cache
+// parses an .fnt file and adds the font to the cache
 function parseBMFont(_0x4e6e71, _0x5059cd, _0x3a0583) {
     const _0x4adbf2 = _0x4e6e71.textures.get(_0x5059cd),
         _0x39d5fe = _0x4adbf2.source[0],

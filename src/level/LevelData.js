@@ -1,5 +1,5 @@
 import pako from 'pako';
-import { g, v, y, x, _, Ji, Qi, $i, ts, es, is, ss, rs, ns, as } from '../constants.js';
+import { g, COLOR_GREEN, y, x, _, Ji, Qi, $i, ts, es, is, ss, rs, ns, as } from '../constants.js';
 
 function Ki(_0x493296) {
     let _0x8d0014 = _0x493296.split(','),
@@ -466,7 +466,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         123: {
             'type': $i,
@@ -490,7 +490,7 @@ const os = {
                 'frame': 'rod_ball_01_001.png',
                 'localDy': -62,
                 'blend': "additive",
-                'tint': v,
+                'tint': COLOR_GREEN,
                 'z': 1,
                 'audioScale': true
             }]
@@ -505,7 +505,7 @@ const os = {
                 'frame': "rod_ball_01_001.png",
                 'localDy': -46.5,
                 'blend': "additive",
-                'tint': v,
+                'tint': COLOR_GREEN,
                 'z': 1,
                 'audioScale': true
             }]
@@ -520,7 +520,7 @@ const os = {
                 'frame': "rod_ball_01_001.png",
                 'localDy': -32.5,
                 'blend': "additive",
-                'tint': v,
+                'tint': COLOR_GREEN,
                 'z': 1,
                 'audioScale': true
             }]
@@ -549,7 +549,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         152: {
             'type': $i,
@@ -557,7 +557,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         153: {
             'type': $i,
@@ -565,7 +565,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         88: {
             'type': Qi,
@@ -591,7 +591,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         19: {
             'type': $i,
@@ -599,7 +599,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         20: {
             'type': $i,
@@ -607,7 +607,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': "additive",
-            'tint': v
+            'tint': COLOR_GREEN
         },
         21: {
             'type': $i,
@@ -615,7 +615,7 @@ const os = {
             'gridW': 0,
             'gridH': 0,
             'blend': 'additive',
-            'tint': v
+            'tint': COLOR_GREEN
         },
         135: {
             'type': $i,

@@ -2,7 +2,7 @@
     gbweb entry point
 */
 import * as Phaser from 'phaser';
-import { r, n } from './constants.js';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from './constants.js';
 import { bootScene } from './scenes/BootScene.js';
 import { gameScene } from './scenes/GameScene.js';
 
@@ -19,8 +19,8 @@ if (!(HOSTNAME === GEOMETRY_DASH_URL || HOSTNAME === "www." + GEOMETRY_DASH_URL 
 // phaser game config
 const phaserConfig = {
     type: PHASER.AUTO, // uses webgl if possible, otherwise canvas
-    width: r,
-    height: n,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
     resolution: 1,
     fps: {
         smoothStep: true
