@@ -1,4 +1,4 @@
-# gdweb 🩷
+![# gdweb 🩷](https://raw.githubusercontent.com/dogfossils/dogfossils/refs/heads/main/media/gdweb%2018q.png)
 
 The 4/3/2026 Geometry Dash web demo, containing the first level of the game, "Stereo Madness".  
 Play here: [geometrydash.com](https://geometrydash.com)
