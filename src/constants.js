@@ -24,21 +24,28 @@ const
     // player colors
     COLOR_GREEN = 0xFF00,
     COLOR_BLUE = 0xFFFF,
-    y = "solid",
-    x = "hazard",
-    _ = "portal_fly",
-    w = "portal_cube",
+    // object types
+    OBJECT_TYPE_SOLID = "solid",
+    OBJECT_TYPE_HAZARD = "hazard",
+    OBJECT_TYPE_PORTAL_SHIP = "portal_fly",
+    OBJECT_TYPE_PORTAL_CUBE = "portal_cube",
     // the camera clips to this y value
     GROUND_BOUNDS_Y = 460;
 
-function b(_0x3ed2c6) {
-    return GROUND_BOUNDS_Y - _0x3ed2c6;
+// converts a world y coordinate to a screen y coordinate
+function worldYToScreenY(worldY) {
+    return GROUND_BOUNDS_Y - worldY;
 }
+
 let BLEND_ADD = Phaser.BlendModes.ADD,
     BLEND_NORMAL = Phaser.BlendModes.NORMAL;
 
-function setBlendModeAdd(_0x) { BLEND_ADD = _0x; }
-function setBlendModeNormal(_0x) { BLEND_NORMAL = _0x; }
+function setBlendModeAdd(newMode) {
+    BLEND_ADD = newMode;
+}
+function setBlendModeNormal(newMode) {
+    BLEND_NORMAL = newMode;
+}
 
 // stuff from level data used in both ground and, level data of course
 const Ji = "solid",
@@ -53,6 +60,6 @@ const Ji = "solid",
     as = "cube"
 
 export {
-        SCREEN_WIDTH, SCREEN_HEIGHT, a, o, PLAYER_GAME_CAMERA_X, setScreenWidth, u, c, d, JUMP_VELOCITY, FLY_CEILING, g, COLOR_GREEN, COLOR_BLUE, y, x, _, w, GROUND_BOUNDS_Y, b, BLEND_ADD, BLEND_NORMAL, setBlendModeAdd, setBlendModeNormal,
+        SCREEN_WIDTH, SCREEN_HEIGHT, a, o, PLAYER_GAME_CAMERA_X, setScreenWidth, u, c, d, JUMP_VELOCITY, FLY_CEILING, g, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, worldYToScreenY, BLEND_ADD, BLEND_NORMAL, setBlendModeAdd, setBlendModeNormal,
         Ji, Qi, $i, ts, es, is, ss, rs, ns, as
     };

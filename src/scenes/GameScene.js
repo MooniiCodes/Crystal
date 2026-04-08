@@ -3,10 +3,10 @@
     includes main game loop and title screen and all that stuff, in 1 scene
 */
 import * as Phaser from 'phaser';
-import { SCREEN_WIDTH, SCREEN_HEIGHT, o, PLAYER_GAME_CAMERA_X, u, c, d, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, y, x, w, GROUND_BOUNDS_Y, BLEND_ADD, b, setScreenWidth } from '../constants.js';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, o, PLAYER_GAME_CAMERA_X, u, c, d, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, BLEND_ADD, worldYToScreenY, setScreenWidth } from '../constants.js';
 import { GameState } from '../systems/GameState.js';
 import { us } from '../objects/Ground.js';
-import { ps } from '../objects/Player.js';
+import { PlayerClass } from '../objects/Player.js';
 import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/ColorManager.js';
 import { AudioClass } from '../systems/AudioManager.js';
 import { emitCircleEffect, emitWinBurst } from '../effects.js';
@@ -25,7 +25,7 @@ class gameScene extends Phaser.Scene {
                 return this._v;
             },
             '_v': -PLAYER_GAME_CAMERA_X
-        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new ps(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new AudioClass(this);
+        }, this._state = new GameState(), this._level = new us(this, this._cameraXRef), this._player = new PlayerClass(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new AudioClass(this);
         let _0x591888 = this.cache.text.get("level_1");
         _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = GROUND_BOUNDS_Y, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
             'frame': 'square.png',
@@ -676,7 +676,7 @@ class gameScene extends Phaser.Scene {
     }
     _levelComplete() {
         const _0x356782 = this._level.endXPos - this._cameraX,
-            _0x2d967b = b(this._endPortalGameY) + this._cameraY;
+            _0x2d967b = worldYToScreenY(this._endPortalGameY) + this._cameraY;
         for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => emitCircleEffect(this, _0x356782, _0x2d967b, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
         emitCircleEffect(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, COLOR_GREEN), this._showCompleteEffect();
     }
@@ -747,7 +747,7 @@ class gameScene extends Phaser.Scene {
                     });
                 }
             });
-        }(this, this._level.endXPos - this._cameraX + 60, b(this._endPortalGameY) + this._cameraY, COLOR_GREEN), this.cameras.main.shake(1950, 0.004), this.time.delayedCall(1950, () => this._showCompleteText()));
+        }(this, this._level.endXPos - this._cameraX + 60, worldYToScreenY(this._endPortalGameY) + this._cameraY, COLOR_GREEN), this.cameras.main.shake(1950, 0.004), this.time.delayedCall(1950, () => this._showCompleteText()));
     }
     _showCompleteText() {
         const _0x56628c = SCREEN_WIDTH / 2,
@@ -804,7 +804,7 @@ class gameScene extends Phaser.Scene {
             }
         }).setScrollFactor(0).setDepth(59);
         const _0x2eadf2 = this._level.endXPos - this._cameraX,
-            _0x380b24 = b(this._endPortalGameY) + this._cameraY;
+            _0x380b24 = worldYToScreenY(this._endPortalGameY) + this._cameraY;
         emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN), emitCircleEffect(this, _0x56628c, 250, 10, 1000, 800, true, false, COLOR_GREEN);
         for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
         for (let _0x429722 = 0; _0x429722 < 10; _0x429722++) {

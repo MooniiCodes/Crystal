@@ -2,7 +2,7 @@
     ground and level objects
 */
 import * as Phaser from 'phaser';
-import { SCREEN_WIDTH, a, o, PLAYER_GAME_CAMERA_X, FLY_CEILING, g, COLOR_GREEN, y, x, _, w, b, BLEND_ADD, BLEND_NORMAL,
+import { SCREEN_WIDTH, a, o, PLAYER_GAME_CAMERA_X, FLY_CEILING, g, COLOR_GREEN, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD, BLEND_NORMAL,
     Ji, Qi, $i, ts, es, is, ss, rs, ns, as
  } from '../constants.js';
 import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/GameState.js';
@@ -10,7 +10,7 @@ import { Zi, ls } from '../level/LevelData.js';
 
 class us {
     constructor(_0x46dab3, _0x35fa95) {
-        this._scene = _0x46dab3, this._cameraXRef = _0x35fa95, this.additiveContainer = _0x46dab3.add.container(0, 0).setDepth(-1), this.container = _0x46dab3.add.container(0, 0), this.topContainer = _0x46dab3.add.container(0, 0).setDepth(13), this.objects = [], this.endXPos = 0, this._groundY = 0, this._ceilingY = null, this._flyGroundActive = false, this._groundAnimFrom = 0, this._groundAnimTo = 0, this._groundAnimTime = 0, this._groundAnimDuration = 0, this._groundAnimating = false, this._groundTargetValue = 0, this._flyFloorY = 0, this._flyCeilingY = 0, this.flyCameraTarget = null, this._colorTriggers = [], this._colorTriggerIdx = 0, this._audioScaleSprites = [], this._enterEffectTriggers = [], this._enterEffectTriggerIdx = 0, this._activeEnterEffect = 0, this._activeExitEffect = 0, this._sections = [], this._sectionContainers = [], this._collisionSections = [], this._nearbyBuffer = [], this._visMinSec = -1, this._visMaxSec = -1, this._groundStartScreenY = b(0), this._ceilingStartScreenY = 0, this._buildGround();
+        this._scene = _0x46dab3, this._cameraXRef = _0x35fa95, this.additiveContainer = _0x46dab3.add.container(0, 0).setDepth(-1), this.container = _0x46dab3.add.container(0, 0), this.topContainer = _0x46dab3.add.container(0, 0).setDepth(13), this.objects = [], this.endXPos = 0, this._groundY = 0, this._ceilingY = null, this._flyGroundActive = false, this._groundAnimFrom = 0, this._groundAnimTo = 0, this._groundAnimTime = 0, this._groundAnimDuration = 0, this._groundAnimating = false, this._groundTargetValue = 0, this._flyFloorY = 0, this._flyCeilingY = 0, this.flyCameraTarget = null, this._colorTriggers = [], this._colorTriggerIdx = 0, this._audioScaleSprites = [], this._enterEffectTriggers = [], this._enterEffectTriggerIdx = 0, this._activeEnterEffect = 0, this._activeExitEffect = 0, this._sections = [], this._sectionContainers = [], this._collisionSections = [], this._nearbyBuffer = [], this._visMinSec = -1, this._visMaxSec = -1, this._groundStartScreenY = worldYToScreenY(0), this._ceilingStartScreenY = 0, this._buildGround();
     }
     loadLevel(_0x335f1b) {
         let {
@@ -23,7 +23,7 @@ class us {
             _0x3bff90 = _0x73ae12.textures.getFrame('GJ_WebSheet', 'groundSquare_01_001.png');
         this._tileW = _0x3bff90 ? _0x3bff90.width : 1012, this._groundTiles = [], this._ceilingTiles = [];
         let _0x5bf5f8 = Math.ceil(SCREEN_WIDTH / this._tileW) + 2,
-            _0x428d85 = b(0);
+            _0x428d85 = worldYToScreenY(0);
         const _0x239f13 = -PLAYER_GAME_CAMERA_X;
         for (let _0x3a0baf = 0; _0x3a0baf < _0x5bf5f8; _0x3a0baf++) {
             let _0x4cea14 = _0x239f13 + _0x3a0baf * this._tileW,
@@ -45,7 +45,7 @@ class us {
         const _0x1f0ac2 = this._scene,
             _0x495be2 = this._tileW,
             _0x546bad = Math.ceil(SCREEN_WIDTH / _0x495be2) + 2,
-            _0x4f87d5 = b(0);
+            _0x4f87d5 = worldYToScreenY(0);
         for (; this._groundTiles.length < _0x546bad;) {
             const _0x596be1 = this._maxGroundWorldX + _0x495be2;
             let _0x32bd97 = _0x1f0ac2.add.image(0, _0x4f87d5, 'GJ_WebSheet', "groundSquare_01_001.png");
@@ -66,9 +66,9 @@ class us {
                 _0x3f1d55 = 620,
                 _0x178745 = 20;
             _0x12b0b9 = this._groundStartScreenY + (_0x3f1d55 - this._groundStartScreenY) * _0x3ce536, _0x3453a2 = this._ceilingStartScreenY + (_0x178745 - this._ceilingStartScreenY) * _0x3ce536;
-            let _0x518952 = b(0) + _0x14aed2;
+            let _0x518952 = worldYToScreenY(0) + _0x14aed2;
             _0x12b0b9 > _0x518952 && (_0x12b0b9 = _0x518952);
-        } else _0x12b0b9 = b(0) + _0x14aed2, _0x3453a2 = 0;
+        } else _0x12b0b9 = worldYToScreenY(0) + _0x14aed2, _0x3453a2 = 0;
         for (let _0x2c7b79 = 0; _0x2c7b79 < this._groundTiles.length; _0x2c7b79++) {
             let _0x2d1a71 = this._groundTiles[_0x2c7b79],
                 _0x20a50b = this._ceilingTiles[_0x2c7b79];
@@ -106,7 +106,7 @@ class us {
             let _0x15ff58 = this._flyFloorY + 300;
             this.flyCameraTarget = _0x15ff58 - 320 + o, this.flyCameraTarget < 0 && (this.flyCameraTarget = 0);
             let _0x3be4f1 = this._scene && this._scene._cameraY || 0;
-            this._groundStartScreenY = b(0) + _0x3be4f1, this._ceilingStartScreenY = 0, this._groundAnimFrom = this._groundTargetValue, this._groundAnimTo = 1, this._groundAnimTime = 0, this._groundAnimDuration = 0.5, this._groundAnimating = true;
+            this._groundStartScreenY = worldYToScreenY(0) + _0x3be4f1, this._ceilingStartScreenY = 0, this._groundAnimFrom = this._groundTargetValue, this._groundAnimTo = 1, this._groundAnimTime = 0, this._groundAnimDuration = 0.5, this._groundAnimating = true;
         } else this.flyCameraTarget = null, this._groundAnimFrom = this._groundTargetValue, this._groundAnimTo = 0, this._groundAnimTime = 0, this._groundAnimDuration = 0.5, this._groundAnimating = true;
     }
     stepGroundAnimation(_0x4a003d) {
@@ -199,7 +199,7 @@ class us {
             let _0x4c7589 = _0x24471f ? _0x24471f.frame : null;
             if (_0x24471f && _0x24471f.randomFrames && (_0x4c7589 = _0x24471f.randomFrames[Math.floor(Math.random() * _0x24471f.randomFrames.length)]), _0x4c7589) {
                 let _0x2ddc05 = _0x173c58,
-                    _0x1b10a0 = b(_0x7ab528);
+                    _0x1b10a0 = worldYToScreenY(_0x7ab528);
                 const _0x501fde = (_0x24471f.type === ts || _0x24471f.type === rs) && _0x4c7589.includes("_front_");
                 if (_0x501fde) {
                     const _0x32e8a1 = _0x4c7589.replace('_front_', "_back_");
@@ -234,7 +234,7 @@ class us {
             } else _0x24471f || _0x443c50.add(_0x1b937f.id);
             if (_0x24471f && _0x24471f.portalParticle && _0x4c7589) {
                 let _0x3a9438 = _0x173c58,
-                    _0x2e9079 = b(_0x7ab528);
+                    _0x2e9079 = worldYToScreenY(_0x7ab528);
                 const _0x143187 = 2;
                 let _0x5926ad = _0x3a9438 - 5 * _0x143187,
                     _0x1ebc69 = _0x2e9079;
@@ -285,14 +285,14 @@ class us {
                 if (_0x24471f.type === Ji && _0x24471f.gridW > 0 && _0x24471f.gridH > 0) {
                     let _0x10e5ae = _0x24471f.gridW * a,
                         _0x11e08d = _0x24471f.gridH * a,
-                        _0x4628ff = new GameObject(y, _0x173c58, _0x7ab528, _0x10e5ae, _0x11e08d);
+                        _0x4628ff = new GameObject(OBJECT_TYPE_SOLID, _0x173c58, _0x7ab528, _0x10e5ae, _0x11e08d);
                     this.objects.push(_0x4628ff), this._addCollisionToSection(_0x4628ff);
                 } else {
                     if (_0x24471f.type === Qi) {
                         let _0x3f8c4f = 0,
                             _0x2a123d = 0;
                         if (_0x24471f.spriteW > 0 && _0x24471f.spriteH > 0 && undefined !== _0x24471f.hitboxScaleX && undefined !== _0x24471f.hitboxScaleY ? (_0x3f8c4f = _0x24471f.spriteW * _0x24471f.hitboxScaleX * 2, _0x2a123d = _0x24471f.spriteH * _0x24471f.hitboxScaleY * 2) : _0x24471f.gridW > 0 && _0x24471f.gridH > 0 && (_0x3f8c4f = 12 * _0x24471f.gridW, _0x2a123d = 24 * _0x24471f.gridH), _0x3f8c4f > 0 && _0x2a123d > 0) {
-                            let _0x3c84ad = new GameObject(x, _0x173c58, _0x7ab528, _0x3f8c4f, _0x2a123d);
+                            let _0x3c84ad = new GameObject(OBJECT_TYPE_HAZARD, _0x173c58, _0x7ab528, _0x3f8c4f, _0x2a123d);
                             this.objects.push(_0x3c84ad), this._addCollisionToSection(_0x3c84ad);
                         }
                     } else {
@@ -300,7 +300,7 @@ class us {
                             let _0xad0974 = 90,
                                 _0x2c2226 = _0x24471f.gridH * a,
                                 _0x25452a = null;
-                            if ("fly" === _0x24471f.sub ? _0x25452a = _ : 'cube' === _0x24471f.sub && (_0x25452a = w), _0x25452a) {
+                            if ("fly" === _0x24471f.sub ? _0x25452a = OBJECT_TYPE_PORTAL_SHIP : 'cube' === _0x24471f.sub && (_0x25452a = OBJECT_TYPE_PORTAL_CUBE), _0x25452a) {
                                 let _0x4bd7bc = new GameObject(_0x25452a, _0x173c58, _0x7ab528, _0xad0974, _0x2c2226);
                                 _0x4bd7bc.portalY = _0x7ab528, this.objects.push(_0x4bd7bc), this._addCollisionToSection(_0x4bd7bc);
                             }
@@ -315,7 +315,7 @@ class us {
         var _0x400605;
         if (this.endXPos <= 0) return;
         const _0x3b56d4 = this.endXPos,
-            _0x1c3aea = b(240),
+            _0x1c3aea = worldYToScreenY(240),
             _0x46064b = Math.round(16);
         this._endPortalContainer = _0x41fbdb.add.container(_0x3b56d4, _0x1c3aea);
         for (let _0x2a327c = 0; _0x2a327c < _0x46064b; _0x2a327c++) {
@@ -371,7 +371,7 @@ class us {
         const _0x50aa7d = 140 + _0x26f0ab;
         let _0x1be4c3;
         _0x1be4c3 = _0x43c4d1 ? _0x50aa7d : Math.max(240, _0x50aa7d);
-        const _0x32e645 = b(_0x1be4c3);
+        const _0x32e645 = worldYToScreenY(_0x1be4c3);
         this._endPortalContainer.y = _0x32e645, this._endPortalShine.y = _0x32e645, this._endPortalEmitter.y = _0x32e645, this._endPortalGameY = _0x1be4c3;
     }
     checkColorTriggers(_0x2b00ce) {

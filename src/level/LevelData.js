@@ -1,5 +1,5 @@
 import pako from 'pako';
-import { g, COLOR_GREEN, y, x, _, Ji, Qi, $i, ts, es, is, ss, rs, ns, as } from '../constants.js';
+import { g, COLOR_GREEN, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, Ji, Qi, $i, ts, es, is, ss, rs, ns, as } from '../constants.js';
 
 function Ki(_0x493296) {
     let _0x8d0014 = _0x493296.split(','),
