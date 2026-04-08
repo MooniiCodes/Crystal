@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 
 let SCREEN_WIDTH = Math.round(10240 / 9); // 1138
 const SCREEN_HEIGHT = 640,
-    a = 60,
+    a = 60, // tile size
     o = 180;
 
 // the x screen position at which the player stays at 
