@@ -3,10 +3,10 @@
 */
 import * as Phaser from 'phaser';
 import { SCREEN_WIDTH, a, o, PLAYER_GAME_CAMERA_X, FLY_CEILING, g, COLOR_GREEN, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD, BLEND_NORMAL,
-    Ji, Qi, $i, ts, es, is, ss, rs, ns, as
+    OBJECT_TYPE_2_SOLID, OBJECT_TYPE_2_HAZARD, OBJECT_TYPE_2_DECORATIVE, OBJECT_TYPE_2_PORTAL, OBJECT_TYPE_2_PAD, OBJECT_TYPE_2_RING, OBJECT_TYPE_2_TRIGGER, OBJECT_TYPE_2_SPEED, OBJECT_TYPE_2_FLY, OBJECT_TYPE_2_CUBE
  } from '../constants.js';
 import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/GameState.js';
-import { Zi, ls } from '../level/LevelData.js';
+import { parseLevel, getObjectDefinition } from '../level/LevelData.js';
 
 class us {
     constructor(_0x46dab3, _0x35fa95) {
@@ -15,7 +15,7 @@ class us {
     loadLevel(_0x335f1b) {
         let {
             objects: _0x1b4349
-        } = Zi(_0x335f1b);
+        } = parseLevel(_0x335f1b);
         this._spawnLevelObjects(_0x1b4349);
     }
     _buildGround() {
@@ -175,8 +175,8 @@ class us {
         let _0x443c50 = new Set();
         this._lastObjectX = 0;
         for (let _0x1b937f of _0x35f1ae) {
-            let _0x24471f = ls(_0x1b937f.id);
-            if (_0x24471f && _0x24471f.type === ss) {
+            let _0x24471f = getObjectDefinition(_0x1b937f.id);
+            if (_0x24471f && _0x24471f.type === OBJECT_TYPE_2_TRIGGER) {
                 29 !== _0x1b937f.id && 30 !== _0x1b937f.id || this._colorTriggers.push({
                     'x': 2 * _0x1b937f.x,
                     'index': 29 === _0x1b937f.id ? 1000 : 1001,
@@ -200,7 +200,7 @@ class us {
             if (_0x24471f && _0x24471f.randomFrames && (_0x4c7589 = _0x24471f.randomFrames[Math.floor(Math.random() * _0x24471f.randomFrames.length)]), _0x4c7589) {
                 let _0x2ddc05 = _0x173c58,
                     _0x1b10a0 = worldYToScreenY(_0x7ab528);
-                const _0x501fde = (_0x24471f.type === ts || _0x24471f.type === rs) && _0x4c7589.includes("_front_");
+                const _0x501fde = (_0x24471f.type === OBJECT_TYPE_2_PORTAL || _0x24471f.type === OBJECT_TYPE_2_SPEED) && _0x4c7589.includes("_front_");
                 if (_0x501fde) {
                     const _0x32e8a1 = _0x4c7589.replace('_front_', "_back_");
                     let _0x517b49 = createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x32e8a1);
@@ -212,7 +212,7 @@ class us {
                     '_portalFront': true
                 } : _0x24471f;
                 let _0x554e0e = createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x4c7589);
-                if (_0x554e0e && (this._applyVisualProps(_0xd15974, _0x554e0e, _0x4c7589, _0x1b937f, _0x24471f), this._addVisualSprite(_0x554e0e, _0x36f679), _0x554e0e._eeWorldX = _0x173c58, _0x554e0e._eeBaseY = _0x1b10a0, this._addToSection(_0x554e0e)), _0x24471f && (_0x24471f.type === Ji || _0x24471f.type === Qi)) {
+                if (_0x554e0e && (this._applyVisualProps(_0xd15974, _0x554e0e, _0x4c7589, _0x1b937f, _0x24471f), this._addVisualSprite(_0x554e0e, _0x36f679), _0x554e0e._eeWorldX = _0x173c58, _0x554e0e._eeBaseY = _0x1b10a0, this._addToSection(_0x554e0e)), _0x24471f && (_0x24471f.type === OBJECT_TYPE_2_SOLID || _0x24471f.type === OBJECT_TYPE_2_HAZARD)) {
                     let _0x47077e = _0x4c7589.replace("_001.png", "_2_001.png"),
                         _0xe3eaec = findAtlasFrame(_0xd15974, _0x47077e) ? createImageFromAtlas(_0xd15974, _0x2ddc05, _0x1b10a0, _0x47077e) : null;
                     _0xe3eaec && (this._applyVisualProps(_0xd15974, _0xe3eaec, _0x47077e, _0x1b937f), this._addVisualSprite(_0xe3eaec), _0xe3eaec._eeWorldX = _0x173c58, _0xe3eaec._eeBaseY = _0x1b10a0, this._addToSection(_0xe3eaec));
@@ -282,13 +282,13 @@ class us {
                 _0x1bed6b.setDepth(14), _0x1bed6b._eeLayer = 2, _0x1bed6b._eeWorldX = _0x173c58, _0x1bed6b._eeBaseY = _0x1ebc69, this._addToSection(_0x1bed6b);
             }
             if (_0x24471f) {
-                if (_0x24471f.type === Ji && _0x24471f.gridW > 0 && _0x24471f.gridH > 0) {
+                if (_0x24471f.type === OBJECT_TYPE_2_SOLID && _0x24471f.gridW > 0 && _0x24471f.gridH > 0) {
                     let _0x10e5ae = _0x24471f.gridW * a,
                         _0x11e08d = _0x24471f.gridH * a,
                         _0x4628ff = new GameObject(OBJECT_TYPE_SOLID, _0x173c58, _0x7ab528, _0x10e5ae, _0x11e08d);
                     this.objects.push(_0x4628ff), this._addCollisionToSection(_0x4628ff);
                 } else {
-                    if (_0x24471f.type === Qi) {
+                    if (_0x24471f.type === OBJECT_TYPE_2_HAZARD) {
                         let _0x3f8c4f = 0,
                             _0x2a123d = 0;
                         if (_0x24471f.spriteW > 0 && _0x24471f.spriteH > 0 && undefined !== _0x24471f.hitboxScaleX && undefined !== _0x24471f.hitboxScaleY ? (_0x3f8c4f = _0x24471f.spriteW * _0x24471f.hitboxScaleX * 2, _0x2a123d = _0x24471f.spriteH * _0x24471f.hitboxScaleY * 2) : _0x24471f.gridW > 0 && _0x24471f.gridH > 0 && (_0x3f8c4f = 12 * _0x24471f.gridW, _0x2a123d = 24 * _0x24471f.gridH), _0x3f8c4f > 0 && _0x2a123d > 0) {
@@ -296,7 +296,7 @@ class us {
                             this.objects.push(_0x3c84ad), this._addCollisionToSection(_0x3c84ad);
                         }
                     } else {
-                        if (_0x24471f.type === ts) {
+                        if (_0x24471f.type === OBJECT_TYPE_2_PORTAL) {
                             let _0xad0974 = 90,
                                 _0x2c2226 = _0x24471f.gridH * a,
                                 _0x25452a = null;

@@ -48,18 +48,18 @@ function setBlendModeNormal(newMode) {
 }
 
 // stuff from level data used in both ground and, level data of course
-const Ji = "solid",
-    Qi = "hazard",
-    $i = "deco",
-    ts = "portal",
-    es = "pad",
-    is = "ring",
-    ss = "trigger",
-    rs = "speed",
-    ns = "fly",
-    as = "cube"
+const OBJECT_TYPE_2_SOLID = "solid",
+    OBJECT_TYPE_2_HAZARD = "hazard",
+    OBJECT_TYPE_2_DECORATIVE = "deco",
+    OBJECT_TYPE_2_PORTAL = "portal",
+    OBJECT_TYPE_2_PAD = "pad",
+    OBJECT_TYPE_2_RING = "ring",
+    OBJECT_TYPE_2_TRIGGER = "trigger",
+    OBJECT_TYPE_2_SPEED = "speed",
+    OBJECT_TYPE_2_FLY = "fly",
+    OBJECT_TYPE_2_CUBE = "cube"
 
 export {
         SCREEN_WIDTH, SCREEN_HEIGHT, a, o, PLAYER_GAME_CAMERA_X, setScreenWidth, u, c, d, JUMP_VELOCITY, FLY_CEILING, g, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, worldYToScreenY, BLEND_ADD, BLEND_NORMAL, setBlendModeAdd, setBlendModeNormal,
-        Ji, Qi, $i, ts, es, is, ss, rs, ns, as
+        OBJECT_TYPE_2_SOLID, OBJECT_TYPE_2_HAZARD, OBJECT_TYPE_2_DECORATIVE, OBJECT_TYPE_2_PORTAL, OBJECT_TYPE_2_PAD, OBJECT_TYPE_2_RING, OBJECT_TYPE_2_TRIGGER, OBJECT_TYPE_2_SPEED, OBJECT_TYPE_2_FLY, OBJECT_TYPE_2_CUBE
     };

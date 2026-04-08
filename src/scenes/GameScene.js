@@ -257,7 +257,7 @@ class gameScene extends Phaser.Scene {
             'fontFamily': "Arial"
         }).setOrigin(0.5, 0.5).setAlpha(0.7).setResolution(2);
         this._infoPopup.add(_0x8233c2);
-        const _0x97b2a9 = this.add.text(_0xd1c6c2, 463, "Unauthorized copying, distribution, or hosting of this demo is prohibited.", {
+        const _0x97b2a9 = this.add.text(_0xd1c6c2, 463, "Unauthorized copying, distribution, or hosting of this demo is prohibited.", { // sorry robtop! please forgive me!
             'fontSize': "12px",
             'color': '#000000',
             'fontFamily': "Arial"
