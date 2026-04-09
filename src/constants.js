@@ -17,7 +17,7 @@ function setScreenWidth(newWidth) {
 const
     u = 1 / 240,
     c = 11.540004,
-    d = 0.9,
+    d = 0.9, // time scale
     JUMP_VELOCITY = 1.916398,
     FLY_CEILING = 600, // ceiling height when entering ship mode, from bottom of screen
     g = a,

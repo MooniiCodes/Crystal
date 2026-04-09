@@ -405,98 +405,155 @@ class gameScene extends Phaser.Scene {
 
             addSlider = (x, icon, value, onChange) => {
                 this._pauseContainer.add(this.add.image(x - 180 - 5, sliderY, "GJ_WebSheet", icon).setScale(1.2));
+                
                 const trackWidth = (grooveWidth - 8) * sliderScale,
-                    _0x34d1c1 = x - grooveWidth * sliderScale / 2 + 2.8,
-                    _0xe86505 = value * trackWidth,
-                    _0x43dbf4 = this.add.tileSprite(_0x34d1c1, sliderY, _0xe86505 > 0 ? _0xe86505 : 1, 11.2, "sliderBar").setOrigin(0, 0.5).setVisible(_0xe86505 > 0);
-                this._pauseContainer.add(_0x43dbf4);
-                const _0x4de88c = this.add.image(x, sliderY, 'GJ_WebSheet', "slidergroove.png").setScale(sliderScale);
-                this._pauseContainer.add(_0x4de88c);
-                const _0x106f98 = _0x34d1c1 + value * trackWidth,
-                    _0x441360 = this.add.image(_0x106f98, sliderY, 'GJ_WebSheet', "sliderthumb.png").setScale(sliderScale).setInteractive({
+                    trackX = x - grooveWidth * sliderScale / 2 + 2.8,
+                    trackVisualFill = value * trackWidth,
+                    
+                    fill = this.add.tileSprite(trackX, sliderY, trackVisualFill > 0 ? trackVisualFill : 1, 11.2, "sliderBar").setOrigin(0, 0.5).setVisible(trackVisualFill > 0);
+                this._pauseContainer.add(fill);
+                
+                // the outline
+                const sliderGroove = this.add.image(x, sliderY, 'GJ_WebSheet', "slidergroove.png").setScale(sliderScale);
+                this._pauseContainer.add(sliderGroove);
+                
+                const sliderThumbX = trackX + value * trackWidth,
+                    sliderThumb = this.add.image(sliderThumbX, sliderY, 'GJ_WebSheet', "sliderthumb.png").setScale(sliderScale).setInteractive({
                         'draggable': true,
                         'useHandCursor': true
                     });
-                this._pauseContainer.add(_0x441360), _0x441360.on("pointerdown", () => _0x441360.setTexture("GJ_WebSheet", "sliderthumbsel.png")), _0x441360.on("pointerup", () => _0x441360.setTexture("GJ_WebSheet", "sliderthumb.png")), _0x441360.on("pointerout", () => _0x441360.setTexture("GJ_WebSheet", 'sliderthumb.png')), _0x441360.on("drag", (_0x1ac7f7, _0x35b64c) => {
-                    _0x441360.x = Math.max(_0x34d1c1, Math.min(_0x34d1c1 + trackWidth, _0x35b64c));
-                    const _0x4a1663 = (_0x441360.x - _0x34d1c1) / trackWidth,
-                        _0x2bc46f = _0x4a1663 < 0.03 ? 0 : _0x4a1663;
-                    _0x43dbf4.width = Math.max(1, _0x2bc46f * trackWidth), _0x43dbf4.setVisible(_0x2bc46f > 0), onChange(_0x2bc46f);
+                this._pauseContainer.add(sliderThumb),
+                
+                // input
+                sliderThumb.on("pointerdown", () => sliderThumb.setTexture("GJ_WebSheet", "sliderthumbsel.png")),
+                sliderThumb.on("pointerup", () => sliderThumb.setTexture("GJ_WebSheet", "sliderthumb.png")),
+                sliderThumb.on("pointerout", () => sliderThumb.setTexture("GJ_WebSheet", 'sliderthumb.png')),
+                sliderThumb.on("drag", (pointer, dragX) => {
+                    sliderThumb.x = Math.max(trackX, Math.min(trackX + trackWidth, dragX));
+                    const alpha = (sliderThumb.x - trackX) / trackWidth,
+                        capped = alpha < 0.03 ? 0 : alpha; // cover elipses
+                    
+                    fill.width = Math.max(1, capped * trackWidth),
+                    fill.setVisible(capped > 0),
+                    onChange(capped);
                 });
             };
-        addSlider(containerX - 200, "gj_songIcon_001.png", this._audio.getUserMusicVolume(), _0x3ebce2 => this._audio.setUserMusicVolume(_0x3ebce2)), addSlider(containerX + 200, "GJ_sfxIcon_001.png", this._sfxVolume, _0x3224fb => {
-            this._sfxVolume = _0x3224fb, this.game.registry.set("userSfxVol", _0x3224fb);
+            
+        addSlider(containerX - 200, "gj_songIcon_001.png", this._audio.getUserMusicVolume(),
+            value => this._audio.setUserMusicVolume(value)
+        ),
+        addSlider(containerX + 200, "GJ_sfxIcon_001.png", this._sfxVolume, value => {
+            this._sfxVolume = value,
+            this.game.registry.set("userSfxVol", value);
         });
     }
     _buildInfoPopup() {
         if (this._infoPopup) return;
-        const _0xd1c6c2 = SCREEN_WIDTH / 2,
-            _0x4c3182 = 320,
-            _0xe2830b = 336;
+        
+        const centerX = SCREEN_WIDTH / 2,
+            centerY = 320,
+            panelHeight = 336;
         this._infoPopup = this.add.container(0, 0).setScrollFactor(0).setDepth(200);
-        const _0x249eb7 = this.add.rectangle(_0xd1c6c2, _0x4c3182, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 100 / 255);
-        _0x249eb7.setInteractive(), this._infoPopup.add(_0x249eb7);
-        const _0x14e46f = 0.325 * this.textures.get("GJ_square02").source[0].width,
-            _0x2c64c2 = this._drawScale9(_0xd1c6c2, _0x4c3182, 480, _0xe2830b, 'GJ_square02', _0x14e46f, 16777215, 1);
-        this._infoPopup.add(_0x2c64c2);
-        const _0x5a0f88 = this.add.image(_0xd1c6c2 - 240 + 20, 172, 'GJ_WebSheet', "GJ_closeBtn_001.png").setScale(0.8).setInteractive();
-        this._infoPopup.add(_0x5a0f88), this._expandHitArea(_0x5a0f88, 2), this._makeBouncyButton(_0x5a0f88, 0.8, () => this._closeInfoPopup());
-        let _0x32bf66 = 206;
-        const _0x302fca = this.add.bitmapText(_0xd1c6c2, _0x32bf66, "bigFont", "Credits", 40).setOrigin(0.5, 0.5);
-        this._infoPopup.add(_0x302fca), _0x32bf66 += 70;
-        const _0x22e4c7 = this.add.bitmapText(_0xd1c6c2, _0x32bf66, 'goldFont', "Made by RobTop Games", 40).setOrigin(0.5, 0.5).setScale(0.6);
-        this._infoPopup.add(_0x22e4c7), _0x32bf66 += 60;
-        const _0x534a78 = this.add.bitmapText(_0xd1c6c2, _0x32bf66, "goldFont", "Song: Stereo Madness", 40).setOrigin(0.5, 0.5).setScale(0.6);
-        this._infoPopup.add(_0x534a78), _0x32bf66 += 30;
-        const _0x3cdf70 = this.add.bitmapText(_0xd1c6c2 - 20, _0x32bf66, "goldFont", "by ForeverBound", 40).setOrigin(0.5, 0.5).setScale(0.6);
-        this._infoPopup.add(_0x3cdf70);
-        const _0x274c3e = _0xd1c6c2 - 10 + 0.6 * _0x3cdf70.width / 2,
-            _0x16b125 = this.add.image(_0x274c3e + 20 + 50 - 10, _0x32bf66 + 2, "GJ_WebSheet", 'gj_ytIcon_001.png').setScale(0.5).setInteractive();
-        this._infoPopup.add(_0x16b125), this._expandHitArea(_0x16b125, 2), this._makeBouncyButton(_0x16b125, 0.5, () => {
+        
+        // dim background
+        const dimBackground = this.add.rectangle(centerX, centerY, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 100 / 255);
+        dimBackground.setInteractive(),
+        this._infoPopup.add(dimBackground);
+        
+        // background panel
+        const corner = 0.325 * this.textures.get("GJ_square02").source[0].width,
+            backgroundPanel = this._drawScale9(centerX, centerY, 480, panelHeight, 'GJ_square02', corner, 16777215, 1);
+        this._infoPopup.add(backgroundPanel);
+
+        // close button
+        const closeButton = this.add.image(centerX - 240 + 20, 172, 'GJ_WebSheet', "GJ_closeBtn_001.png").setScale(0.8).setInteractive();
+        this._infoPopup.add(closeButton),
+        this._expandHitArea(closeButton, 2),
+        this._makeBouncyButton(closeButton, 0.8, () => this._closeInfoPopup());
+
+        // throw text on the panel
+        let infoYCursor = 206;
+        const creditsLabel = this.add.bitmapText(centerX, infoYCursor, "bigFont", "Credits", 40).setOrigin(0.5, 0.5);
+        this._infoPopup.add(creditsLabel), infoYCursor += 70;
+        const byRobTopLabel = this.add.bitmapText(centerX, infoYCursor, 'goldFont', "Made by RobTop Games", 40).setOrigin(0.5, 0.5).setScale(0.6);
+        this._infoPopup.add(byRobTopLabel), infoYCursor += 60;
+        const songLabel = this.add.bitmapText(centerX, infoYCursor, "goldFont", "Song: Stereo Madness", 40).setOrigin(0.5, 0.5).setScale(0.6);
+        this._infoPopup.add(songLabel), infoYCursor += 30;
+        const songArtistLabel = this.add.bitmapText(centerX - 20, infoYCursor, "goldFont", "by ForeverBound", 40).setOrigin(0.5, 0.5).setScale(0.6);
+        this._infoPopup.add(songArtistLabel);
+        // youtube link button
+        const youtubeX = centerX - 10 + 0.6 * songArtistLabel.width / 2,
+            youtubeSongButton = this.add.image(youtubeX + 20 + 50 - 10, infoYCursor + 2, "GJ_WebSheet", 'gj_ytIcon_001.png').setScale(0.5).setInteractive();
+        this._infoPopup.add(youtubeSongButton),
+        this._expandHitArea(youtubeSongButton, 2),
+        this._makeBouncyButton(youtubeSongButton, 0.5, () => {
             window.open("https://www.youtube.com/watch?v=JhKyKEDxo8Q", "_blank");
         });
-        const _0x8233c2 = this.add.text(_0xd1c6c2, 446, "© 2026 RobTop Games. All rights reserved.", {
+
+        // copyright text
+        const copyrightLabel = this.add.text(centerX, 446, "© 2026 RobTop Games. All rights reserved.", {
             'fontSize': '12px',
             'color': "#000000",
             'fontFamily': "Arial"
         }).setOrigin(0.5, 0.5).setAlpha(0.7).setResolution(2);
-        this._infoPopup.add(_0x8233c2);
-        const _0x97b2a9 = this.add.text(_0xd1c6c2, 463, "Unauthorized copying, distribution, or hosting of this demo is prohibited.", { // sorry robtop! please forgive me!
+        this._infoPopup.add(copyrightLabel);
+        
+        // distrubution warning
+        const distrubutionWarningLabel = this.add.text(centerX, 463, "Unauthorized copying, distribution, or hosting of this demo is prohibited.", { // sorry robtop! please forgive me!
             'fontSize': "12px",
             'color': '#000000',
             'fontFamily': "Arial"
         }).setOrigin(0.5, 0.5).setAlpha(0.7).setResolution(2);
-        this._infoPopup.add(_0x97b2a9);
+        this._infoPopup.add(distrubutionWarningLabel);
     }
     _closeInfoPopup() {
         this._infoPopup && (this._infoPopup.destroy(), this._infoPopup = null);
     }
-    _expandHitArea(_0x122213, _0x37180a) {
-        const _0x46ea45 = _0x122213.width,
-            _0x43b461 = _0x122213.height,
-            _0x960250 = _0x46ea45 * (_0x37180a - 1) / 2,
-            _0x3f88a1 = _0x43b461 * (_0x37180a - 1) / 2;
-        _0x122213.input.hitArea.setTo(-_0x960250, -_0x3f88a1, _0x46ea45 + 2 * _0x960250, _0x43b461 + 2 * _0x3f88a1);
+    /* ui helpers */
+    // expands the hit area of an interactive image by a multiplier
+    _expandHitArea(image, multiplier) {
+        const width = image.width,
+            height = image.height,
+            pX = width * (multiplier - 1) / 2,
+            pY = height * (multiplier - 1) / 2;
+        image.input.hitArea.setTo(-pX, -pY, width + 2 * pX, height + 2 * pY);
     }
-    _makeBouncyButton(_0x4b8c6e, _0x57b645, _0x2f13d0, _0xda0c21) {
-        const _0x396ca0 = 1.26 * _0x57b645;
-        return _0x4b8c6e.on("pointerdown", () => {
-            _0xda0c21 && !_0xda0c21() || (_0x4b8c6e._pressed = true, this.tweens.killTweensOf(_0x4b8c6e, "scale"), this.tweens.add({
-                'targets': _0x4b8c6e,
-                'scale': _0x396ca0,
-                duration: 300,
-                ease: "Bounce.Out"
-            }));
-        }), _0x4b8c6e.on("pointerout", () => {
-            _0x4b8c6e._pressed && (_0x4b8c6e._pressed = false, this.tweens.killTweensOf(_0x4b8c6e, "scale"), this.tweens.add({
-                'targets': _0x4b8c6e,
-                'scale': _0x57b645,
-                duration: 400,
-                ease: "Bounce.Out"
-            }));
-        }), _0x4b8c6e.on('pointerup', () => {
-            _0x4b8c6e._pressed && (_0x4b8c6e._pressed = false, this.tweens.killTweensOf(_0x4b8c6e, "scale"), _0x4b8c6e.setScale(_0x57b645), _0x2f13d0());
-        }), _0x4b8c6e;
+    // animates a button with a bounce effect when pressed, and adds callback
+    _makeBouncyButton(image, baseScale, onClick, isActiveCheck) {
+        const pressedScale = 1.26 * baseScale;
+        return image.on("pointerdown", () => {
+            isActiveCheck && !isActiveCheck() || (
+                image._pressed = true,
+                this.tweens.killTweensOf(image, "scale"), this.tweens.add({
+                    targets: image,
+                    scale: pressedScale,
+                    duration: 300,
+                    ease: "Bounce.Out"
+                })
+            );
+        }),
+        image.on("pointerout", () => {
+            image._pressed && (
+                image._pressed = false,
+                this.tweens.killTweensOf(image, "scale"),
+                this.tweens.add({
+                    targets: image,
+                    scale: baseScale,
+                    duration: 400,
+                    ease: "Bounce.Out"
+                })
+            );
+        }),
+        image.on('pointerup', () => {
+            image._pressed && (
+                image._pressed = false,
+                this.tweens.killTweensOf(image, "scale"),
+                image.setScale(baseScale),
+                onClick()
+            );
+        }),
+        // return
+        image;
     }
     _toggleFullscreen() {
         if (this.scale.isFullscreen) this.scale.stopFullscreen();
@@ -504,372 +561,741 @@ class gameScene extends Phaser.Scene {
             this.scale.startFullscreen();
             try {
                 screen.orientation.lock("landscape").catch(() => {});
-            } catch (_0x22124f) {}
+            } catch (any) {}
         }
     }
-    _drawScale9(_0x147730, _0x4c8cbf, _0x58d136, _0x1ac13a, _0x24a44b, _0x143641, _0x590eba, _0x206735) {
-        const _0x4080b2 = this.add.container(_0x147730, _0x4c8cbf),
-            _0x2522df = this.textures.get(_0x24a44b),
-            _0x401ec1 = _0x2522df.source[0],
-            _0x3f82ec = _0x401ec1.width,
-            _0x294746 = _0x401ec1.height,
-            _0x2b09f1 = _0x58d136 - 2 * _0x143641,
-            _0x990515 = _0x1ac13a - 2 * _0x143641,
-            _0x1d065e = [{
-                'sx': 0,
-                'sy': 0,
-                'sw': _0x143641,
-                'sh': _0x143641,
-                'dx': -_0x58d136 / 2,
-                'dy': -_0x1ac13a / 2,
-                'dw': _0x143641,
-                'dh': _0x143641
-            }, {
-                'sx': _0x143641,
-                'sy': 0,
-                'sw': _0x3f82ec - 2 * _0x143641,
-                'sh': _0x143641,
-                'dx': -_0x58d136 / 2 + _0x143641,
-                'dy': -_0x1ac13a / 2,
-                'dw': _0x2b09f1,
-                'dh': _0x143641
-            }, {
-                'sx': _0x3f82ec - _0x143641,
-                'sy': 0,
-                'sw': _0x143641,
-                'sh': _0x143641,
-                'dx': _0x58d136 / 2 - _0x143641,
-                'dy': -_0x1ac13a / 2,
-                'dw': _0x143641,
-                'dh': _0x143641
-            }, {
-                'sx': 0,
-                'sy': _0x143641,
-                'sw': _0x143641,
-                'sh': _0x294746 - 2 * _0x143641,
-                'dx': -_0x58d136 / 2,
-                'dy': -_0x1ac13a / 2 + _0x143641,
-                'dw': _0x143641,
-                'dh': _0x990515
-            }, {
-                'sx': _0x143641,
-                'sy': _0x143641,
-                'sw': _0x3f82ec - 2 * _0x143641,
-                'sh': _0x294746 - 2 * _0x143641,
-                'dx': -_0x58d136 / 2 + _0x143641,
-                'dy': -_0x1ac13a / 2 + _0x143641,
-                'dw': _0x2b09f1,
-                'dh': _0x990515
-            }, {
-                'sx': _0x3f82ec - _0x143641,
-                'sy': _0x143641,
-                'sw': _0x143641,
-                'sh': _0x294746 - 2 * _0x143641,
-                'dx': _0x58d136 / 2 - _0x143641,
-                'dy': -_0x1ac13a / 2 + _0x143641,
-                'dw': _0x143641,
-                'dh': _0x990515
-            }, {
-                'sx': 0,
-                'sy': _0x294746 - _0x143641,
-                'sw': _0x143641,
-                'sh': _0x143641,
-                'dx': -_0x58d136 / 2,
-                'dy': _0x1ac13a / 2 - _0x143641,
-                'dw': _0x143641,
-                'dh': _0x143641
-            }, {
-                'sx': _0x143641,
-                'sy': _0x294746 - _0x143641,
-                'sw': _0x3f82ec - 2 * _0x143641,
-                'sh': _0x143641,
-                'dx': -_0x58d136 / 2 + _0x143641,
-                'dy': _0x1ac13a / 2 - _0x143641,
-                'dw': _0x2b09f1,
-                'dh': _0x143641
-            }, {
-                'sx': _0x3f82ec - _0x143641,
-                'sy': _0x294746 - _0x143641,
-                'sw': _0x143641,
-                'sh': _0x143641,
-                'dx': _0x58d136 / 2 - _0x143641,
-                'dy': _0x1ac13a / 2 - _0x143641,
-                'dw': _0x143641,
-                'dh': _0x143641
-            }];
-        for (let _0x24f653 = 0; _0x24f653 < _0x1d065e.length; _0x24f653++) {
-            const _0x1fa377 = _0x1d065e[_0x24f653],
-                _0xade586 = "_s9_" + _0x24f653;
-            _0x2522df.has(_0xade586) || _0x2522df.add(_0xade586, 0, _0x1fa377.sx, _0x1fa377.sy, _0x1fa377.sw, _0x1fa377.sh);
-            const _0x1145e5 = this.add.image(_0x1fa377.dx, _0x1fa377.dy, _0x24a44b, _0xade586).setOrigin(0, 0).setDisplaySize(_0x1fa377.dw, _0x1fa377.dh);
-            undefined !== _0x590eba && _0x1145e5.setTint(_0x590eba), undefined !== _0x206735 && _0x1145e5.setAlpha(_0x206735), _0x4080b2.add(_0x1145e5);
+    // draws a 9 slice image
+    _drawScale9(x, y, width, height, textureKey, cornerSize, tint, alpha) {
+        const container = this.add.container(x, y),
+            texture = this.textures.get(textureKey),
+            source = texture.source[0],
+            sourceWidth = source.width,
+            sourceHeight = source.height,
+            mainWidth = width - 2 * cornerSize,
+            mainHeight = height - 2 * cornerSize,
+
+            slices = [
+                {
+                    sx: 0,
+                    sy: 0,
+                    sw: cornerSize,
+                    sh: cornerSize,
+                    dx: -width / 2,
+                    dy: -height / 2,
+                    dw: cornerSize,
+                    dh: cornerSize
+                },
+                {
+                    sx: cornerSize,
+                    sy: 0,
+                    sw: sourceWidth - 2 * cornerSize,
+                    sh: cornerSize,
+                    dx: -width / 2 + cornerSize,
+                    dy: -height / 2,
+                    dw: mainWidth,
+                    dh: cornerSize
+                },
+                {
+                    sx: sourceWidth - cornerSize,
+                    sy: 0,
+                    sw: cornerSize,
+                    sh: cornerSize,
+                    dx: width / 2 - cornerSize,
+                    dy: -height / 2,
+                    dw: cornerSize,
+                    dh: cornerSize
+                },
+                {
+                    sx: 0,
+                    sy: cornerSize,
+                    sw: cornerSize,
+                    sh: sourceHeight - 2 * cornerSize,
+                    dx: -width / 2,
+                    dy: -height / 2 + cornerSize,
+                    dw: cornerSize,
+                    dh: mainHeight
+                },
+                {
+                    sx: cornerSize,
+                    sy: cornerSize,
+                    sw: sourceWidth - 2 * cornerSize,
+                    sh: sourceHeight - 2 * cornerSize,
+                    dx: -width / 2 + cornerSize,
+                    dy: -height / 2 + cornerSize,
+                    dw: mainWidth,
+                    dh: mainHeight
+                },
+                {
+                    sx: sourceWidth - cornerSize,
+                    sy: cornerSize,
+                    sw: cornerSize,
+                    sh: sourceHeight - 2 * cornerSize,
+                    dx: width / 2 - cornerSize,
+                    dy: -height / 2 + cornerSize,
+                    dw: cornerSize,
+                    dh: mainHeight
+                },
+                {
+                    sx: 0,
+                    sy: sourceHeight - cornerSize,
+                    sw: cornerSize,
+                    sh: cornerSize,
+                    dx: -width / 2,
+                    dy: height / 2 - cornerSize,
+                    dw: cornerSize,
+                    dh: cornerSize
+                },
+                {
+                    sx: cornerSize,
+                    sy: sourceHeight - cornerSize,
+                    sw: sourceWidth - 2 * cornerSize,
+                    sh: cornerSize,
+                    dx: -width / 2 + cornerSize,
+                    dy: height / 2 - cornerSize,
+                    dw: mainWidth,
+                    dh: cornerSize
+                },
+                {
+                    sx: sourceWidth - cornerSize,
+                    sy: sourceHeight - cornerSize,
+                    sw: cornerSize,
+                    sh: cornerSize,
+                    dx: width / 2 - cornerSize,
+                    dy: height / 2 - cornerSize,
+                    dw: cornerSize,
+                    dh: cornerSize
+                }
+            ];
+        
+        for (let i = 0; i < slices.length; i++) {
+            const slice = slices[i],
+                key = "_s9_" + i;
+            texture.has(key) || texture.add(key, 0, slice.sx, slice.sy, slice.sw, slice.sh);
+            const piece = this.add.image(slice.dx, slice.dy, textureKey, key).setOrigin(0, 0).setDisplaySize(slice.dw, slice.dh);
+            undefined !== tint && piece.setTint(tint),
+            undefined !== alpha && piece.setAlpha(alpha),
+            container.add(piece);
         }
-        return _0x4080b2;
+        return container;
     }
+    /* other */
+
     _startGame() {
         if (!this._menuActive) return;
-        if (this._menuActive = false, this._slideIn = true, this._menuGlitter && (this._menuGlitter.destroy(), this._menuGlitter = null), this._playBtn && (this.tweens.killTweensOf(this._playBtn), this.tweens.add({
-                'targets': this._playBtn,
-                'scale': 0.01,
-                duration: 200,
-                ease: "Quad.In",
-                onComplete: () => {
-                    this._playBtn.destroy(), this._playBtn = null;
-                }
-            })), this._robLogo && this.tweens.add({
-                'targets': this._robLogo,
-                'y': SCREEN_HEIGHT + this._robLogo.height,
+        if (
+            this._menuActive = false,
+            this._slideIn = true,
+            
+            // destroy menu glitter
+            this._menuGlitter && (
+                this._menuGlitter.destroy(),
+                this._menuGlitter = null
+            ),
+            
+            // destroy play button with an animation
+            this._playBtn && (
+                this.tweens.killTweensOf(this._playBtn),
+                this.tweens.add({
+                    targets: this._playBtn,
+                    scale: 0.01,
+                    duration: 200,
+                    ease: "Quad.In",
+                    onComplete: () => {
+                        this._playBtn.destroy(), 
+                        this._playBtn = null;
+                    }
+                })
+            ),
+            
+            // destroy menu items with an animation
+            this._robLogo && this.tweens.add({
+                targets: this._robLogo,
+                y: SCREEN_HEIGHT + this._robLogo.height,
                 duration: 300,
                 ease: "Quad.In",
                 onComplete: () => {
-                    this._robLogo.destroy(), this._robLogo = null;
+                    this._robLogo.destroy(), 
+                    this._robLogo = null;
                 }
-            }), this._copyrightText && this.tweens.add({
-                'targets': this._copyrightText,
-                'y': 680,
+            }),
+            this._copyrightText && this.tweens.add({
+                targets: this._copyrightText,
+                y: 680,
                 duration: 300,
                 ease: 'Quad.In',
                 onComplete: () => {
-                    this._copyrightText.destroy(), this._copyrightText = null;
+                    this._copyrightText.destroy(), 
+                    this._copyrightText = null;
                 }
-            }), this._menuFsBtn && this.tweens.add({
-                'targets': this._menuFsBtn,
-                'y': -this._menuFsBtn.height,
+            }),
+            this._menuFsBtn && this.tweens.add({
+                targets: this._menuFsBtn,
+                y: -this._menuFsBtn.height,
                 duration: 300,
                 ease: "Quad.In",
                 onComplete: () => {
-                    this._menuFsBtn.destroy(), this._menuFsBtn = null;
+                    this._menuFsBtn.destroy(), 
+                    this._menuFsBtn = null;
                 }
-            }), this._menuInfoBtn && this.tweens.add({
-                'targets': this._menuInfoBtn,
-                'y': -this._menuInfoBtn.height,
+            }),
+            this._menuInfoBtn && this.tweens.add({
+                targets: this._menuInfoBtn,
+                y: -this._menuInfoBtn.height,
                 duration: 300,
                 ease: 'Quad.In',
                 onComplete: () => {
-                    this._menuInfoBtn.destroy(), this._menuInfoBtn = null;
+                    this._menuInfoBtn.destroy(),
+                    this._menuInfoBtn = null;
                 }
-            }), this._closeInfoPopup(), this._tryMeImg && this.tweens.add({
-                'targets': this._tryMeImg,
-                'y': -this._tryMeImg.height,
+            }),
+            this._closeInfoPopup(), this._tryMeImg && this.tweens.add({
+                targets: this._tryMeImg,
+                y: -this._tryMeImg.height,
                 duration: 300,
                 ease: "Quad.In",
                 onComplete: () => {
-                    this._tryMeImg.destroy(), this._tryMeImg = null;
+                    this._tryMeImg.destroy(),
+                    this._tryMeImg = null;
                 }
-            }), this._downloadBtns) {
-            for (const _0xaa3a95 of this._downloadBtns) this.tweens.killTweensOf(_0xaa3a95), this.tweens.add({
-                'targets': _0xaa3a95,
-                'y': SCREEN_HEIGHT + _0xaa3a95.height,
-                duration: 300,
-                ease: "Quad.In",
-                onComplete: () => _0xaa3a95.destroy()
-            });
+            }),
+            
+        // if
+            this._downloadBtns) {
+            for (const button of this._downloadBtns)
+                this.tweens.killTweensOf(button),
+                this.tweens.add({
+                    targets: button,
+                    y: SCREEN_HEIGHT + button.height,
+                    duration: 300,
+                    ease: "Quad.In",
+                    onComplete: () => button.destroy()
+                }
+            );
             this._downloadBtns = null;
         }
+
         this._logo && this.tweens.add({
-            'targets': this._logo,
-            'y': -this._logo.height,
+            targets: this._logo,
+            y: -this._logo.height,
             duration: 300,
             ease: "Quad.In",
             onComplete: () => {
-                this._logo.destroy(), this._logo = null;
+                this._logo.destroy(),
+                this._logo = null;
             }
-        }), this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef._v = this._cameraX, this._prevCameraX = this._cameraX;
-        const _0x22e36e = this._cameraX - (this._menuCameraX || 0);
-        this._level.shiftGroundTiles(_0x22e36e), this._playerWorldX = this._cameraX, this._state.y = 30, this._state.onGround = true, this._level.additiveContainer.setVisible(true), this._level.container.setVisible(true), this._level.topContainer.setVisible(true), this._player.setCubeVisible(true), this._player.reset(), this._attemptsLabel.setVisible(this._attempts > 1), this._positionAttemptsLabel();
+        }),
+        
+        this._cameraX = -PLAYER_GAME_CAMERA_X,
+        this._cameraY = 0,
+        this._cameraXRef._v = this._cameraX,
+        this._prevCameraX = this._cameraX;
+
+        const groundOffset = this._cameraX - (this._menuCameraX || 0);
+        this._level.shiftGroundTiles(groundOffset),
+        this._playerWorldX = this._cameraX,
+        this._state.y = 30,
+        this._state.onGround = true,
+
+        this._level.additiveContainer.setVisible(true),
+        this._level.container.setVisible(true),
+        this._level.topContainer.setVisible(true),
+
+        this._player.setCubeVisible(true),
+        this._player.reset(),
+        this._attemptsLabel.setVisible(this._attempts > 1),
+        
+        this._positionAttemptsLabel();
     }
     _pushButton() {
-        if (this._menuActive) return this._audio.playEffect("playSound_01", {
-            'volume': 1
-        }), void this._startGame();
-        this._slideIn || this._state.isDead || (this._state.upKeyDown = true, this._state.upKeyPressed = true, !this._state.isFlying && this._state.canJump && (this._player.updateJump(0), this._totalJumps++));
+        if (this._menuActive)
+            return this._audio.playEffect("playSound_01", {
+                'volume': 1
+            }),
+            void this._startGame();
+
+        this._slideIn || this._state.isDead || (
+            this._state.upKeyDown = true,
+            this._state.upKeyPressed = true,
+            !this._state.isFlying && this._state.canJump && (
+                this._player.updateJump(0),
+                this._totalJumps++
+            ));
     }
     _releaseButton() {
-        this._state.upKeyDown = false, this._state.upKeyPressed = false;
+        this._state.upKeyDown = false,
+        this._state.upKeyPressed = false;
     }
     _positionMenuItems() {
-        const _0x1e5db8 = SCREEN_WIDTH / 2;
-        if (this._logo && (this._logo.x = _0x1e5db8), this._menuInfoBtn && (this._menuInfoBtn.x = SCREEN_WIDTH - 30 - 3), this._copyrightText && (this._copyrightText.x = SCREEN_WIDTH - 20), this._tryMeImg && (this._tryMeImg.x = _0x1e5db8 + 175), this._menuGlitter && (this._menuGlitter.x = _0x1e5db8, this._menuGlitter.y = 320), this._playBtn && (this._playBtn.x = _0x1e5db8, this.tweens.killTweensOf(this._playBtn, 'y'), this._playBtn.y = 320, this.tweens.add({
-                'targets': this._playBtn,
-                'y': 324,
-                duration: 750,
-                ease: 'Quad.InOut',
-                'yoyo': true,
-                'repeat': -1
-            })), this._downloadBtns) {
-            const _0x285ef7 = SCREEN_WIDTH - 130,
-                _0x4a8263 = 555,
-                _0x23d03e = 210;
-            for (let _0x1bdfae = 0; _0x1bdfae < this._downloadBtns.length; _0x1bdfae++) this._downloadBtns[_0x1bdfae].setPosition(_0x285ef7 - _0x1bdfae * _0x23d03e, _0x4a8263);
+        const centerX = SCREEN_WIDTH / 2;
+        if (
+            this._logo && (
+                this._logo.x = centerX
+            ),
+            this._menuInfoBtn && (
+                this._menuInfoBtn.x = SCREEN_WIDTH - 30 - 3
+            ),
+            this._copyrightText && (
+                this._copyrightText.x = SCREEN_WIDTH - 20
+            ),
+            this._tryMeImg && (
+                this._tryMeImg.x = centerX + 175
+            ),
+            this._menuGlitter && (
+                this._menuGlitter.x = centerX,
+                this._menuGlitter.y = 320
+            ),
+            this._playBtn && (
+                this._playBtn.x = centerX,
+                this.tweens.killTweensOf(this._playBtn, 'y'),
+                this._playBtn.y = 320,
+                this.tweens.add({
+                    targets: this._playBtn,
+                    y: 324,
+                    duration: 750,
+                    ease: 'Quad.InOut',
+                    yoyo: true,
+                    repeat: -1
+                })
+            ),
+            
+        // if
+            this._downloadBtns) {
+            const right = SCREEN_WIDTH - 130,
+                y = 555,
+                spacing = 210;
+            for (let i = 0; i < this._downloadBtns.length; i++)
+                this._downloadBtns[i].setPosition(right - i * spacing, y);
         }
     }
     _positionAttemptsLabel() {
-        let _0xdbdd91 = this._cameraX + SCREEN_WIDTH / 2;
-        this._attempts > 1 && (_0xdbdd91 += 100), this._attemptsLabel.setPosition(_0xdbdd91, 150);
+        let x = this._cameraX + SCREEN_WIDTH / 2;
+        this._attempts > 1 && (x += 100),
+        this._attemptsLabel.setPosition(x, 150);
     }
     _resetGameplayState() {
-        this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef._v = -PLAYER_GAME_CAMERA_X, this._prevCameraX = -PLAYER_GAME_CAMERA_X, this._playerWorldX = 0, this._deltaBuffer = 0, this._deathTimer = 0, this._deathSoundPlayed = false, this._newBestShown = false, this._hadNewBest = false, this._levelWon = false, this._endCameraOverride = false, this._endCamTween = null, this._spaceWasDown = false;
+        this._cameraX = -PLAYER_GAME_CAMERA_X,
+        this._cameraY = 0,
+        this._cameraXRef._v = -PLAYER_GAME_CAMERA_X,
+        this._prevCameraX = -PLAYER_GAME_CAMERA_X,
+        this._playerWorldX = 0,
+        this._deltaBuffer = 0,
+        this._deathTimer = 0,
+        this._deathSoundPlayed = false,
+        this._newBestShown = false,
+        this._hadNewBest = false,
+        this._levelWon = false,
+        this._endCameraOverride = false,
+        this._endCamTween = null,
+        this._spaceWasDown = false;
     }
     _restartLevel() {
         this._attempts++;
-        const _0x2ba78a = this._cameraX;
-        this._resetGameplayState(), this._state.reset(), this._player.reset(), this._glitterEmitter.stop(), this._level.resetObjects(), this._level.shiftGroundTiles(this._cameraX - _0x2ba78a), this._level.resetGroundState(), this._level.resetColorTriggers(), this._level.resetEnterEffectTriggers(), this._level.resetVisibility(), this._colorManager.reset(), this._audio.reset(), this._audio.startMusic(), this._paused = false, this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null), this._pauseBtn.setVisible(true).setAlpha(75 / 255), this._attemptsLabel.setText("Attempt " + this._attempts), this._attemptsLabel.setVisible(true), this._positionAttemptsLabel();
+        const previousCameraX = this._cameraX;
+        this._resetGameplayState(),
+        this._state.reset(),
+        this._player.reset(),
+        this._glitterEmitter.stop(),
+        this._level.resetObjects(),
+        this._level.shiftGroundTiles(this._cameraX - previousCameraX),
+        this._level.resetGroundState(),
+        this._level.resetColorTriggers(),
+        this._level.resetEnterEffectTriggers(),
+        this._level.resetVisibility(),
+        this._colorManager.reset(),
+        this._audio.reset(),
+        this._audio.startMusic(),
+        this._paused = false,
+        this._pauseContainer && (
+            this._pauseContainer.destroy(),
+            this._pauseContainer = null
+        ),
+        this._pauseBtn.setVisible(true).setAlpha(75 / 255),
+        this._attemptsLabel.setText("Attempt " + this._attempts),
+        this._attemptsLabel.setVisible(true),
+        this._positionAttemptsLabel();
     }
-    _onFullscreenChange(_0x310c5b) {
-        _0x310c5b || setScreenWidth(1138), this.time.delayedCall(200, () => this._applyScreenResize());
+    _onFullscreenChange(isFullscreen) {
+        isFullscreen || setScreenWidth(1138),
+
+        this.time.delayedCall(200, () => this._applyScreenResize());
     }
     _applyScreenResize() {
         if (this.scale.isFullscreen) {
-            const _0x5bc34b = window.innerWidth / window.innerHeight;
-            setScreenWidth(Math.round(SCREEN_HEIGHT * _0x5bc34b));
+            const ratio = window.innerWidth / window.innerHeight;
+            setScreenWidth(Math.round(SCREEN_HEIGHT * ratio));
         }
-        if (this.scale.setGameSize(SCREEN_WIDTH, SCREEN_HEIGHT), this.scale.refresh(), this._bg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT), this._pauseBtn.x = SCREEN_WIDTH - 30, this._menuActive && this._positionMenuItems(), this._paused && this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null, this._buildPauseOverlay()), this._level.resizeScreen(), !this._menuActive) {
-            const _0x56287b = this._cameraX;
-            this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X, this._cameraXRef._v = this._cameraX, this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._level.shiftGroundTiles(this._cameraX - _0x56287b), this._level.updateGroundTiles(this._cameraY), this._level.updateVisibility(this._cameraX), this._level.applyEnterEffects(this._cameraX);
-            const _0xde8a1a = this._playerWorldX - this._cameraX;
-            this._player.syncSprites(this._cameraX, this._cameraY, 0, _0xde8a1a);
+        if (
+            this.scale.setGameSize(SCREEN_WIDTH, SCREEN_HEIGHT),
+            this.scale.refresh(),
+            this._bg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT),
+            this._pauseBtn.x = SCREEN_WIDTH - 30,
+            
+            this._menuActive && this._positionMenuItems(),
+            this._paused && this._pauseContainer && (
+                this._pauseContainer.destroy(),
+                this._pauseContainer = null,
+                this._buildPauseOverlay()
+            ),
+            this._level.resizeScreen(),
+        // if
+            !this._menuActive) {
+            const previousX = this._cameraX;
+            this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X,
+            this._cameraXRef._v = this._cameraX,
+            this._level.additiveContainer.x = -this._cameraX,
+            this._level.additiveContainer.y = this._cameraY,
+            this._level.container.x = -this._cameraX,
+            this._level.container.y = this._cameraY,
+            this._level.topContainer.x = -this._cameraX,
+            this._level.topContainer.y = this._cameraY,
+            this._level.shiftGroundTiles(this._cameraX - previousX),
+            this._level.updateGroundTiles(this._cameraY),
+            this._level.updateVisibility(this._cameraX), 
+            this._level.applyEnterEffects(this._cameraX);
+
+            const syncX = this._playerWorldX - this._cameraX;
+            this._player.syncSprites(this._cameraX, this._cameraY, 0, syncX);
         }
     }
     _updateBackground() {
-        this._bg.tilePositionX += (this._cameraX - this._prevCameraX) * this._bgSpeedX, this._prevCameraX = this._cameraX, this._bg.tilePositionY = this._bgInitY - this._cameraY * this._bgSpeedY;
+        this._bg.tilePositionX += (this._cameraX - this._prevCameraX) * this._bgSpeedX,
+        this._prevCameraX = this._cameraX,
+        this._bg.tilePositionY = this._bgInitY - this._cameraY * this._bgSpeedY;
     }
-    _updateCameraY(_0xc7c517) {
-        let _0x29ed62 = this._cameraY,
-            _0x1a27be = _0x29ed62;
-        if (null !== this._level.flyCameraTarget) _0x1a27be = this._level.flyCameraTarget;
+    _updateCameraY(speedFactor) {
+        let cameraY = this._cameraY,
+            targetY = cameraY;
+
+        if (null !== this._level.flyCameraTarget)
+            targetY = this._level.flyCameraTarget;
         else {
-            let _0x2bc8fb = this._state.y,
-                _0x259956 = 140,
-                _0x5025ec = 80,
-                _0x1f7976 = _0x29ed62 - o + 320;
-            _0x2bc8fb > _0x1f7976 + _0x259956 ? _0x1a27be = _0x2bc8fb - 320 - _0x259956 + o : _0x2bc8fb < _0x1f7976 - _0x5025ec && (_0x1a27be = _0x2bc8fb - 320 + _0x5025ec + o);
-        }(_0x1a27be < 0 && (_0x1a27be = 0), 0 !== _0xc7c517) && (_0x29ed62 += (_0x1a27be - _0x29ed62) / (10 / _0xc7c517), (_0x29ed62 < 0 && (_0x29ed62 = 0), this._cameraY = _0x29ed62));
-    }
-    _quantizeDelta(_0x654f39) {
-        let _0x578d1b = _0x654f39 / 1000 + this._deltaBuffer,
-            _0x53e02e = Math.round(_0x578d1b / u);
-        _0x53e02e < 0 && (_0x53e02e = 0), _0x53e02e > 60 && (_0x53e02e = 60);
-        let _0xd8019e = _0x53e02e * u;
-        return this._deltaBuffer = _0x578d1b - _0xd8019e, 60 * _0xd8019e;
-    }
-    update(_0x54fa47, _0xaf2ffd) {
-        if (this._fpsAccum += _0xaf2ffd, this._fpsFrames++, this._fpsAccum >= 250 && (this._fpsText.setText(Math.round(1000 * this._fpsFrames / this._fpsAccum)), this._fpsAccum = 0, this._fpsFrames = 0), this._paused) return void(this._deltaBuffer = 0);
-        if (this._menuActive) {
-            if ((this._spaceKey.isDown || this._upKey.isDown) && !this._spaceWasDown) return this._spaceWasDown = true, this._audio.playEffect("playSound_01", {
-                'volume': 1
-            }), void this._startGame();
-            this._spaceWasDown = this._spaceKey.isDown || this._upKey.isDown;
-            const _0x1e9cf4 = Math.min(_0xaf2ffd / 1000 * 60, 2),
-                _0x2e19f3 = 0.25;
-            this._menuCameraX = (this._menuCameraX || 0) + _0x1e9cf4 * c * d * _0x2e19f3;
-            const _0x38afac = this._cameraX;
-            return this._cameraX = this._menuCameraX, this._updateBackground(), this._cameraX = _0x38afac, this._prevCameraX = this._menuCameraX, this._cameraXRef._v = this._menuCameraX, this._level.stepGroundAnimation(_0xaf2ffd / 1000), void this._level.updateGroundTiles(this._cameraY);
+            let py = this._state.y,
+                upper = 140,
+                lower = 80,
+                worldY = cameraY - o + 320;
+            
+            py > worldY + upper
+                ? targetY = py - 320 - upper + o
+            : py < worldY - lower && (
+                targetY = py - 320 + lower + o
+            );
         }
+        (
+            targetY < 0 && (
+                targetY = 0
+            ),
+            
+        // if
+            0 !== speedFactor) && (
+            cameraY += (targetY - cameraY) / (10 / speedFactor),
+            (
+                cameraY < 0 && (cameraY = 0),
+                this._cameraY = cameraY
+            )
+        );
+    }
+    // returns the quantized delta to be used for movement, and stores the leftover in a buffer for the next frame
+    _quantizeDelta(deltaMs) {
+        let total = deltaMs / 1000 + this._deltaBuffer,
+            steps = Math.round(total / u);
+        
+        steps < 0 && (steps = 0),
+        steps > 60 && (steps = 60);
+            
+        let used = steps * u;
+        return this._deltaBuffer = total - used,
+            
+            60 * used;
+    }
+    // main update loop
+    update(time, deltaMs) {
+        // fps counter
+        if (
+            this._fpsAccum += deltaMs,
+            this._fpsFrames++,
+            this._fpsAccum >= 250 && (
+                this._fpsText.setText(Math.round(1000 * this._fpsFrames / this._fpsAccum)),
+                this._fpsAccum = 0,
+                this._fpsFrames = 0
+            ),
+            
+        // if
+            this._paused)
+            return void(this._deltaBuffer = 0);
+
+        // title screen
+        if (this._menuActive) {
+            if ((this._spaceKey.isDown || this._upKey.isDown) && !this._spaceWasDown)
+                return this._spaceWasDown = true,
+                    this._audio.playEffect("playSound_01", {
+                        volume: 1
+                    }),
+                    void this._startGame();
+
+            this._spaceWasDown = this._spaceKey.isDown || this._upKey.isDown;
+            const frames = Math.min(deltaMs / 1000 * 60, 2),
+                titleScreenSpeed = 0.25;
+            this._menuCameraX = (this._menuCameraX || 0) + frames * c * d * titleScreenSpeed;
+            const cameraX = this._cameraX;
+            return this._cameraX = this._menuCameraX,
+                this._updateBackground(),
+                this._cameraX = cameraX,
+                this._prevCameraX = this._menuCameraX,
+                this._cameraXRef._v = this._menuCameraX,
+                this._level.stepGroundAnimation(deltaMs / 1000),
+                void this._level.updateGroundTiles(this._cameraY);
+        }
+        // the slide into gameplay effect
         if (this._slideIn) {
-            const _0x3c9318 = this._quantizeDelta(_0xaf2ffd);
-            this._playerWorldX += _0x3c9318 * c * d;
-            const _0x4f81e7 = 0.25;
-            this._slideGroundX = (this._slideGroundX || this._cameraX) + _0x3c9318 * c * d * _0x4f81e7, this._cameraXRef._v = this._slideGroundX;
-            const _0x95cc4f = this._playerWorldX - this._cameraX;
-            if (this._player.updateGroundRotation(_0x3c9318 * d), this._player.syncSprites(this._cameraX, this._cameraY, _0xaf2ffd / 1000, _0x95cc4f), this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._level.updateVisibility(this._cameraX), this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._playerWorldX >= 0) {
-                this._slideIn = false, this._deltaBuffer = 0, this._playerWorldX = 0, this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X, this._cameraXRef._v = this._cameraX;
-                const _0x490749 = this._cameraX - this._slideGroundX;
-                this._level.shiftGroundTiles(_0x490749), this._firstPlay && (this._firstPlay = false, this._audio.startMusic()), this._pauseBtn.setVisible(true).setAlpha(0), this.tweens.add({
-                    'targets': this._pauseBtn,
-                    'alpha': 75 / 255,
+            const frames = this._quantizeDelta(deltaMs);
+            this._playerWorldX += frames * c * d;
+            const groundMultiplier = 0.25;
+            this._slideGroundX = (this._slideGroundX || this._cameraX) + frames * c * d * groundMultiplier, this._cameraXRef._v = this._slideGroundX;
+            const playerScreenX = this._playerWorldX - this._cameraX;
+            if (
+                this._player.updateGroundRotation(frames * d),
+                this._player.syncSprites(this._cameraX, this._cameraY, deltaMs / 1000, playerScreenX),
+                this._level.additiveContainer.x = -this._cameraX,
+                this._level.additiveContainer.y = this._cameraY,
+                this._level.container.x = -this._cameraX,
+                this._level.container.y = this._cameraY,
+                this._level.topContainer.x = -this._cameraX, 
+                this._level.topContainer.y = this._cameraY, 
+                this._level.updateVisibility(this._cameraX), 
+                this._updateBackground(), 
+                this._level.stepGroundAnimation(deltaMs / 1000), 
+                this._level.updateGroundTiles(this._cameraY),
+
+            // if
+                this._playerWorldX >= 0) {
+                this._slideIn = false,
+                this._deltaBuffer = 0,
+                this._playerWorldX = 0,
+                this._cameraX = this._playerWorldX - PLAYER_GAME_CAMERA_X,
+                this._cameraXRef._v = this._cameraX;
+
+                const xDelta = this._cameraX - this._slideGroundX;
+                this._level.shiftGroundTiles(xDelta),
+                this._firstPlay && (
+                    this._firstPlay = false,
+                    this._audio.startMusic()
+                ),
+
+                this._pauseBtn.setVisible(true).setAlpha(0),
+                this.tweens.add({
+                    targets: this._pauseBtn,
+                    alpha: 75 / 255,
                     duration: 500
                 });
             }
             return;
         }
-        let _0x368ad9 = this._spaceKey.isDown || this._upKey.isDown;
-        if (_0x368ad9 && !this._spaceWasDown ? this._pushButton() : !_0x368ad9 && this._spaceWasDown && this._releaseButton(), this._spaceWasDown = _0x368ad9, !this.input.activePointer.isDown || this._state.upKeyDown || this._state.isDead || (this._state.upKeyDown = true), this._level.updateEndPortalY(this._cameraY, this._state.isFlying), !this._levelWon && !this._state.isDead && this._level.endXPos > 0) {
-            const _0x448396 = 600;
-            this._playerWorldX >= this._level.endXPos - _0x448396 && (this._levelWon = true, this._endPortalGameY = this._level._endPortalGameY || 240, this._triggerEndPortal());
+        // gameplay
+        let jumpHotkey = this._spaceKey.isDown || this._upKey.isDown;
+        if (jumpHotkey && !this._spaceWasDown
+            ? this._pushButton()
+            : !jumpHotkey && this._spaceWasDown &&
+            this._releaseButton(),
+        
+            this._spaceWasDown = jumpHotkey,
+            !this.input.activePointer.isDown || this._state.upKeyDown || this._state.isDead || (
+                this._state.upKeyDown = true
+            ),
+            
+            this._level.updateEndPortalY(this._cameraY, this._state.isFlying),
+        // if
+            !this._levelWon && !this._state.isDead && this._level.endXPos > 0) {
+            // distance till you essentially win    
+            const endPortalDistance = 600;
+            this._playerWorldX >= this._level.endXPos - endPortalDistance && (
+                this._levelWon = true,
+                this._endPortalGameY = this._level._endPortalGameY || 240,
+                this._triggerEndPortal()
+            );
         }
+
+        // win
         if (this._levelWon) {
-            if (this._deltaBuffer = 0, this._endCamTween) {
-                const _0x3eb8cf = this._endCamTween;
-                this._cameraX = _0x3eb8cf.fromX + (_0x3eb8cf.toX - _0x3eb8cf.fromX) * _0x3eb8cf.p, this._cameraY = _0x3eb8cf.fromY + (_0x3eb8cf.toY - _0x3eb8cf.fromY) * _0x3eb8cf.p;
+            if (this._deltaBuffer = 0,
+            // if
+                this._endCamTween) {
+                const tween = this._endCamTween;
+                this._cameraX = tween.fromX + (tween.toX - tween.fromX) * tween.p,
+                this._cameraY = tween.fromY + (tween.toY - tween.fromY) * tween.p;
             }
-            return this._cameraXRef._v = this._cameraX, this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), void this._level.updateGroundTiles(this._cameraY);
+            return this._cameraXRef._v = this._cameraX,
+                this._level.additiveContainer.x = -this._cameraX,
+                this._level.additiveContainer.y = this._cameraY, 
+                this._level.container.x = -this._cameraX, 
+                this._level.container.y = this._cameraY, 
+                this._level.topContainer.x = -this._cameraX, 
+                this._level.topContainer.y = this._cameraY,
+                this._updateBackground(),
+                this._level.stepGroundAnimation(deltaMs / 1000),
+                void this._level.updateGroundTiles(this._cameraY);
         }
+
+        // dead
         if (this._state.isDead) {
-            if (this._deathSoundPlayed || (this._audio.stopMusic(), this._audio.playEffect("explode_11", {
-                    'volume': 0.65
-                }), this._deathSoundPlayed = true), !this._newBestShown) {
+            if (this._deathSoundPlayed || (
+                this._audio.stopMusic(),
+                this._audio.playEffect("explode_11", {
+                    volume: 0.65
+                }),
+                this._deathSoundPlayed = true
+            ),
+            // if
+                !this._newBestShown) {
                 this._newBestShown = true;
-                let _0x435587 = this._level.endXPos || 6000,
-                    _0x169d53 = this._playerWorldX;
-                this._lastPercent = Math.min(99, Math.max(0, Math.floor(_0x169d53 / _0x435587 * 100))), this._lastPercent > this._bestPercent && (this._bestPercent = this._lastPercent, this._hadNewBest = true, this._showNewBest());
+                // the end position
+                let endXPosition = this._level.endXPos || 6000,
+                    playerWorldX = this._playerWorldX;
+                this._lastPercent = Math.min(99, Math.max(0, Math.floor(playerWorldX / endXPosition * 100))),
+                this._lastPercent > this._bestPercent && (
+                    this._bestPercent = this._lastPercent,
+                    this._hadNewBest = true,
+                    this._showNewBest()
+                );
             }
-            this._player.updateExplosionPieces(_0xaf2ffd), this._deathTimer += _0xaf2ffd;
-            let _0x237728 = this._hadNewBest ? 1400 : 1000;
-            return void(this._deathTimer > _0x237728 && this._restartLevel());
+            this._player.updateExplosionPieces(deltaMs),
+            this._deathTimer += deltaMs;
+            let deathTime = this._hadNewBest ? 1400 : 1000;
+
+            return void(this._deathTimer > deathTime && this._restartLevel());
         }
-        this._playTime += _0xaf2ffd / 1000, this._audio.update(_0xaf2ffd / 1000), this._level.updateAudioScale(this._audio.getMeteringValue());
-        let _0x30fa5d = this._quantizeDelta(_0xaf2ffd),
-            _0x5efc2d = _0x30fa5d > 0 ? Math.max(1, Math.round(4 * _0x30fa5d)) : 0;
-        _0x5efc2d > 60 && (_0x5efc2d = 60);
-        let _0x426602 = _0x5efc2d > 0 ? _0x30fa5d / _0x5efc2d : 0,
-            _0x5caeb1 = _0x426602 * d;
-        const _0x23505e = this._state.y;
-        for (let _0x26d5d6 = 0; _0x26d5d6 < _0x5efc2d; _0x26d5d6++) this._state.lastY = this._state.y, this._player.updateJump(_0x5caeb1), this._state.y += this._state.yVelocity * _0x5caeb1, this._player.checkCollisions(this._playerWorldX - PLAYER_GAME_CAMERA_X), this._playerWorldX += _0x426602 * c * d, this._state.isFlying || (this._state.onGround ? this._player.updateGroundRotation(_0x5caeb1) : this._player.rotateActionActive && this._player.updateRotateAction(u));
-        if (this._state.lastY = _0x23505e, !this._endCameraOverride) {
-            const _0xe48698 = this._playerWorldX - PLAYER_GAME_CAMERA_X;
+
+        this._playTime += deltaMs / 1000,
+        this._audio.update(deltaMs / 1000),
+        this._level.updateAudioScale(this._audio.getMeteringValue());
+
+        let physicsTotal = this._quantizeDelta(deltaMs),
+            subSteps = physicsTotal > 0 ? Math.max(1, Math.round(4 * physicsTotal)) : 0;
+        // 60 tick cap
+        subSteps > 60 && (
+            subSteps = 60
+        );
+
+        let subDelta = subSteps > 0 ? physicsTotal / subSteps : 0,
+            subDeltaScaled = subDelta * d;
+
+        const prevY = this._state.y;
+        for (let i = 0; i < subSteps; i++)
+            this._state.lastY = this._state.y,
+            this._player.updateJump(subDeltaScaled),
+            this._state.y += this._state.yVelocity * subDeltaScaled,
+            this._player.checkCollisions(this._playerWorldX - PLAYER_GAME_CAMERA_X),
+            this._playerWorldX += subDelta * c * d,
+            this._state.isFlying || (
+                this._state.onGround
+                ? this._player.updateGroundRotation(subDeltaScaled)
+                : this._player.rotateActionActive &&
+                this._player.updateRotateAction(u)
+            );
+        
+        if (
+            this._state.lastY = prevY,
+        // if
+            !this._endCameraOverride) {
+                // the camera's position during gameplay
+            const cameraPositionX = this._playerWorldX - PLAYER_GAME_CAMERA_X;
             if (this._level.endXPos > 0) {
-                const _0x24670d = this._level.endXPos - SCREEN_WIDTH;
-                if (_0xe48698 >= _0x24670d - 200) {
-                    this._endCameraOverride = true, this._cameraX = _0xe48698;
-                    const _0x2e3f0a = -140 + (this._level._endPortalGameY || 240),
-                        _0x34bdb9 = 1.8,
-                        _0x41f777 = _0x2aca75 => _0x2aca75 < 0.5 ? Math.pow(2 * _0x2aca75, _0x34bdb9) / 2 : 1 - Math.pow(2 * (1 - _0x2aca75), _0x34bdb9) / 2;
+                const endLeft = this._level.endXPos - SCREEN_WIDTH;
+                if (cameraPositionX >= endLeft - 200) {
+                    this._endCameraOverride = true,
+                    this._cameraX = cameraPositionX;
+                    
+                    const endPortalY = -140 + (this._level._endPortalGameY || 240),
+                        easeFactor = 1.8,
+                        ease = time => time < 0.5
+                        ? Math.pow(2 * time, easeFactor) / 2
+                        : 1 - Math.pow(2 * (1 - time), easeFactor) / 2;
+
                     this._endCamTween = {
-                        'p': 0,
-                        'fromX': this._cameraX,
-                        'toX': _0x24670d,
-                        'fromY': this._cameraY,
-                        'toY': _0x2e3f0a
-                    }, this.tweens.add({
-                        'targets': this._endCamTween,
-                        'p': 1,
+                        p: 0,
+                        fromX: this._cameraX,
+                        toX: endLeft,
+                        fromY: this._cameraY,
+                        toY: endPortalY
+                    },
+                    this.tweens.add({
+                        targets: this._endCamTween,
+                        p: 1,
                         duration: 1200,
-                        ease: _0x41f777
+                        ease: ease
                     });
-                } else this._cameraX = _0xe48698;
-            } else this._cameraX = _0xe48698;
+                } else
+                    this._cameraX = cameraPositionX;
+            } else
+                this._cameraX = cameraPositionX;
         }
+        
         if (this._endCameraOverride && this._endCamTween) {
-            const _0x490838 = this._endCamTween;
-            this._cameraX = _0x490838.fromX + (_0x490838.toX - _0x490838.fromX) * _0x490838.p, this._cameraY = _0x490838.fromY + (_0x490838.toY - _0x490838.fromY) * _0x490838.p;
+            const endCamTween = this._endCamTween;
+            this._cameraX = endCamTween.fromX + (endCamTween.toX - endCamTween.fromX) * endCamTween.p,
+            this._cameraY = endCamTween.fromY + (endCamTween.toY - endCamTween.fromY) * endCamTween.p;
         }
-        this._cameraXRef._v = this._cameraX, this._endCameraOverride || this._updateCameraY(_0x30fa5d), this._level.additiveContainer.x = -this._cameraX, this._level.additiveContainer.y = this._cameraY, this._level.container.x = -this._cameraX, this._level.container.y = this._cameraY, this._level.topContainer.x = -this._cameraX, this._level.topContainer.y = this._cameraY;
-        let _0x5464ab = this._playerWorldX;
-        for (let _0x2001f6 of this._level.checkColorTriggers(_0x5464ab)) this._colorManager.triggerColor(_0x2001f6.index, _0x2001f6.color, _0x2001f6.duration), _0x2001f6.tintGround && this._colorManager.triggerColor(ID_GROUND_COLOR, _0x2001f6.color, _0x2001f6.duration);
-        this._colorManager.step(_0xaf2ffd / 1000), this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)), this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)), this._level.updateVisibility(this._cameraX), this._level.checkEnterEffectTriggers(_0x5464ab), this._level.applyEnterEffects(this._cameraX), this._glitterCenterX = this._cameraX + SCREEN_WIDTH / 2, this._glitterCenterY = GROUND_BOUNDS_Y - this._cameraY, this._updateBackground(), this._level.stepGroundAnimation(_0xaf2ffd / 1000), this._level.updateGroundTiles(this._cameraY), this._state.isFlying && this._player.updateShipRotation(_0x30fa5d);
-        const _0x259e68 = this._playerWorldX - this._cameraX;
-        this._player.syncSprites(this._cameraX, this._cameraY, _0xaf2ffd / 1000, _0x259e68);
+        
+        this._cameraXRef._v = this._cameraX, 
+        this._endCameraOverride || 
+            this._updateCameraY(physicsTotal),
+        
+        this._level.additiveContainer.x = -this._cameraX,
+        this._level.additiveContainer.y = this._cameraY,
+        
+        this._level.container.x = -this._cameraX, 
+        this._level.container.y = this._cameraY, 
+        
+        this._level.topContainer.x = -this._cameraX, 
+        this._level.topContainer.y = this._cameraY;
+
+        // color triggers
+        let playerWorldX = this._playerWorldX;
+        for (let trigger of this._level.checkColorTriggers(playerWorldX))
+            this._colorManager.triggerColor(trigger.index, trigger.color, trigger.duration),
+            trigger.tintGround &&
+                this._colorManager.triggerColor(ID_GROUND_COLOR, trigger.color, trigger.duration);
+        
+        this._colorManager.step(deltaMs / 1000),
+        this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)),
+        this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)),
+        
+        this._level.updateVisibility(this._cameraX),
+        this._level.checkEnterEffectTriggers(playerWorldX),
+        this._level.applyEnterEffects(this._cameraX),
+        
+        this._glitterCenterX = this._cameraX + SCREEN_WIDTH / 2,
+        this._glitterCenterY = GROUND_BOUNDS_Y - this._cameraY,
+        
+        this._updateBackground(),
+        this._level.stepGroundAnimation(deltaMs / 1000),
+        this._level.updateGroundTiles(this._cameraY),
+        this._state.isFlying && this._player.updateShipRotation(physicsTotal);
+
+        const cameraOffsetX = this._playerWorldX - this._cameraX;
+        this._player.syncSprites(this._cameraX, this._cameraY, deltaMs / 1000, cameraOffsetX);
     }
+    /* end sequence */
     _showNewBest() {
-        let _0x9f2437 = SCREEN_WIDTH / 2,
-            _0x12bde3 = this.add.image(0, 0, "GJ_WebSheet", "GJ_newBest_001.png").setOrigin(0.5, 1),
-            _0x544c9c = this.add.bitmapText(0, 2, "bigFont", this._lastPercent + '%', 65).setOrigin(0.5, 0).setScale(1.1),
-            _0x326cb9 = this.add.container(_0x9f2437, 300, [_0x12bde3, _0x544c9c]).setScrollFactor(0).setDepth(60).setScale(0.01);
+        let centerX = SCREEN_WIDTH / 2,
+            container = this.add.image(0, 0, "GJ_WebSheet", "GJ_newBest_001.png").setOrigin(0.5, 1),
+            percentageText = this.add.bitmapText(0, 2, "bigFont", this._lastPercent + '%', 65).setOrigin(0.5, 0).setScale(1.1),
+            newBestContainer = this.add.container(centerX, 300, [container, percentageText]).setScrollFactor(0).setDepth(60).setScale(0.01);
+        
         this.tweens.add({
-            'targets': _0x326cb9,
-            'scale': 1,
+            targets: newBestContainer,
+            scale: 1,
             duration: 400,
             ease: 'Elastic.Out',
-            'easeParams': [1, 0.6],
+            easeParams: [1, 0.6],
             onComplete: () => {
                 this.tweens.add({
-                    'targets': _0x326cb9,
-                    'scale': 0.01,
+                    targets: newBestContainer,
+                    scale: 0.01,
                     duration: 200,
-                    'delay': 700,
+                    delay: 700,
                     ease: 'Quad.In',
                     onComplete: () => {
-                        _0x326cb9.setVisible(false), _0x326cb9.destroy();
+                        newBestContainer.setVisible(false), newBestContainer.destroy();
                     }
                 });
             }
@@ -879,311 +1305,420 @@ class gameScene extends Phaser.Scene {
         this._player.playEndAnimation(this._level.endXPos, () => this._levelComplete(), this._endPortalGameY);
     }
     _levelComplete() {
-        const _0x356782 = this._level.endXPos - this._cameraX,
-            _0x2d967b = worldYToScreenY(this._endPortalGameY) + this._cameraY;
-        for (let _0x481f7c = 0; _0x481f7c < 5; _0x481f7c++) this.time.delayedCall(50 * _0x481f7c, () => emitCircleEffect(this, _0x356782, _0x2d967b, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
-        emitCircleEffect(this, _0x356782, _0x2d967b, 10, 1000, 500, true, false, COLOR_GREEN), this._showCompleteEffect();
+        const x = this._level.endXPos - this._cameraX,
+            y = worldYToScreenY(this._endPortalGameY) + this._cameraY;
+        for (let i = 0; i < 5; i++)
+            this.time.delayedCall(50 * i, () => emitCircleEffect(this, x, y, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
+            
+        emitCircleEffect(this, x, y, 10, 1000, 500, true, false, COLOR_GREEN),
+        this._showCompleteEffect();
     }
     _showCompleteEffect() {
-        this._audio.fadeOutMusic(1500), this.sound.play("endStart_02", {
-            'volume': 0.8
-        }), (! function(_0x3f5321, _0x8f5267, _0x2f1e2d, _0x4b5e5b) {
-            const _0x29d856 = 2,
-                _0x1b2543 = 8,
-                _0x2cc21f = 1 * _0x29d856,
-                _0x26b2b1 = 30 * _0x29d856,
-                _0x6f49c1 = 20 * _0x29d856,
-                _0x232789 = Math.round(Math.sqrt(SCREEN_WIDTH ** 2 + 102400)) + 32.5 * _0x29d856,
-                _0x1c105b = 180,
-                _0x586720 = 40,
-                _0x57b9ff = 195,
-                _0x2b6612 = 40,
-                _0x5ce50e = 40,
-                _0x4da54f = 155 / 255,
-                _0x20decf = 100 / 255,
-                _0x576e6f = 400,
-                _0x487fb1 = -135,
-                _0x323ded = 90 / _0x1b2543,
-                _0x44369e = Array.from({
-                    'length': _0x1b2543
-                }, (_0x18e51d, _0x59ebd4) => _0x487fb1 + _0x59ebd4 * _0x323ded);
-            for (let _0x59890f = _0x44369e.length - 1; _0x59890f > 0; _0x59890f--) {
-                const _0x2bf73b = Math.floor(Math.random() * (_0x59890f + 1));
-                [_0x44369e[_0x59890f], _0x44369e[_0x2bf73b]] = [_0x44369e[_0x2bf73b], _0x44369e[_0x59890f]];
+        this._audio.fadeOutMusic(1500),
+        this.sound.play("endStart_02", {
+            volume: 0.8
+        }),
+
+        // beams
+        (! function(scene, cx, cy, color) {
+            const scale = 2,
+                beamCount = 8,
+
+                startWidth = 1 * scale,
+                baseWidth = 30 * scale,
+                widthVariance = 20 * scale,
+
+                beamLength = Math.round(Math.sqrt(SCREEN_WIDTH ** 2 + 102400)) + 32.5 * scale,
+                
+                durationBase = 180,
+                durationVar = 40,
+                delayStep = 195,
+                startDelay = 40,
+                delayVar = 40,
+
+                maxAlpha = 155 / 0xFF,
+                minAlpha = 100 / 0xFF,
+                delayIncrement = 400,
+
+                startAngle = -135,
+                angleIncrement = 90 / beamCount,
+
+                angles = Array.from({
+                    length: beamCount
+                }, (_, i) => startAngle + i * angleIncrement);
+
+            for (let i = angles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [angles[i], angles[j]] = [angles[j], angles[i]];
             }
-            let _0x594d69 = 0;
-            const _0x116c8c = [];
-            for (let _0x104cbb = 0; _0x104cbb < _0x1b2543; _0x104cbb++) {
-                const _0x1a79fc = _0x104cbb * _0x57b9ff + _0x2b6612 + _0x5ce50e * (2 * Math.random() - 1),
-                    _0x6eb03a = _0x26b2b1 + _0x6f49c1 * (2 * Math.random() - 1),
-                    _0x2e9531 = _0x1c105b + _0x586720 * (2 * Math.random() - 1),
-                    _0x28e7b3 = Math.min(1, Math.max(0, _0x4da54f + _0x20decf * (2 * Math.random() - 1))),
-                    _0x34147c = _0x44369e[_0x104cbb] + _0x323ded * Math.random() + 180,
-                    _0xf33b0d = _0x3f5321.add.graphics().setScrollFactor(0).setDepth(-1).setBlendMode(BLEND_ADD).setPosition(_0x8f5267, _0x2f1e2d).setAngle(_0x34147c).setAlpha(_0x28e7b3).setVisible(false),
-                    _0x496d96 = {
-                        'PLAYER_GAME_CAMERA_X': 1,
-                        'w': _0x2cc21f
+
+            let maxDelay = 0;
+            const activeBeams = [];
+
+            for (let i = 0; i < beamCount; i++) {
+                const spawnDelay = i * delayStep + startDelay + delayVar * (2 * Math.random() - 1),
+                    targetWidth = baseWidth + widthVariance * (2 * Math.random() - 1),
+                    duration = durationBase + durationVar * (2 * Math.random() - 1),
+                    alpha = Math.min(1, Math.max(0, maxAlpha + minAlpha * (2 * Math.random() - 1))),
+                    rotation = angles[i] + angleIncrement * Math.random() + 180,
+                    
+                    beamGraphic = scene.add.graphics().setScrollFactor(0).setDepth(-1).setBlendMode(BLEND_ADD).setPosition(cx, cy).setAngle(rotation).setAlpha(alpha).setVisible(false),
+                    
+                    tweenData = {
+                        h: 1,
+                        w: startWidth
                     };
-                _0x3f5321.time.delayedCall(Math.max(0, _0x1a79fc), () => {
-                    _0xf33b0d.setVisible(true), _0x3f5321.tweens.add({
-                        'targets': _0x496d96,
-                        'PLAYER_GAME_CAMERA_X': _0x232789,
-                        'w': _0x6eb03a,
-                        duration: _0x2e9531,
+                    console.log(beamGraphic);
+
+                scene.time.delayedCall(Math.max(0, spawnDelay), () => {
+                    beamGraphic.setVisible(true), scene.tweens.add({
+                        targets: tweenData,
+                        h: beamLength,
+                        w: targetWidth,
+                        duration: duration,
                         ease: "Quad.Out",
                         onUpdate: () => {
-                            const _0x2db3d7 = _0x2cc21f + (_0x496d96.w - _0x2cc21f) / 4;
-                            _0xf33b0d.clear(), _0xf33b0d.fillStyle(_0x4b5e5b, 1), _0xf33b0d.beginPath(), _0xf33b0d.moveTo(-_0x2db3d7 / 2, 0), _0xf33b0d.lineTo(_0x2db3d7 / 2, 0), _0xf33b0d.lineTo(_0x496d96.w / 2, _0x496d96.h), _0xf33b0d.lineTo(-_0x496d96.w / 2, _0x496d96.h), _0xf33b0d.closePath(), _0xf33b0d.fillPath();
+                            const _0x2db3d7 = startWidth + (tweenData.w - startWidth) / 4;
+                            beamGraphic.clear(), beamGraphic.fillStyle(color, 1), beamGraphic.beginPath(), beamGraphic.moveTo(-_0x2db3d7 / 2, 0), beamGraphic.lineTo(_0x2db3d7 / 2, 0), beamGraphic.lineTo(tweenData.w / 2, tweenData.h), beamGraphic.lineTo(-tweenData.w / 2, tweenData.h), beamGraphic.closePath(), beamGraphic.fillPath();
                         }
                     });
-                }), _0x1a79fc > _0x594d69 && (_0x594d69 = _0x1a79fc), _0x116c8c.push(_0xf33b0d);
+                }),
+                
+                spawnDelay > maxDelay && (
+                    maxDelay = spawnDelay
+                ),
+                activeBeams.push(beamGraphic);
             }
-            _0x3f5321.time.delayedCall(_0x594d69 + _0x576e6f, () => {
-                for (const _0x15b95e of _0x116c8c) {
-                    const _0x51b5fc = 200 * Math.random(),
-                        _0x3ed1de = 400 + 100 * (2 * Math.random() - 1);
-                    _0x3f5321.tweens.add({
-                        'targets': _0x15b95e,
-                        'alpha': 0,
-                        'delay': _0x51b5fc,
-                        duration: _0x3ed1de,
-                        onComplete: () => _0x15b95e.destroy()
+
+            scene.time.delayedCall(maxDelay + delayIncrement, () => {
+                for (const beam of activeBeams) {
+                    const exitDelay = 200 * Math.random(),
+                        exitDuration = 400 + 100 * (2 * Math.random() - 1);
+                    
+                        scene.tweens.add({
+                        targets: beam,
+                        alpha: 0,
+                        delay: exitDelay,
+                        duration: exitDuration,
+                        onComplete: () => beam.destroy()
                     });
                 }
             });
         }(this, this._level.endXPos - this._cameraX + 60, worldYToScreenY(this._endPortalGameY) + this._cameraY, COLOR_GREEN), this.cameras.main.shake(1950, 0.004), this.time.delayedCall(1950, () => this._showCompleteText()));
     }
     _showCompleteText() {
-        const _0x56628c = SCREEN_WIDTH / 2,
-            _0x45ab26 = this.add.image(_0x56628c, 250, 'GJ_WebSheet', "GJ_levelComplete_001.png").setScrollFactor(0).setDepth(60).setScale(0.01);
+        const centerX = SCREEN_WIDTH / 2,
+            
+            levelCompleteSplash = this.add.image(centerX, 250, 'GJ_WebSheet', "GJ_levelComplete_001.png").setScrollFactor(0).setDepth(60).setScale(0.01);
+        
         this.tweens.add({
-            'targets': _0x45ab26,
-            'scale': 1.1,
+            targets: levelCompleteSplash,
+            scale: 1.1,
             duration: 660,
             ease: 'Elastic.Out',
-            'easeParams': [1, 0.6],
+            easeParams: [1, 0.6],
             onComplete: () => {
                 this.tweens.add({
-                    'targets': _0x45ab26,
-                    'scale': 0.01,
+                    targets: levelCompleteSplash,
+                    scale: 0.01,
                     duration: 220,
-                    'delay': 880,
+                    delay: 880,
                     ease: 'Quad.In',
                     onComplete: () => {
-                        _0x45ab26.setVisible(false), _0x45ab26.destroy();
+                        levelCompleteSplash.setVisible(false), levelCompleteSplash.destroy();
                     }
                 });
             }
         });
-        const _0x2884ff = [COLOR_GREEN, 16777215];
-        for (let _0x5f16c8 = 0; _0x5f16c8 < 2; _0x5f16c8++) this.add.particles(_0x56628c, 250, "GJ_WebSheet", {
-            'frame': "square.png",
-            'speed': {
-                'min': 300,
-                'max': 700
-            },
-            'angle': {
-                'min': 0,
-                'max': 360
-            },
-            'scale': {
-                'start': 0.4,
-                'end': 0.13
-            },
-            'lifespan': {
-                'min': 0,
-                'max': 1000
-            },
-            'quantity': 50,
-            'stopAfter': 200,
-            'blendMode': BLEND_ADD,
-            'tint': _0x2884ff[_0x5f16c8],
-            'x': {
-                'min': -800,
-                'max': 800
-            },
-            'y': {
-                'min': -80,
-                'max': 80
+
+        // through particles on screen
+        const tints = [COLOR_GREEN, 0xFFFFFF];
+        for (let i = 0; i < 2; i++)
+            this.add.particles(centerX, 250, "GJ_WebSheet", {
+                frame: "square.png",
+                speed: {
+                    min: 300,
+                    max: 700
+                },
+                angle: {
+                    min: 0,
+                    max: 360
+                },
+                scale: {
+                    start: 0.4,
+                    end: 0.13
+                },
+                lifespan: {
+                    min: 0,
+                    max: 1000
+                },
+                quantity: 50,
+                stopAfter: 200,
+                blendMode: BLEND_ADD,
+                tint: tints[i],
+                x: {
+                    min: -800,
+                    max: 800
+                },
+                y: {
+                    min: -80,
+                    max: 80
+                }
             }
-        }).setScrollFactor(0).setDepth(59);
-        const _0x2eadf2 = this._level.endXPos - this._cameraX,
-            _0x380b24 = worldYToScreenY(this._endPortalGameY) + this._cameraY;
-        emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN), emitCircleEffect(this, _0x56628c, 250, 10, 1000, 800, true, false, COLOR_GREEN);
-        for (let _0x579e05 = 0; _0x579e05 < 5; _0x579e05++) this.time.delayedCall(50 * _0x579e05, () => emitCircleEffect(this, _0x2eadf2, _0x380b24, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
-        for (let _0x429722 = 0; _0x429722 < 10; _0x429722++) {
-            const _0xbf7dd0 = 150 * _0x429722 + (160 * Math.random() - 80);
-            this.time.delayedCall(Math.max(0, _0xbf7dd0), () => emitWinBurst(this, COLOR_GREEN, COLOR_BLUE));
+            ).setScrollFactor(0).setDepth(59);
+
+        const portalX = this._level.endXPos - this._cameraX,
+            portalY = worldYToScreenY(this._endPortalGameY) + this._cameraY;
+
+        emitCircleEffect(this, portalX, portalY, 10, SCREEN_WIDTH, 800, true, false, COLOR_GREEN),
+        emitCircleEffect(this, centerX, 250, 10, 1000, 800, true, false, COLOR_GREEN);
+        
+        for (let i = 0; i < 5; i++)
+            this.time.delayedCall(50 * i, () => emitCircleEffect(this, portalX, portalY, 10, SCREEN_WIDTH, 500, false, true, COLOR_GREEN));
+
+        for (let i = 0; i < 10; i++) {
+            const burstDelay = 150 * i + (160 * Math.random() - 80);
+            this.time.delayedCall(Math.max(0, burstDelay), () => emitWinBurst(this, COLOR_GREEN, COLOR_BLUE));
         }
+
         this.time.delayedCall(1500, () => this._showEndLayer());
     }
     _showEndLayer() {
-        this._pauseBtn && this.tweens.add({
-            'targets': this._pauseBtn,
-            'alpha': 0,
-            duration: 300
-        });
-        const _0x384f9e = SCREEN_WIDTH / 2,
-            _0x1aa656 = 320;
-        this._endLayerOverlay = this.add.rectangle(_0x384f9e, _0x1aa656, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0).setScrollFactor(0).setDepth(200).setInteractive(), (this._endLayerInternal = this.add.container(0, -640).setScrollFactor(0).setDepth(201), this.tweens.add({
-            'targets': this._endLayerOverlay,
-            'alpha': 100 / 255,
-            duration: 1000
-        }));
-        const _0x59b9ab = {
-            'p': 0
+        this._pauseBtn &&
+            this.tweens.add({
+                targets: this._pauseBtn,
+                alpha: 0,
+                duration: 300
+            });
+    
+        const centerX = SCREEN_WIDTH / 2,
+            centerY = 320;
+
+        // end layer overlay
+        this._endLayerOverlay = this.add.rectangle(centerX, centerY, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0).setScrollFactor(0).setDepth(200).setInteractive(),
+        (
+            this._endLayerInternal = this.add.container(0, -640).setScrollFactor(0).setDepth(201),
+            this.tweens.add({
+                targets: this._endLayerOverlay,
+                alpha: 100 / 255,
+                duration: 1000
+            })
+        );
+
+        const slideState = {
+            p: 0
         };
         this.tweens.add({
-            'targets': _0x59b9ab,
-            'p': 1,
+            targets: slideState,
+            p: 1,
             duration: 1000,
             ease: "Bounce.Out",
             onUpdate: () => {
-                this._endLayerInternal.y = 650 * _0x59b9ab.p - 640;
+                this._endLayerInternal.y = 650 * slideState.p - 640;
             },
             onComplete: () => this._playStarAward()
         });
-        const _0x595215 = 712,
-            _0x950c8d = 460,
-            _0x2a115c = (SCREEN_WIDTH - _0x595215) / 2;
-        this._endLayerInternal.add(this.add.rectangle(_0x2a115c + 356, 310, _0x595215, _0x950c8d, 0, 180 / 255));
-        const _0x43f2e3 = this.textures.getFrame("GJ_WebSheet", "GJ_table_side_001.png"),
-            _0x3feccc = _0x43f2e3 ? _0x950c8d / _0x43f2e3.height : 1;
-        this._endLayerInternal.add(this.add.image(_0x2a115c - 40, 80, "GJ_WebSheet", 'GJ_table_side_001.png').setOrigin(0, 0).setScale(1, _0x3feccc)), this._endLayerInternal.add(this.add.image(_0x2a115c + _0x595215 + 40, 80, "GJ_WebSheet", 'GJ_table_side_001.png').setOrigin(1, 0).setFlipX(true).setScale(1, _0x3feccc));
-        const _0x33b564 = this.add.image(_0x2a115c + 356, 70, "GJ_WebSheet", "GJ_table_top_001.png");
-        this._endLayerInternal.add(_0x33b564), this._endLayerInternal.add(this.add.image(_0x2a115c + 356, 560, "GJ_WebSheet", "GJ_table_bottom_001.png"));
-        const _0x3e9c79 = _0x33b564.y - 65;
-        this._endLayerInternal.add(this.add.image(_0x384f9e - 312, _0x3e9c79, 'GJ_WebSheet', "chain_01_001.png").setOrigin(0.5, 1)), this._endLayerInternal.add(this.add.image(_0x384f9e + 312, _0x3e9c79, 'GJ_WebSheet', 'chain_01_001.png').setOrigin(0.5, 1)), this._endLayerInternal.add(this.add.image(_0x384f9e, 170, "GJ_WebSheet", "GJ_levelComplete_001.png").setScale(0.8));
-        const _0x45b6e4 = 0.8;
-        let _0xe44f6d = 250;
-        const _0x2de55e = this.add.bitmapText(_0x384f9e, _0xe44f6d, 'goldFont', "Attempts: " + this._attempts, 40).setOrigin(0.5, 0.5).setScale(_0x45b6e4);
-        this._endLayerInternal.add(_0x2de55e), _0xe44f6d += 48, this._endLayerInternal.add(this.add.bitmapText(_0x384f9e, _0xe44f6d, "goldFont", "Jumps: " + this._totalJumps, 40).setOrigin(0.5, 0.5).setScale(_0x45b6e4)), _0xe44f6d += 48;
-        const _0x596450 = Math.floor(this._playTime),
-            _0x30687e = Math.floor(_0x596450 / 3600),
-            _0x52f8ee = Math.floor(_0x596450 % 3600 / 60),
-            _0x2591d0 = _0x596450 % 60;
-        let _0x2be782;
-        _0x2be782 = _0x30687e > 0 ? String(_0x30687e).padStart(2, '0') + ':' + String(_0x52f8ee).padStart(2, '0') + ':' + String(_0x2591d0).padStart(2, '0') : String(_0x52f8ee).padStart(2, '0') + ':' + String(_0x2591d0).padStart(2, '0');
-        const _0x241209 = _0xe44f6d;
-        this._endLayerInternal.add(this.add.bitmapText(_0x384f9e, _0xe44f6d, "goldFont", "Time: " + _0x2be782, 40).setOrigin(0.5, 0.5).setScale(_0x45b6e4));
-        const _0x452429 = ["Awesome!", "Good\nJob!", "Well\nDone!", "Impressive!", "Amazing!", 'Incredible!', "Skillful!", 'Brilliant!', "Not\nbad!", "Warp\nSpeed!", 'Challenge\x0aBreaker!', 'Reflex\x0aMaster!', "I am\nspeechless...", "You are...\nThe One!", "How is this\npossible!?", "You beat\nme..."],
-            _0x165c06 = _0x452429[Math.floor(Math.random() * _0x452429.length)],
-            _0x45540f = 225;
-        this._endLayerInternal.add(this.add.bitmapText(_0x384f9e + _0x45540f, _0x241209, 'bigFont', _0x165c06, 40).setOrigin(0.5, 0.5).setScale(0.8).setCenterAlign()), this._endLayerInternal.add(this.add.image(_0x384f9e - _0x45540f, 352.5, "GJ_WebSheet", 'getIt_001.png').setScale(1 / 1.5));
-        const _0x34b1bd = [{
-            'key': "downloadApple_001",
-            'url': "https://apps.apple.com/us/app/geometry-dash/id625334537"
-        }, {
-            'key': "downloadGoogle_001",
-            'url': "https://play.google.com/store/apps/details?id=com.robtopx.geometryjump&hl=en"
-        }, {
-            'key': "downloadSteam_001",
-            'url': "https://store.steampowered.com/app/322170/Geometry_Dash"
-        }];
-        for (let _0x10f8cc = 0; _0x10f8cc < _0x34b1bd.length; _0x10f8cc++) {
-            const _0xd7310b = _0x34b1bd[_0x10f8cc],
-                _0x1e3f82 = (_0x10f8cc - 1) * _0x45540f,
-                _0x55a82e = 1 / 1.5,
-                _0x4c7fb8 = this.add.image(_0x384f9e + _0x1e3f82, 437.5, "GJ_WebSheet", _0xd7310b.key + ".png").setScale(_0x55a82e).setInteractive();
-            this._endLayerInternal.add(_0x4c7fb8), this._makeBouncyButton(_0x4c7fb8, _0x55a82e, () => window.open(_0xd7310b.url, "_blank"));
-        }
-        _0x2de55e.width, this._endStarX = _0x384f9e + _0x45540f, this._endStarY = _0x241209 - 77.5;
-        const _0x45fc2b = [{
-            'frame': 'GJ_replayBtn_001.png',
-            'dx': -200,
-            'action': () => this._hideEndLayer(() => this._restartLevel())
-        }, {
-            'frame': 'GJ_menuBtn_001.png',
-            'dx': 200,
-            'action': () => {
-                this._audio.playEffect("quitSound_01"), this._audio.stopMusic(), this.game.registry.set("fadeInFromBlack", true), this.cameras.main.fadeOut(400, 0, 0, 0, (_0x53bf86, _0x15310d) => {
-                    _0x15310d >= 1 && this.scene.restart();
-                });
+        
+        const tableWidth = 712,
+            tableHeight = 460,
+
+            tableX = (SCREEN_WIDTH - tableWidth) / 2;
+            
+        this._endLayerInternal.add(this.add.rectangle(tableX + 356, 310, tableWidth, tableHeight, 0, 180 / 255));
+      
+        const sideFrame = this.textures.getFrame("GJ_WebSheet", "GJ_table_side_001.png"),
+            sideScaleY = sideFrame ? tableHeight / sideFrame.height : 1;
+        
+        this._endLayerInternal.add(this.add.image(tableX - 40, 80, "GJ_WebSheet", 'GJ_table_side_001.png').setOrigin(0, 0).setScale(1, sideScaleY)),
+        this._endLayerInternal.add(this.add.image(tableX + tableWidth + 40, 80, "GJ_WebSheet", 'GJ_table_side_001.png').setOrigin(1, 0).setFlipX(true).setScale(1, sideScaleY));
+            
+        const tableTop = this.add.image(tableX + 356, 70, "GJ_WebSheet", "GJ_table_top_001.png");
+        this._endLayerInternal.add(tableTop), this._endLayerInternal.add(this.add.image(tableX + 356, 560, "GJ_WebSheet", "GJ_table_bottom_001.png"));
+        
+        const chainTopY = tableTop.y - 65;
+        this._endLayerInternal.add(this.add.image(centerX - 312, chainTopY, 'GJ_WebSheet', "chain_01_001.png").setOrigin(0.5, 1)), this._endLayerInternal.add(this.add.image(centerX + 312, chainTopY, 'GJ_WebSheet', 'chain_01_001.png').setOrigin(0.5, 1)), this._endLayerInternal.add(this.add.image(centerX, 170, "GJ_WebSheet", "GJ_levelComplete_001.png").setScale(0.8));
+        
+        const fontScale = 0.8;
+        let statsCursorY = 250;
+        
+        // attempts
+        const attemptsLabel = this.add.bitmapText(centerX, statsCursorY, 'goldFont', "Attempts: " + this._attempts, 40).setOrigin(0.5, 0.5).setScale(fontScale);
+        this._endLayerInternal.add(attemptsLabel),
+        statsCursorY += 48,
+        // jumps
+        this._endLayerInternal.add(this.add.bitmapText(centerX, statsCursorY, "goldFont", "Jumps: " + this._totalJumps, 40).setOrigin(0.5, 0.5).setScale(fontScale)),
+        statsCursorY += 48;
+        
+        const totalSeconds = Math.floor(this._playTime),
+            hours = Math.floor(totalSeconds / 3600),
+            minutes = Math.floor(totalSeconds % 3600 / 60),
+            seconds = totalSeconds % 60;
+            
+        let formattedTime;
+        formattedTime = hours > 0 ? String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0') : String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+        
+        const lastStatY = statsCursorY;
+        this._endLayerInternal.add(this.add.bitmapText(centerX, statsCursorY, "goldFont", "Time: " + formattedTime, 40).setOrigin(0.5, 0.5).setScale(fontScale));
+        
+        // random win text
+        const winPool = ["Awesome!", "Good\nJob!", "Well\nDone!", "Impressive!", "Amazing!", 'Incredible!', "Skillful!", 'Brilliant!', "Not\nbad!", "Warp\nSpeed!", 'Challenge\x0aBreaker!', 'Reflex\x0aMaster!', "I am\nspeechless...", "You are...\nThe One!", "How is this\npossible!?", "You beat\nme..."],
+            winText = winPool[Math.floor(Math.random() * winPool.length)],
+            xOffset = 225;
+
+        this._endLayerInternal.add(this.add.bitmapText(centerX + xOffset, lastStatY, 'bigFont', winText, 40).setOrigin(0.5, 0.5).setScale(0.8).setCenterAlign()),
+        this._endLayerInternal.add(this.add.image(centerX - xOffset, 352.5, "GJ_WebSheet", 'getIt_001.png').setScale(1 / 1.5));
+        
+        // store links
+        const storeLinks = [
+            {
+                key: "downloadApple_001",
+                url: "https://apps.apple.com/us/app/geometry-dash/id625334537"
+            },
+            {
+                key: "downloadGoogle_001",
+                url: "https://play.google.com/store/apps/details?id=com.robtopx.geometryjump&hl=en"
+            },
+            {
+                key: "downloadSteam_001",
+                url: "https://store.steampowered.com/app/322170/Geometry_Dash"
             }
-        }];
-        for (const _0x2d4335 of _0x45fc2b) {
-            const _0xdde774 = this.add.image(_0x384f9e + _0x2d4335.dx, 555, "GJ_WebSheet", _0x2d4335.frame).setInteractive();
-            this._endLayerInternal.add(_0xdde774), this._makeBouncyButton(_0xdde774, 1, _0x2d4335.action);
+        ];
+
+        for (let i = 0; i < storeLinks.length; i++) {
+            const store = storeLinks[i],
+                iconXOffset = (i - 1) * xOffset,
+                iconScale = 1 / 1.5,
+                storeIcon = this.add.image(centerX + iconXOffset, 437.5, "GJ_WebSheet", store.key + ".png").setScale(iconScale).setInteractive();
+            
+            this._endLayerInternal.add(storeIcon),
+            this._makeBouncyButton(storeIcon, iconScale, () => window.open(store.url, "_blank"));
+        }
+
+        attemptsLabel.width, // ?
+
+        // _playStarAward values
+        this._endStarX = centerX + xOffset,
+        this._endStarY = lastStatY - 77.5;
+
+        // action buttons
+        const footerButtons = [
+            {
+                frame: 'GJ_replayBtn_001.png',
+                dx: -200,
+                action: () => this._hideEndLayer(() => this._restartLevel())
+            },
+            {
+                frame: 'GJ_menuBtn_001.png',
+                dx: 200,
+                action: () => {
+                    this._audio.playEffect("quitSound_01"), this._audio.stopMusic(), this.game.registry.set("fadeInFromBlack", true), this.cameras.main.fadeOut(400, 0, 0, 0, (_0x53bf86, _0x15310d) => {
+                        _0x15310d >= 1 && this.scene.restart();
+                    });
+                }
+            }
+        ];
+
+        for (const buttonConfig of footerButtons) {
+            const buttonImage = this.add.image(centerX + buttonConfig.dx, 555, "GJ_WebSheet", buttonConfig.frame).setInteractive();
+            this._endLayerInternal.add(buttonImage),
+            this._makeBouncyButton(buttonImage, 1, buttonConfig.action);
         }
     }
     _playStarAward() {
         if (!this._endLayerInternal) return;
-        const _0x4edc03 = this._endStarX,
-            _0x5a0e9 = this._endStarY,
-            _0x453043 = this.add.image(_0x4edc03, _0x5a0e9, "GJ_WebSheet", "GJ_bigStar_001.png").setScale(3).setAlpha(0);
-        this._endLayerInternal.add(_0x453043), this.tweens.add({
-            'targets': _0x453043,
-            'scale': 0.8,
-            'alpha': 1,
+
+        const starX = this._endStarX,
+            starY = this._endStarY,
+
+            starSprite = this.add.image(starX, starY, "GJ_WebSheet", "GJ_bigStar_001.png").setScale(3).setAlpha(0);
+        
+        this._endLayerInternal.add(starSprite),
+        this.tweens.add({
+            targets: starSprite,
+            scale: 0.8,
+            alpha: 1,
             duration: 300,
-            'delay': 0,
+            delay: 0,
             ease: "Bounce.Out"
-        }), this.time.delayedCall(100, () => {
+        }),
+        
+        this.time.delayedCall(100, () => {
             this._audio.playEffect("highscoreGet02");
-            const _0x1204d3 = _0x4edc03,
-                _0x96e3b2 = _0x5a0e9 + this._endLayerInternal.y;
-            this.add.particles(_0x1204d3, _0x96e3b2, "GJ_WebSheet", {
-                'frame': "square.png",
-                'speed': {
-                    'min': 200,
-                    'max': 600
+
+            const worldX = starX,
+                worldY = starY + this._endLayerInternal.y;
+            
+            this.add.particles(worldX, worldY, "GJ_WebSheet", {
+                frame: "square.png",
+                speed: {
+                    min: 200,
+                    max: 600
                 },
-                'angle': {
-                    'min': 0,
-                    'max': 360
+                angle: {
+                    min: 0,
+                    max: 360
                 },
-                'scale': {
-                    'start': 0.5,
-                    'end': 0
+                scale: {
+                    start: 0.5,
+                    end: 0
                 },
-                'alpha': {
-                    'start': 1,
-                    'end': 0
+                alpha: {
+                    start: 1,
+                    end: 0
                 },
-                'lifespan': {
-                    'min': 200,
-                    'max': 600
+                lifespan: {
+                    min: 200,
+                    max: 600
                 },
-                'quantity': 30,
-                'stopAfter': 30,
-                'blendMode': BLEND_ADD,
-                'tint': 16776960
+                quantity: 30,
+                stopAfter: 30,
+                blendMode: BLEND_ADD,
+                tint: 0xFFFF00
             }).setScrollFactor(0).setDepth(202);
-            const _0x43203f = this.add.graphics().setScrollFactor(0).setDepth(202).setBlendMode(BLEND_ADD),
-                _0x403316 = {
-                    't': 0
+            
+            const burstGraphic = this.add.graphics().setScrollFactor(0).setDepth(202).setBlendMode(BLEND_ADD),
+                burstState = {
+                    t: 0
                 };
+
             this.tweens.add({
-                'targets': _0x403316,
-                't': 1,
+                targets: burstState,
+                t: 1,
                 duration: 400,
                 ease: "Quad.Out",
                 onUpdate: () => {
-                    _0x43203f.clear(), _0x43203f.fillStyle(16776960, 1 - _0x403316.t), _0x43203f.fillCircle(_0x1204d3, _0x96e3b2, 20 + 200 * _0x403316.t);
+                    burstGraphic.clear(),
+                    burstGraphic.fillStyle(0xFFFF00, 1 - burstState.t),
+                    burstGraphic.fillCircle(worldX, worldY, 20 + 200 * burstState.t);
                 },
-                onComplete: () => _0x43203f.destroy()
+                onComplete: () => burstGraphic.destroy()
             });
         });
     }
-    _hideEndLayer(_0x272eb1) {
-        if (!this._endLayerInternal) return void(_0x272eb1 && _0x272eb1());
-        const _0x1215e0 = {
-            'p': 0
+    _hideEndLayer(callback) {
+        if (!this._endLayerInternal)
+            return void(callback && callback());
+        
+        const endTarget = {
+            p: 0
         };
+
         this.tweens.add({
-            'targets': _0x1215e0,
-            'p': 1,
+            targets: endTarget,
+            p: 1,
             duration: 500,
-            ease: _0xc1c75 => _0xc1c75 < 0.5 ? Math.pow(2 * _0xc1c75, 2) / 2 : 1 - Math.pow(2 * (1 - _0xc1c75), 2) / 2,
+            ease: t => t < 0.5 ? Math.pow(2 * t, 2) / 2 : 1 - Math.pow(2 * (1 - t), 2) / 2,
             onUpdate: () => {
-                this._endLayerInternal.y = -640 * _0x1215e0.p;
+                this._endLayerInternal.y = -640 * endTarget.p;
             },
             onComplete: () => {
-                this._endLayerInternal.destroy(), this._endLayerInternal = null, this._endLayerOverlay && (this._endLayerOverlay.destroy(), this._endLayerOverlay = null), _0x272eb1 && _0x272eb1();
+                this._endLayerInternal.destroy(), this._endLayerInternal = null, this._endLayerOverlay && (this._endLayerOverlay.destroy(), this._endLayerOverlay = null), callback && callback();
             }
-        }), this.tweens.add({
-            'targets': this._endLayerOverlay,
-            'alpha': 0,
+        }),
+        
+        this.tweens.add({
+            targets: this._endLayerOverlay,
+            alpha: 0,
             duration: 500
         });
     }
