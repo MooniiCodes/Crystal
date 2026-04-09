@@ -14,213 +14,417 @@ import { emitCircleEffect, emitWinBurst } from '../effects.js';
 class gameScene extends Phaser.Scene {
     constructor() {
         super({
-            'key': "GameScene"
+            key: "GameScene"
         });
     }
     create() {
-        this._bgSpeedX = 0.1, this._bgSpeedY = 0.1, this._menuCameraX = -PLAYER_GAME_CAMERA_X, this._prevCameraX = -PLAYER_GAME_CAMERA_X, this._bg = this.add.tileSprite(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, "game_bg_01").setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
-        const _0x15d27a = this.textures.get('game_bg_01').source[0].height;
-        this._bgInitY = _0x15d27a - SCREEN_HEIGHT - o, this._cameraX = -PLAYER_GAME_CAMERA_X, this._cameraY = 0, this._cameraXRef = {
+        // parallax
+        this._bgSpeedX = 0.1,
+        this._bgSpeedY = 0.1,
+
+        this._menuCameraX = -PLAYER_GAME_CAMERA_X,
+        this._prevCameraX = -PLAYER_GAME_CAMERA_X,
+        
+        this._bg = this.add.tileSprite(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, "game_bg_01")
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
+        
+        const backgroundHeight = this.textures.get('game_bg_01').source[0].height;
+        this._bgInitY = backgroundHeight - SCREEN_HEIGHT - o,
+
+        this._cameraX = -PLAYER_GAME_CAMERA_X,
+        this._cameraY = 0,
+        this._cameraXRef = {
             get 'value'() {
                 return this._v;
             },
-            '_v': -PLAYER_GAME_CAMERA_X
-        }, this._state = new GameState(), this._level = new GroundClass(this, this._cameraXRef), this._player = new PlayerClass(this, this._state, this._level), this._colorManager = new ColorManager(), this._audio = new AudioClass(this);
-        let _0x591888 = this.cache.text.get("level_1");
-        _0x591888 && this._level.loadLevel(_0x591888), this._level.createEndPortal(this), this._glitterCenterX = 0, this._glitterCenterY = GROUND_BOUNDS_Y, this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
-            'frame': 'square.png',
-            'speed': 0,
-            'scale': {
-                'start': 0.375,
-                'end': 0
+            _v: -PLAYER_GAME_CAMERA_X
+        },
+        
+        // game systems
+        this._state = new GameState(),
+        this._level = new GroundClass(this, this._cameraXRef),
+        this._player = new PlayerClass(this, this._state, this._level),
+        this._colorManager = new ColorManager(),
+        this._audio = new AudioClass(this);
+        
+        let levelData = this.cache.text.get("level_1");
+        levelData && this._level.loadLevel(levelData),
+        this._level.createEndPortal(this),
+
+        this._glitterCenterX = 0,
+        this._glitterCenterY = GROUND_BOUNDS_Y,
+        this._glitterEmitter = this.add.particles(0, 0, 'GJ_WebSheet', {
+            frame: 'square.png',
+            speed: 0,
+            scale: {
+                start: 0.375,
+                end: 0
             },
-            'alpha': {
-                'start': 1,
-                'end': 0
+            alpha: {
+                start: 1,
+                end: 0
             },
-            'lifespan': {
-                'min': 200,
-                'max': 1800
+            lifespan: {
+                min: 200,
+                max: 1800
             },
-            'frequency': 60,
-            'blendMode': BLEND_ADD,
-            'tint': COLOR_GREEN,
-            'emitting': false,
-            'emitCallback': _0x3c2a3e => {
-                _0x3c2a3e.x = this._glitterCenterX + (2 * Math.random() - 1) * (SCREEN_WIDTH / 1.8), _0x3c2a3e.y = this._glitterCenterY + 320 * (2 * Math.random() - 1);
+            frequency: 60,
+            blendMode: BLEND_ADD,
+            tint: COLOR_GREEN,
+            emitting: false,
+            emitCallback: particle => {
+                particle.x = this._glitterCenterX + (2 * Math.random() - 1) * (SCREEN_WIDTH / 1.8),
+                particle.y = this._glitterCenterY + 320 * (2 * Math.random() - 1);
             }
-        }), this._level.additiveContainer.add(this._glitterEmitter), this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)), this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)), this._level.additiveContainer.setVisible(false), this._level.container.setVisible(false), this._level.topContainer.setVisible(false), this._attempts = 1, this._bestPercent = 0, this._lastPercent = 0, this._endPortalGameY = 240, this._resetGameplayState(), this._totalJumps = 0, this._playTime = 0, this._menuActive = true, this._slideIn = false, this._slideGroundX = null, this._firstPlay = true, this._player.setCubeVisible(false), this._player.setShipVisible(false), (this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30), this._robLogo = this.add.image(160, 555, "GJ_WebSheet", 'RobTopLogoBig_001.png').setScrollFactor(0).setDepth(30).setScale(0.9), this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
-            'fontSize': "14px",
-            'color': "#ffffff",
-            'fontFamily': "Arial"
-        }).setOrigin(1, 1).setScrollFactor(0).setDepth(30).setAlpha(0.3), this._tryMeImg = this.add.image(0, 182.5, "GJ_WebSheet", "tryMe_001.png").setScrollFactor(0).setDepth(30), this._downloadBtns = []);
-        const _0x4fc67f = [{
-            'key': 'downloadSteam_001',
-            'url': "https://store.steampowered.com/app/322170/Geometry_Dash"
-        }, {
-            'key': 'downloadGoogle_001',
-            'url': "https://play.google.com/store/apps/details?id=com.robtopx.geometryjump&hl=en"
-        }, {
-            'key': "downloadApple_001",
-            'url': 'https://apps.apple.com/us/app/geometry-dash/id625334537'
-        }];
-        for (let _0xfeaf5c = 0; _0xfeaf5c < _0x4fc67f.length; _0xfeaf5c++) {
-            const _0x1ce2a6 = _0x4fc67f[_0xfeaf5c],
-                _0x6bf69f = 1 / 1.5,
-                _0x1d293f = this.add.image(0, 0, "GJ_WebSheet", _0x1ce2a6.key + '.png').setScrollFactor(0).setDepth(30).setScale(_0x6bf69f).setInteractive();
-            this._makeBouncyButton(_0x1d293f, _0x6bf69f, () => window.open(_0x1ce2a6.url, "_blank"), () => this._menuActive), this._downloadBtns.push(_0x1d293f);
-        }
-        const _0x28fa5b = this.scale.isFullscreen;
-        this._menuFsBtn = this.add.image(33, 33, "GJ_WebSheet", _0x28fa5b ? 'toggleFullscreenOff_001.png' : "toggleFullscreenOn_001.png").setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(), this._expandHitArea(this._menuFsBtn, 1.5), this._makeBouncyButton(this._menuFsBtn, 0.64, () => {
-            const _0x26b7c = !this.scale.isFullscreen;
-            this._menuFsBtn.setTexture("GJ_WebSheet", _0x26b7c ? "toggleFullscreenOff_001.png" : 'toggleFullscreenOn_001.png'), this._expandHitArea(this._menuFsBtn, 1.5), this._toggleFullscreen();
-        }, () => this._menuActive), this._menuInfoBtn = this.add.image(SCREEN_WIDTH - 30 - 3, 33, "GJ_WebSheet", "GJ_infoIcon_001.png").setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(), this._expandHitArea(this._menuInfoBtn, 1.5), this._makeBouncyButton(this._menuInfoBtn, 0.64, () => {
-            this._buildInfoPopup();
-        }, () => this._menuActive && !this._infoPopup), this._menuGlitter = this.add.particles(0, 0, "GJ_WebSheet", {
-            'frame': "square.png",
-            'speed': 0,
-            'scale': {
-                'start': 0.5,
-                'end': 0
-            },
-            'alpha': {
-                'start': 0.6,
-                'end': 0.2
-            },
-            'lifespan': {
-                'min': 1000,
-                'max': 2000
-            },
-            'frequency': 35,
-            'blendMode': BLEND_ADD,
-            'tint': 20670,
-            'x': {
-                'min': -130,
-                'max': 130
-            },
-            'y': {
-                'min': -100,
-                'max': 100
+        }),
+        this._level.additiveContainer.add(this._glitterEmitter),
+        
+        this._bg.setTint(this._colorManager.getHex(ID_BACKGROUND_COLOR)),
+        this._level.setGroundColor(this._colorManager.getHex(ID_GROUND_COLOR)),
+        
+        this._level.additiveContainer.setVisible(false),
+        this._level.container.setVisible(false),
+        this._level.topContainer.setVisible(false),
+        
+        // stats
+        this._attempts = 1,
+        this._bestPercent = 0,
+        this._lastPercent = 0,
+        this._endPortalGameY = 240,
+        this._resetGameplayState(),
+        this._totalJumps = 0,
+        this._playTime = 0,
+        
+        // menu state
+        this._menuActive = true,
+        this._slideIn = false,
+        this._slideGroundX = null,
+        this._firstPlay = true,
+        
+        this._player.setCubeVisible(false),
+        this._player.setShipVisible(false),
+        
+        // ui elements
+        (
+            this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30),
+            this._robLogo = this.add.image(160, 555, "GJ_WebSheet", 'RobTopLogoBig_001.png').setScrollFactor(0).setDepth(30).setScale(0.9),
+
+            this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
+                fontSize: "14px",
+                color: "#ffffff",
+                fontFamily: "Arial"
+            }).setOrigin(1, 1).setScrollFactor(0).setDepth(30).setAlpha(0.3),
+
+            this._tryMeImg = this.add.image(0, 182.5, "GJ_WebSheet", "tryMe_001.png").setScrollFactor(0).setDepth(30),
+            
+            // create download links
+            this._downloadBtns = []);
+            const downloadLinks = [
+                {
+                    key: 'downloadSteam_001',
+                    url: "https://store.steampowered.com/app/322170/Geometry_Dash"
+                },
+                {
+                    key: 'downloadGoogle_001',
+                    url: "https://play.google.com/store/apps/details?id=com.robtopx.geometryjump&hl=en"
+                },
+                {
+                    key: "downloadApple_001",
+                    url: 'https://apps.apple.com/us/app/geometry-dash/id625334537'
+                }
+            ];
+            for (let i = 0; i < downloadLinks.length; i++) {
+                const link = downloadLinks[i],
+                    scale = 1 / 1.5,
+                    button = this.add.image(0, 0, "GJ_WebSheet", link.key + '.png').setScrollFactor(0).setDepth(30).setScale(scale).setInteractive();
+                this._makeBouncyButton(button, scale, () => window.open(link.url, "_blank"), () => this._menuActive),
+                this._downloadBtns.push(button);
             }
-        }).setScrollFactor(0).setDepth(29), this._playBtn = this.add.image(0, 0, "GJ_WebSheet", "GJ_playBtn_001.png").setScrollFactor(0).setDepth(30).setInteractive(), this._playBtnPressed = false, this._makeBouncyButton(this._playBtn, 1, () => {
-            this._audio.playEffect("playSound_01", {
-                'volume': 1
-            }), this._startGame();
-        }, () => this._menuActive && !this._playBtnPressed), this._positionMenuItems(), this._spaceWasDown = false, this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), this._upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP), this._pauseBtn = this.add.image(SCREEN_WIDTH - 30, 30, "GJ_WebSheet", "GJ_pauseBtn_clean_001.png").setScrollFactor(0).setDepth(30).setAlpha(75 / 255).setVisible(false), this._pauseBtn.setInteractive(), this._expandHitArea(this._pauseBtn, 2), this._pauseBtn.on("pointerdown", () => this._pauseGame()), this._escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC), this._escKey.on("down", () => {
-            this._paused ? this._resumeGame() : this._menuActive || this._slideIn || this._state.isDead || this._levelWon || this._pauseGame();
-        }), this._paused = false, this._pauseContainer = null, this._sfxVolume = this.game.registry.get("userSfxVol") ?? 1, this.input.on("pointerdown", () => {
-            this._menuActive || this._paused || this._pushButton();
-        }), this.input.on("pointerup", () => {
-            this._menuActive || this._paused || this._releaseButton();
-        }), window.addEventListener("pointerup", () => this._releaseButton()), window.addEventListener("touchend", () => this._releaseButton()), this.scale.on("enterfullscreen", () => this._onFullscreenChange(true)), this.scale.on("leavefullscreen", () => this._onFullscreenChange(false)), this._buildHUD(), document.addEventListener("visibilitychange", () => {
-            document.hidden ? this._audio.pauseMusic() : this._menuActive || this._paused || this._state.isDead || this._levelWon || this._audio.resumeMusic();
-        }), window.addEventListener("orientationchange", () => {
-            this.time.delayedCall(100, () => this.scale.refresh());
-        }), window.addEventListener("resize", () => {
-            this.scale.refresh();
-        }), this.game.registry.get("fadeInFromBlack") && (this.game.registry.remove("fadeInFromBlack"), this.cameras.main.fadeIn(400, 0, 0, 0));
+            
+            // fullscreen button
+            const isFullscreen = this.scale.isFullscreen;
+            this._menuFsBtn = this.add.image(33, 33, "GJ_WebSheet", isFullscreen ? 'toggleFullscreenOff_001.png' : "toggleFullscreenOn_001.png")
+            .setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(),
+            this._expandHitArea(this._menuFsBtn, 1.5),
+            this._makeBouncyButton(this._menuFsBtn, 0.64, () => {
+                const newFullscreen = !this.scale.isFullscreen;
+                this._menuFsBtn.setTexture("GJ_WebSheet", newFullscreen ? "toggleFullscreenOff_001.png" : 'toggleFullscreenOn_001.png'),
+                this._expandHitArea(this._menuFsBtn, 1.5),
+                this._toggleFullscreen();
+           }, () => this._menuActive),
+        
+            // info button
+            this._menuInfoBtn = this.add.image(SCREEN_WIDTH - 30 - 3, 33, "GJ_WebSheet", "GJ_infoIcon_001.png")
+            .setScrollFactor(0).setDepth(30).setScale(0.64).setAlpha(0.8).setTint(Phaser.Display.Color.GetColor(0, Math.round(102), 255)).setInteractive(),
+            
+            this._expandHitArea(this._menuInfoBtn, 1.5),
+            this._makeBouncyButton(
+                this._menuInfoBtn, 0.64,
+                () => {
+                    this._buildInfoPopup();
+                }, () => this._menuActive && !this._infoPopup
+            ),
+            
+            // play button glitter
+            this._menuGlitter = this.add.particles(0, 0, "GJ_WebSheet", {
+                frame: "square.png",
+                speed: 0,
+                scale: {
+                    start: 0.5,
+                    end: 0
+                },
+                alpha: {
+                    start: 0.6,
+                    end: 0.2
+                },
+                lifespan: {
+                    min: 1000,
+                    max: 2000
+                },
+                frequency: 35,
+                blendMode: BLEND_ADD,
+                tint: 20670,
+                x: {
+                    min: -130,
+                    max: 130
+                },
+                y: {
+                    min: -100,
+                    max: 100
+                }
+            }).setScrollFactor(0).setDepth(29),
+            
+            // animated play button
+            this._playBtn = this.add.image(0, 0, "GJ_WebSheet", "GJ_playBtn_001.png")
+            .setScrollFactor(0).setDepth(30).setInteractive(),
+            
+            this._playBtnPressed = false,
+            this._makeBouncyButton(this._playBtn, 1,
+                () => {
+                    this._audio.playEffect("playSound_01", {
+                        volume: 1
+                    }),
+                    this._startGame();
+                }, () => this._menuActive && !this._playBtnPressed),
+            
+            this._positionMenuItems(),
+
+            // input
+            this._spaceWasDown = false,
+            this._spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+            this._upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
+
+            this._pauseBtn = this.add.image(SCREEN_WIDTH - 30, 30, "GJ_WebSheet", "GJ_pauseBtn_clean_001.png")
+                .setScrollFactor(0).setDepth(30).setAlpha(75 / 255).setVisible(false),
+            this._pauseBtn.setInteractive(),
+            this._expandHitArea(this._pauseBtn, 2),
+            this._pauseBtn.on("pointerdown", () => this._pauseGame()),
+            
+            this._escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC),
+            this._escKey.on("down", () => {
+                this._paused
+                ? this._resumeGame()
+                : this._menuActive || this._slideIn || this._state.isDead || this._levelWon || this._pauseGame();
+            }),
+            
+            this._paused = false,
+            this._pauseContainer = null,
+            this._sfxVolume = this.game.registry.get("userSfxVol") ?? 1,
+
+            this.input.on("pointerdown", () => {
+                this._menuActive || this._paused || this._pushButton();
+            }),
+            this.input.on("pointerup", () => {
+                this._menuActive || this._paused || this._releaseButton();
+            }),
+            
+            window.addEventListener("pointerup", () => this._releaseButton()),
+            window.addEventListener("touchend", () => this._releaseButton()),
+            
+            this.scale.on("enterfullscreen", () => this._onFullscreenChange(true)),
+            this.scale.on("leavefullscreen", () => this._onFullscreenChange(false)),
+            
+            this._buildHUD(),
+            
+            document.addEventListener("visibilitychange", () => {
+                document.hidden
+                ? this._audio.pauseMusic()
+                : this._menuActive || this._paused || this._state.isDead || this._levelWon || this._audio.resumeMusic();
+            }),
+            window.addEventListener("orientationchange", () => {
+                this.time.delayedCall(100, () => this.scale.refresh());
+            }),
+            window.addEventListener("resize", () => {
+                this.scale.refresh();
+            }),
+
+            this.game.registry.get("fadeInFromBlack") && (
+                this.game.registry.remove("fadeInFromBlack"),
+                this.cameras.main.fadeIn(400, 0, 0, 0)
+            );
     }
     _buildHUD() {
-        this._attemptsLabel = this.add.bitmapText(0, 0, "bigFont", 'Attempt\x201', 65).setOrigin(0.5, 0.5).setVisible(false), this._level.topContainer.add(this._attemptsLabel), this._positionAttemptsLabel(), this._fpsText = this.add.text(SCREEN_WIDTH - 20, 10, '', {
-            'fontSize': "28px",
-            'fill': "#ff0000",
-            'fontFamily': "Arial"
-        }).setOrigin(1, 0).setScrollFactor(0).setDepth(999).setVisible(false), this._fpsAccum = 0, this._fpsFrames = 0, this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H).on("down", () => {
+        this._attemptsLabel = this.add.bitmapText(0, 0, "bigFont", 'Attempt\x201', 65).setOrigin(0.5, 0.5).setVisible(false),
+        this._level.topContainer.add(this._attemptsLabel),
+        this._positionAttemptsLabel(),
+
+        this._fpsText = this.add.text(SCREEN_WIDTH - 20, 10, '', {
+            fontSize: "28px",
+            fill: "#ff0000",
+            fontFamily: "Arial"
+        }).setOrigin(1, 0).setScrollFactor(0).setDepth(999).setVisible(false),
+        this._fpsAccum = 0,
+        this._fpsFrames = 0,
+        this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H).on("down", () => {
             this._fpsText.setVisible(!this._fpsText.visible);
         });
     }
-    toggleGlitter(_0x34c21a) {
-        _0x34c21a ? this._glitterEmitter.start() : this._glitterEmitter.stop();
+    toggleGlitter(active) {
+        active
+        ? this._glitterEmitter.start()
+        : this._glitterEmitter.stop();
     }
-    _setParticleTimeScale(_0x41fa6a) {
-        const _0x2a8756 = _0x3d71c7 => {
-            _0x3d71c7 && "ParticleEmitter" === _0x3d71c7.type && (_0x3d71c7.timeScale = _0x41fa6a), _0x3d71c7 && _0x3d71c7.list && _0x3d71c7.list.forEach(_0x2a8756);
+    // recursively set timeScale for all particle emitters in the level, used for pausing
+    _setParticleTimeScale(scale) {
+        const walk = object => {
+            object && "ParticleEmitter" === object.type && (
+                object.timeScale = scale
+            ),
+            object && object.list &&
+                object.list.forEach(walk);
         };
-        _0x2a8756(this._level.container), _0x2a8756(this._level.topContainer), this._glitterEmitter && (this._glitterEmitter.timeScale = _0x41fa6a);
+        walk(this._level.container),
+        walk(this._level.topContainer),
+        this._glitterEmitter && (
+            this._glitterEmitter.timeScale = scale
+        );
     }
     _pauseGame() {
-        this._paused || this._menuActive || this._slideIn || this._state.isDead || this._levelWon || (this._paused = true, this._pauseBtn.setVisible(false), this._audio.pauseMusic(), this._setParticleTimeScale(0), this._buildPauseOverlay());
+        this._paused || this._menuActive || this._slideIn || this._state.isDead || this._levelWon || (
+            this._paused = true,
+            this._pauseBtn.setVisible(false),
+            this._audio.pauseMusic(),
+            this._setParticleTimeScale(0),
+            this._buildPauseOverlay()
+        );
     }
     _resumeGame() {
-        this._paused && (this._setParticleTimeScale(1), this._paused = false, this._pauseBtn.setVisible(true).setAlpha(75 / 255), this._audio.resumeMusic(), this._pauseContainer && (this._pauseContainer.destroy(), this._pauseContainer = null));
+        this._paused && (
+            this._setParticleTimeScale(1),
+            this._paused = false,
+            this._pauseBtn.setVisible(true).setAlpha(75 / 255),
+            this._audio.resumeMusic(),
+            this._pauseContainer && (
+                this._pauseContainer.destroy(),
+                this._pauseContainer = null
+            )
+        );
     }
     _buildPauseOverlay() {
-        const _0x13af33 = SCREEN_WIDTH / 2,
-            _0xf70e04 = 320,
-            _0x4eb71b = SCREEN_WIDTH - 40;
+        const containerX = SCREEN_WIDTH / 2,
+            containerY = 320,
+            panelWidth = SCREEN_WIDTH - 40;
+
         this._pauseContainer = this.add.container(0, 0).setScrollFactor(0).setDepth(100);
-        const _0x505665 = this.add.rectangle(_0x13af33, _0xf70e04, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 75 / 255);
-        _0x505665.setInteractive(), this._pauseContainer.add(_0x505665);
-        const _0x103191 = 0.325 * this.textures.get("square04_001").source[0].width,
-            _0x954813 = this._drawScale9(_0x13af33, _0xf70e04, _0x4eb71b, 600, 'square04_001', _0x103191, 0, 150 / 255);
-        this._pauseContainer.add(_0x954813);
-        const _0x3874ed = this.scale.isFullscreen,
-            _0x426993 = this.add.image(_0x13af33 - _0x4eb71b / 2 + 40, 60, 'GJ_WebSheet', _0x3874ed ? "toggleFullscreenOff_001.png" : 'toggleFullscreenOn_001.png').setScale(0.64).setInteractive();
-        this._expandHitArea(_0x426993, 2.5), this._pauseContainer.add(_0x426993), this._makeBouncyButton(_0x426993, 0.64, () => {
-            const _0x23c9e5 = !this.scale.isFullscreen;
-            _0x426993.setTexture("GJ_WebSheet", _0x23c9e5 ? 'toggleFullscreenOff_001.png' : "toggleFullscreenOn_001.png"), this._expandHitArea(_0x426993, 2.5), this._toggleFullscreen();
-        }), this._pauseContainer.add(this.add.bitmapText(_0x13af33, 65, 'bigFont', "Stereo Madness", 40).setOrigin(0.5, 0.5));
-        const _0x21dacf = 170,
-            _0x46bab2 = this._bestPercent || 0,
-            _0x38b8d1 = this.add.image(_0x13af33, _0x21dacf, 'GJ_WebSheet', "GJ_progressBar_001.png").setTint(0).setAlpha(125 / 255);
-        this._pauseContainer.add(_0x38b8d1);
-        const _0x1d49a9 = this.textures.getFrame("GJ_WebSheet", "GJ_progressBar_001.png"),
-            _0xb5ab6f = _0x1d49a9 ? _0x1d49a9.width : 680,
-            _0x1e6502 = _0x1d49a9 ? _0x1d49a9.height : 40,
-            _0x3782ca = Math.max(1, Math.floor(_0xb5ab6f * (_0x46bab2 / 100))),
-            _0x3d0987 = this.add.image(0, 0, 'GJ_WebSheet', "GJ_progressBar_001.png").setTint(65280).setScale(0.992, 0.86).setOrigin(0, 0.5).setCrop(0, 0, _0x3782ca, _0x1e6502);
-        _0x3d0987.setPosition(_0x13af33 - 0.992 * _0xb5ab6f / 2, _0x21dacf), this._pauseContainer.add(_0x3d0987), this._pauseContainer.add(this.add.bitmapText(_0x13af33, _0x21dacf, "bigFont", _0x46bab2 + '%', 30).setOrigin(0.5, 0.5).setScale(0.7)), this._pauseContainer.add(this.add.bitmapText(_0x13af33, 130, "bigFont", "Normal Mode", 30).setOrigin(0.5, 0.5).setScale(0.78));
-        const _0x4791ac = [{
-                'frame': "GJ_replayBtn_001.png",
-                'action': () => {
+        const backdrop = this.add.rectangle(containerX, containerY, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 75 / 255);
+        backdrop.setInteractive(), this._pauseContainer.add(backdrop);
+
+        const corner = 0.325 * this.textures.get("square04_001").source[0].width,
+            nineSliceCorner = this._drawScale9(containerX, containerY, panelWidth, 600, 'square04_001', corner, 0, 150 / 255);
+        this._pauseContainer.add(nineSliceCorner);
+        
+        const isFullscreen = this.scale.isFullscreen,
+
+            fullscreenButton = this.add.image(containerX - panelWidth / 2 + 40, 60, 'GJ_WebSheet', isFullscreen ? "toggleFullscreenOff_001.png" : 'toggleFullscreenOn_001.png').setScale(0.64).setInteractive();
+        this._expandHitArea(fullscreenButton, 2.5),
+        this._pauseContainer.add(fullscreenButton),
+        this._makeBouncyButton(fullscreenButton, 0.64, () => {
+            const notFullscreen = !this.scale.isFullscreen;
+            fullscreenButton.setTexture("GJ_WebSheet", notFullscreen ? 'toggleFullscreenOff_001.png' : "toggleFullscreenOn_001.png"),
+            this._expandHitArea(fullscreenButton, 2.5),
+            this._toggleFullscreen();
+        }),
+        
+        // label
+        this._pauseContainer.add(this.add.bitmapText(containerX, 65, 'bigFont', "Stereo Madness", 40).setOrigin(0.5, 0.5));
+
+        // best percent bar
+        const barY = 170,
+            bestPercent = this._bestPercent || 0,
+            percentBarImage = this.add.image(containerX, barY, 'GJ_WebSheet', "GJ_progressBar_001.png").setTint(0).setAlpha(125 / 255);
+        this._pauseContainer.add(percentBarImage);
+
+        const progressBarFrame = this.textures.getFrame("GJ_WebSheet", "GJ_progressBar_001.png"),
+            barWidth = progressBarFrame ? progressBarFrame.width : 680,
+            barHeight = progressBarFrame ? progressBarFrame.height : 40,
+            fillWidth = Math.max(1, Math.floor(barWidth * (bestPercent / 100))),
+            fill = this.add.image(0, 0, 'GJ_WebSheet', "GJ_progressBar_001.png").setTint(65280).setScale(0.992, 0.86).setOrigin(0, 0.5).setCrop(0, 0, fillWidth, barHeight);
+        fill.setPosition(containerX - 0.992 * barWidth / 2, barY), this._pauseContainer.add(fill),
+        
+        this._pauseContainer.add(this.add.bitmapText(containerX, barY, "bigFont", bestPercent + '%', 30).setOrigin(0.5, 0.5).setScale(0.7)),
+        this._pauseContainer.add(this.add.bitmapText(containerX, 130, "bigFont", "Normal Mode", 30).setOrigin(0.5, 0.5).setScale(0.78)); // there only is normal mode.. lol
+        
+        const pauseButtons = [
+            {
+                frame: "GJ_replayBtn_001.png",
+                action: () => {
                     this._resumeGame(), this._restartLevel();
                 }
-            }, {
-                'frame': "GJ_playBtn2_001.png",
-                'action': () => this._resumeGame()
-            }, {
-                'frame': "GJ_menuBtn_001.png",
-                'action': () => {
+            },
+            {
+                frame: "GJ_playBtn2_001.png",
+                action: () => this._resumeGame()
+            },
+            {
+                frame: "GJ_menuBtn_001.png",
+                action: () => {
                     this._audio.playEffect("quitSound_01"), this._audio.stopMusic(), this._resumeGame(), this.scene.restart();
                 }
-            }],
-            _0x25aa59 = _0x4791ac.map(_0x120c08 => {
-                const _0x44c01c = this.textures.getFrame("GJ_WebSheet", _0x120c08.frame);
-                return _0x44c01c ? _0x44c01c.width : 246;
+            }
+        ],
+            buttonWidths = pauseButtons.map(button => {
+                const frame = this.textures.getFrame("GJ_WebSheet", button.frame);
+                return frame ? frame.width : 246;
             });
-        let _0x599a9b = _0x13af33 - (_0x25aa59.reduce((_0x53adf8, _0x10ae31) => _0x53adf8 + _0x10ae31, 0) + 40 * (_0x4791ac.length - 1)) / 2;
-        for (let _0x18feee = 0; _0x18feee < _0x4791ac.length; _0x18feee++) {
-            const _0x17809c = _0x4791ac[_0x18feee],
-                _0x228482 = _0x25aa59[_0x18feee],
-                _0x7f0786 = this.add.image(_0x599a9b + _0x228482 / 2, 330, "GJ_WebSheet", _0x17809c.frame).setInteractive();
-            this._pauseContainer.add(_0x7f0786), this._makeBouncyButton(_0x7f0786, 1, _0x17809c.action), _0x599a9b += _0x228482 + 40;
+
+        let buttonsX = containerX - (buttonWidths.reduce((a, b) => a + b, 0) + 40 * (pauseButtons.length - 1)) / 2;
+        for (let i = 0; i < pauseButtons.length; i++) {
+            const thisMeta = pauseButtons[i],
+                thisWidth = buttonWidths[i],
+                button = this.add.image(buttonsX + thisWidth / 2, 330, "GJ_WebSheet", thisMeta.frame).setInteractive();
+            this._pauseContainer.add(button),
+            this._makeBouncyButton(button, 1, thisMeta.action),
+            buttonsX += thisWidth + 40;
         }
-        const _0x1008ae = 500,
-            _0x22b43a = 0.7,
-            _0x41925a = this.textures.getFrame("GJ_WebSheet", "slidergroove.png"),
-            _0x372782 = _0x41925a ? _0x41925a.width : 420,
-            _0xe34699 = (_0x422be3, _0x4b32e0, _0xaaab25, _0x169b87) => {
-                this._pauseContainer.add(this.add.image(_0x422be3 - 180 - 5, _0x1008ae, "GJ_WebSheet", _0x4b32e0).setScale(1.2));
-                const _0x51c57b = (_0x372782 - 8) * _0x22b43a,
-                    _0x34d1c1 = _0x422be3 - _0x372782 * _0x22b43a / 2 + 2.8,
-                    _0xe86505 = _0xaaab25 * _0x51c57b,
-                    _0x43dbf4 = this.add.tileSprite(_0x34d1c1, _0x1008ae, _0xe86505 > 0 ? _0xe86505 : 1, 11.2, "sliderBar").setOrigin(0, 0.5).setVisible(_0xe86505 > 0);
+
+        // volume sliders
+        const sliderY = 500,
+            sliderScale = 0.7,
+            grooveFrame = this.textures.getFrame("GJ_WebSheet", "slidergroove.png"),
+            grooveWidth = grooveFrame ? grooveFrame.width : 420,
+
+            addSlider = (x, icon, value, onChange) => {
+                this._pauseContainer.add(this.add.image(x - 180 - 5, sliderY, "GJ_WebSheet", icon).setScale(1.2));
+                const trackWidth = (grooveWidth - 8) * sliderScale,
+                    _0x34d1c1 = x - grooveWidth * sliderScale / 2 + 2.8,
+                    _0xe86505 = value * trackWidth,
+                    _0x43dbf4 = this.add.tileSprite(_0x34d1c1, sliderY, _0xe86505 > 0 ? _0xe86505 : 1, 11.2, "sliderBar").setOrigin(0, 0.5).setVisible(_0xe86505 > 0);
                 this._pauseContainer.add(_0x43dbf4);
-                const _0x4de88c = this.add.image(_0x422be3, _0x1008ae, 'GJ_WebSheet', "slidergroove.png").setScale(_0x22b43a);
+                const _0x4de88c = this.add.image(x, sliderY, 'GJ_WebSheet', "slidergroove.png").setScale(sliderScale);
                 this._pauseContainer.add(_0x4de88c);
-                const _0x106f98 = _0x34d1c1 + _0xaaab25 * _0x51c57b,
-                    _0x441360 = this.add.image(_0x106f98, _0x1008ae, 'GJ_WebSheet', "sliderthumb.png").setScale(_0x22b43a).setInteractive({
+                const _0x106f98 = _0x34d1c1 + value * trackWidth,
+                    _0x441360 = this.add.image(_0x106f98, sliderY, 'GJ_WebSheet', "sliderthumb.png").setScale(sliderScale).setInteractive({
                         'draggable': true,
                         'useHandCursor': true
                     });
                 this._pauseContainer.add(_0x441360), _0x441360.on("pointerdown", () => _0x441360.setTexture("GJ_WebSheet", "sliderthumbsel.png")), _0x441360.on("pointerup", () => _0x441360.setTexture("GJ_WebSheet", "sliderthumb.png")), _0x441360.on("pointerout", () => _0x441360.setTexture("GJ_WebSheet", 'sliderthumb.png')), _0x441360.on("drag", (_0x1ac7f7, _0x35b64c) => {
-                    _0x441360.x = Math.max(_0x34d1c1, Math.min(_0x34d1c1 + _0x51c57b, _0x35b64c));
-                    const _0x4a1663 = (_0x441360.x - _0x34d1c1) / _0x51c57b,
+                    _0x441360.x = Math.max(_0x34d1c1, Math.min(_0x34d1c1 + trackWidth, _0x35b64c));
+                    const _0x4a1663 = (_0x441360.x - _0x34d1c1) / trackWidth,
                         _0x2bc46f = _0x4a1663 < 0.03 ? 0 : _0x4a1663;
-                    _0x43dbf4.width = Math.max(1, _0x2bc46f * _0x51c57b), _0x43dbf4.setVisible(_0x2bc46f > 0), _0x169b87(_0x2bc46f);
+                    _0x43dbf4.width = Math.max(1, _0x2bc46f * trackWidth), _0x43dbf4.setVisible(_0x2bc46f > 0), onChange(_0x2bc46f);
                 });
             };
-        _0xe34699(_0x13af33 - 200, "gj_songIcon_001.png", this._audio.getUserMusicVolume(), _0x3ebce2 => this._audio.setUserMusicVolume(_0x3ebce2)), _0xe34699(_0x13af33 + 200, "GJ_sfxIcon_001.png", this._sfxVolume, _0x3224fb => {
+        addSlider(containerX - 200, "gj_songIcon_001.png", this._audio.getUserMusicVolume(), _0x3ebce2 => this._audio.setUserMusicVolume(_0x3ebce2)), addSlider(containerX + 200, "GJ_sfxIcon_001.png", this._sfxVolume, _0x3224fb => {
             this._sfxVolume = _0x3224fb, this.game.registry.set("userSfxVol", _0x3224fb);
         });
     }
