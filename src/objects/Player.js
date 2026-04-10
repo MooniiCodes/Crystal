@@ -3,7 +3,7 @@
 */
 // is 30 half the player size?
 // UPDATE: 30 is tile size in units, i believe
-import { PLAYER_GAME_CAMERA_X, d, JUMP_VELOCITY, g, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD } from '../constants.js';
+import { PLAYER_GAME_CAMERA_X, TIME_SCALE, JUMP_VELOCITY, TILE_SIZE2, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD } from '../constants.js';
 import { findAtlasFrame } from '../systems/GameState.js';
 import { StreakClass, createSpriteLayer } from './PlayerVisuals.js';
 
@@ -49,7 +49,7 @@ class PlayerClass {
         this._playerSpriteLayer ) // if this then
             this._playerSpriteLayer.sprite.setTint(COLOR_GREEN);
         else { // else if not, create a green rectangle as a placeholder
-            let fallback = scene.add.rectangle(playerX, screenY, g, g, COLOR_GREEN);
+            let fallback = scene.add.rectangle(playerX, screenY, TILE_SIZE2, TILE_SIZE2, COLOR_GREEN);
             fallback.setDepth(10),
             this._playerSpriteLayer = {
                 sprite: fallback
@@ -916,7 +916,7 @@ class PlayerClass {
     runRotateAction() {
         this.rotateActionActive = true,
         this.rotateActionTime = 0,
-        this.rotateActionDuration = 0.39 / d,
+        this.rotateActionDuration = 0.39 / TIME_SCALE,
         this.rotateActionStart = this._rotation,
         this.rotateActionTotal = Math.PI * this.flipMod();
     }
@@ -1188,11 +1188,11 @@ class PlayerClass {
             playerScreenY = worldYToScreenY(playerY) + cameraY;
 
         graphics.lineStyle(2, 0xFFFF, 0.8),
-        graphics.strokeRect(playerScreenX - halfSize, playerScreenY - halfSize2, g, g),
+        graphics.strokeRect(playerScreenX - halfSize, playerScreenY - halfSize2, TILE_SIZE2, TILE_SIZE2),
         graphics.lineStyle(2, 0xFFFF00, 0.8),
-        graphics.strokeRect(playerScreenX - halfSize + 5, playerScreenY - halfSize2, 50, g),
+        graphics.strokeRect(playerScreenX - halfSize + 5, playerScreenY - halfSize2, 50, TILE_SIZE2),
         graphics.lineStyle(2, 0xFF0000, 0.8),
-        graphics.strokeRect(playerScreenX - halfSize, playerScreenY - halfSize2 + 5, g, 50);
+        graphics.strokeRect(playerScreenX - halfSize, playerScreenY - halfSize2 + 5, TILE_SIZE2, 50);
         let innerTopY = worldYToScreenY(playerY - halfSize2 + innerMargin) + cameraY,
             innerBottomY = worldYToScreenY(playerY + halfSize2 - innerMargin) + cameraY;
         graphics.lineStyle(2, 0xFF8800, 0.9), graphics.lineBetween(playerScreenX - halfSize - 8, innerTopY, playerScreenX + halfSize + 8, innerTopY), graphics.lineBetween(playerScreenX - halfSize - 8, innerBottomY, playerScreenX + halfSize + 8, innerBottomY), (graphics.lineStyle(2, 16777215, 1), graphics.strokeRect(playerScreenX - 9, playerScreenY - 9, 36, 18));

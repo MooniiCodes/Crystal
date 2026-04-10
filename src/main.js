@@ -3,8 +3,8 @@
 */
 import * as Phaser from 'phaser';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from './constants.js';
-import { bootScene } from './scenes/BootScene.js';
-import { gameScene } from './scenes/GameScene.js';
+import { BootScene } from './scenes/BootScene.js';
+import { GameScene } from './scenes/GameScene.js';
 
 const PHASER = Phaser;
 
@@ -37,7 +37,7 @@ const phaserConfig = {
         mode: PHASER.Scale.FIT,
         autoCenter: PHASER.Scale.CENTER_BOTH
     },
-    scene: [bootScene, gameScene]
+    scene: [BootScene, GameScene]
 };
 
 new PHASER[("Game")](phaserConfig);

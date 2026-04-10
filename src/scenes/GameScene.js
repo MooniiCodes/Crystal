@@ -3,7 +3,7 @@
     includes main game loop and title screen and all that stuff, in 1 scene
 */
 import * as Phaser from 'phaser';
-import { SCREEN_WIDTH, SCREEN_HEIGHT, o, PLAYER_GAME_CAMERA_X, u, c, d, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, BLEND_ADD, worldYToScreenY, setScreenWidth } from '../constants.js';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, SHIP_CAMERA_Y_OFFSET, PLAYER_GAME_CAMERA_X, TICK_DELTA, PLAYER_SPEED, TIME_SCALE, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, BLEND_ADD, worldYToScreenY, setScreenWidth } from '../constants.js';
 import { GameState } from '../systems/GameState.js';
 import { GroundClass } from '../objects/Ground.js';
 import { PlayerClass } from '../objects/Player.js';
@@ -11,7 +11,7 @@ import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/C
 import { AudioClass } from '../systems/AudioManager.js';
 import { emitCircleEffect, emitWinBurst } from '../effects.js';
 
-class gameScene extends Phaser.Scene {
+class GameScene extends Phaser.Scene {
     constructor() {
         super({
             key: "GameScene"
@@ -29,7 +29,7 @@ class gameScene extends Phaser.Scene {
         .setOrigin(0, 0).setScrollFactor(0).setDepth(-10);
         
         const backgroundHeight = this.textures.get('game_bg_01').source[0].height;
-        this._bgInitY = backgroundHeight - SCREEN_HEIGHT - o,
+        this._bgInitY = backgroundHeight - SCREEN_HEIGHT - SHIP_CAMERA_Y_OFFSET,
 
         this._cameraX = -PLAYER_GAME_CAMERA_X,
         this._cameraY = 0,
@@ -972,12 +972,12 @@ class gameScene extends Phaser.Scene {
             let py = this._state.y,
                 upper = 140,
                 lower = 80,
-                worldY = cameraY - o + 320;
+                worldY = cameraY - SHIP_CAMERA_Y_OFFSET + 320;
             
             py > worldY + upper
-                ? targetY = py - 320 - upper + o
+                ? targetY = py - 320 - upper + SHIP_CAMERA_Y_OFFSET
             : py < worldY - lower && (
-                targetY = py - 320 + lower + o
+                targetY = py - 320 + lower + SHIP_CAMERA_Y_OFFSET
             );
         }
         (
@@ -997,12 +997,12 @@ class gameScene extends Phaser.Scene {
     // returns the quantized delta to be used for movement, and stores the leftover in a buffer for the next frame
     _quantizeDelta(deltaMs) {
         let total = deltaMs / 1000 + this._deltaBuffer,
-            steps = Math.round(total / u);
+            steps = Math.round(total / TICK_DELTA);
         
         steps < 0 && (steps = 0),
         steps > 60 && (steps = 60);
             
-        let used = steps * u;
+        let used = steps * TICK_DELTA;
         return this._deltaBuffer = total - used,
             
             60 * used;
@@ -1035,7 +1035,7 @@ class gameScene extends Phaser.Scene {
             this._spaceWasDown = this._spaceKey.isDown || this._upKey.isDown;
             const frames = Math.min(deltaMs / 1000 * 60, 2),
                 titleScreenSpeed = 0.25;
-            this._menuCameraX = (this._menuCameraX || 0) + frames * c * d * titleScreenSpeed;
+            this._menuCameraX = (this._menuCameraX || 0) + frames * PLAYER_SPEED * TIME_SCALE * titleScreenSpeed;
             const cameraX = this._cameraX;
             return this._cameraX = this._menuCameraX,
                 this._updateBackground(),
@@ -1048,12 +1048,12 @@ class gameScene extends Phaser.Scene {
         // the slide into gameplay effect
         if (this._slideIn) {
             const frames = this._quantizeDelta(deltaMs);
-            this._playerWorldX += frames * c * d;
+            this._playerWorldX += frames * PLAYER_SPEED * TIME_SCALE;
             const groundMultiplier = 0.25;
-            this._slideGroundX = (this._slideGroundX || this._cameraX) + frames * c * d * groundMultiplier, this._cameraXRef._v = this._slideGroundX;
+            this._slideGroundX = (this._slideGroundX || this._cameraX) + frames * PLAYER_SPEED * TIME_SCALE * groundMultiplier, this._cameraXRef._v = this._slideGroundX;
             const playerScreenX = this._playerWorldX - this._cameraX;
             if (
-                this._player.updateGroundRotation(frames * d),
+                this._player.updateGroundRotation(frames * TIME_SCALE),
                 this._player.syncSprites(this._cameraX, this._cameraY, deltaMs / 1000, playerScreenX),
                 this._level.additiveContainer.x = -this._cameraX,
                 this._level.additiveContainer.y = this._cameraY,
@@ -1176,7 +1176,7 @@ class gameScene extends Phaser.Scene {
         );
 
         let subDelta = subSteps > 0 ? physicsTotal / subSteps : 0,
-            subDeltaScaled = subDelta * d;
+            subDeltaScaled = subDelta * TIME_SCALE;
 
         const prevY = this._state.y;
         for (let i = 0; i < subSteps; i++)
@@ -1184,12 +1184,12 @@ class gameScene extends Phaser.Scene {
             this._player.updateJump(subDeltaScaled),
             this._state.y += this._state.yVelocity * subDeltaScaled,
             this._player.checkCollisions(this._playerWorldX - PLAYER_GAME_CAMERA_X),
-            this._playerWorldX += subDelta * c * d,
+            this._playerWorldX += subDelta * PLAYER_SPEED * TIME_SCALE,
             this._state.isFlying || (
                 this._state.onGround
                 ? this._player.updateGroundRotation(subDeltaScaled)
                 : this._player.rotateActionActive &&
-                this._player.updateRotateAction(u)
+                this._player.updateRotateAction(TICK_DELTA)
             );
         
         if (
@@ -1724,4 +1724,4 @@ class gameScene extends Phaser.Scene {
     }
 }
 
-export { gameScene };
+export { GameScene };

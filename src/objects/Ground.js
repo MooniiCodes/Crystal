@@ -2,8 +2,8 @@
     ground and level objects
 */
 import * as Phaser from 'phaser';
-import { SCREEN_WIDTH, a, o, PLAYER_GAME_CAMERA_X, FLY_CEILING, g, COLOR_GREEN, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD, BLEND_NORMAL,
-    OBJECT_TYPE_2_SOLID, OBJECT_TYPE_2_HAZARD, OBJECT_TYPE_2_DECORATIVE, OBJECT_TYPE_2_PORTAL, OBJECT_TYPE_2_PAD, OBJECT_TYPE_2_RING, OBJECT_TYPE_2_TRIGGER, OBJECT_TYPE_2_SPEED, OBJECT_TYPE_2_FLY, OBJECT_TYPE_2_CUBE
+import { SCREEN_WIDTH, TILE_SIZE, SHIP_CAMERA_Y_OFFSET, PLAYER_GAME_CAMERA_X, FLY_CEILING, TILE_SIZE2, COLOR_GREEN, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD, BLEND_NORMAL,
+    OBJECT_TYPE2_SOLID, OBJECT_TYPE2_HAZARD, OBJECT_TYPE2_DECORATIVE, OBJECT_TYPE2_PORTAL, OBJECT_TYPE2_PAD, OBJECT_TYPE2_RING, OBJECT_TYPE2_TRIGGER, OBJECT_TYPE2_SPEED, OBJECT_TYPE2_FLY, OBJECT_TYPE2_CUBE
  } from '../constants.js';
 import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/GameState.js';
 import { parseLevel, getObjectDefinition } from '../level/LevelData.js';
@@ -241,7 +241,7 @@ class GroundClass {
 
     _computeFlyBounds(portalY) {
         let floorY = portalY - 300;
-        return floorY = Math.floor(floorY / a) * a,
+        return floorY = Math.floor(floorY / TILE_SIZE) * TILE_SIZE,
         floorY = Math.max(0, floorY), {
             floorY: floorY,
             ceilingY: floorY + FLY_CEILING
@@ -255,8 +255,10 @@ class GroundClass {
             this._flyGroundActive = true;
 
             let flyCameraTargetOffset = this._flyFloorY + 300;
-            this.flyCameraTarget = flyCameraTargetOffset - 320 + o,
-            this.flyCameraTarget < 0 && (this.flyCameraTarget = 0);
+            this.flyCameraTarget = flyCameraTargetOffset - 320 + SHIP_CAMERA_Y_OFFSET,
+            this.flyCameraTarget < 0 && (
+                this.flyCameraTarget = 0
+            );
             
             let curCamY = this._scene && this._scene._cameraY || 0;
             this._groundStartScreenY = worldYToScreenY(0) + curCamY,
@@ -413,7 +415,7 @@ class GroundClass {
             let definition = getObjectDefinition(object.id);
             
             // invisible triggers
-            if (definition && definition.type === OBJECT_TYPE_2_TRIGGER) {
+            if (definition && definition.type === OBJECT_TYPE2_TRIGGER) {
                 // hardcoded ids? thats scary!!
                 29 !== object.id && 30 !== object.id || this._colorTriggers.push({
                     x: 2 * object.x,
@@ -453,7 +455,7 @@ class GroundClass {
 
                 let screenX = worldX,
                     screenY = worldYToScreenY(worldY);
-                const isPortal = (definition.type === OBJECT_TYPE_2_PORTAL || definition.type === OBJECT_TYPE_2_SPEED) && frameName.includes("_front_");
+                const isPortal = (definition.type === OBJECT_TYPE2_PORTAL || definition.type === OBJECT_TYPE2_SPEED) && frameName.includes("_front_");
                 
                 // back layer for portals
                 if (isPortal) {
@@ -487,7 +489,7 @@ class GroundClass {
                 ),
                 
                 // secondary
-                definition && (definition.type === OBJECT_TYPE_2_SOLID || definition.type === OBJECT_TYPE_2_HAZARD)) {
+                definition && (definition.type === OBJECT_TYPE2_SOLID || definition.type === OBJECT_TYPE2_HAZARD)) {
                     let overlayFrame = frameName.replace("_001.png", "_2_001.png"),
                         overlaySprite = findAtlasFrame(scene, overlayFrame) ? createImageFromAtlas(scene, screenX, screenY, overlayFrame) : null;
                     
@@ -599,16 +601,16 @@ class GroundClass {
             // collission objects
             if (definition) {
                 // solid block
-                if (definition.type === OBJECT_TYPE_2_SOLID && definition.gridW > 0 && definition.gridH > 0) {
-                    let hitboxWidth = definition.gridW * a,
-                        hitboxHeight = definition.gridH * a,
+                if (definition.type === OBJECT_TYPE2_SOLID && definition.gridW > 0 && definition.gridH > 0) {
+                    let hitboxWidth = definition.gridW * TILE_SIZE,
+                        hitboxHeight = definition.gridH * TILE_SIZE,
                         hitbox = new GameObject(OBJECT_TYPE_SOLID, worldX, worldY, hitboxWidth, hitboxHeight);
                     
                     // make solid object collidable
                     this.objects.push(hitbox),
                     this._addCollisionToSection(hitbox);
                 } else {
-                    if (definition.type === OBJECT_TYPE_2_HAZARD) {
+                    if (definition.type === OBJECT_TYPE2_HAZARD) {
                         let hitboxWidth = 0,
                             hitboxHeight = 0;
                         if (definition.spriteW > 0 && definition.spriteH > 0 && undefined !== definition.hitboxScaleX && undefined !== definition.hitboxScaleY
@@ -627,9 +629,9 @@ class GroundClass {
                         }
                     } else {
                         // portal
-                        if (definition.type === OBJECT_TYPE_2_PORTAL) {
+                        if (definition.type === OBJECT_TYPE2_PORTAL) {
                             let hitboxWidth = 90,
-                                hitboxHeight = definition.gridH * a,
+                                hitboxHeight = definition.gridH * TILE_SIZE,
                                 portalType = null;
                             if ("fly" === definition.sub
                                 ? portalType = OBJECT_TYPE_PORTAL_SHIP
@@ -666,7 +668,7 @@ class GroundClass {
 
         this._endPortalContainer = scene.add.container(px, py);
         for (let i = 0; i < endTileSize; i++) {
-            const squarePiece = scene.add.image(0, (i - Math.floor(endTileSize / 2)) * a, "GJ_WebSheet", "square_02_001.png")
+            const squarePiece = scene.add.image(0, (i - Math.floor(endTileSize / 2)) * TILE_SIZE, "GJ_WebSheet", "square_02_001.png")
                 .setAngle(-90);
             this._endPortalContainer.add(squarePiece);
         }

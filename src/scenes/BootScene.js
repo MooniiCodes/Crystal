@@ -5,7 +5,7 @@ import * as Phaser from 'phaser';
 import { setBlendModeAdd, setBlendModeNormal } from '../constants.js';
 import { parseBMFont } from '../systems/BitmapFontParser.js';
 
-class bootScene extends Phaser.Scene {
+class BootScene extends Phaser.Scene {
     constructor() {
         super({
             'key': "BootScene"
@@ -70,4 +70,4 @@ class bootScene extends Phaser.Scene {
     }
 }
 
-export { bootScene };
+export { BootScene };

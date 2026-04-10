@@ -2,8 +2,8 @@ import * as Phaser from 'phaser';
 
 let SCREEN_WIDTH = Math.round(10240 / 9); // 1138
 const SCREEN_HEIGHT = 640,
-    a = 60, // tile size
-    o = 180;
+    TILE_SIZE = 60, // tile size
+    SHIP_CAMERA_Y_OFFSET = 180;
 
 // the x screen position at which the player stays at 
 let PLAYER_GAME_CAMERA_X = SCREEN_WIDTH / 2 - 150;
@@ -15,12 +15,12 @@ function setScreenWidth(newWidth) {
 }
 
 const
-    u = 1 / 240,
-    c = 11.540004,
-    d = 0.9, // time scale
+    TICK_DELTA = 1 / 240,
+    PLAYER_SPEED = 11.540004,
+    TIME_SCALE = 0.9,
     JUMP_VELOCITY = 1.916398,
     FLY_CEILING = 600, // ceiling height when entering ship mode, from bottom of screen
-    g = a,
+    TILE_SIZE2 = TILE_SIZE, // duplicate
     // player colors
     COLOR_GREEN = 0xFF00,
     COLOR_BLUE = 0xFFFF,
@@ -48,18 +48,19 @@ function setBlendModeNormal(newMode) {
 }
 
 // stuff from level data used in both ground and, level data of course
-const OBJECT_TYPE_2_SOLID = "solid",
-    OBJECT_TYPE_2_HAZARD = "hazard",
-    OBJECT_TYPE_2_DECORATIVE = "deco",
-    OBJECT_TYPE_2_PORTAL = "portal",
-    OBJECT_TYPE_2_PAD = "pad",
-    OBJECT_TYPE_2_RING = "ring",
-    OBJECT_TYPE_2_TRIGGER = "trigger",
-    OBJECT_TYPE_2_SPEED = "speed",
-    OBJECT_TYPE_2_FLY = "fly",
-    OBJECT_TYPE_2_CUBE = "cube"
+// duplicates
+const OBJECT_TYPE2_SOLID = "solid",
+    OBJECT_TYPE2_HAZARD = "hazard",
+    OBJECT_TYPE2_DECORATIVE = "deco",
+    OBJECT_TYPE2_PORTAL = "portal",
+    OBJECT_TYPE2_PAD = "pad",
+    OBJECT_TYPE2_RING = "ring",
+    OBJECT_TYPE2_TRIGGER = "trigger",
+    OBJECT_TYPE2_SPEED = "speed",
+    OBJECT_TYPE2_FLY = "fly",
+    OBJECT_TYPE2_CUBE = "cube"
 
 export {
-        SCREEN_WIDTH, SCREEN_HEIGHT, a, o, PLAYER_GAME_CAMERA_X, setScreenWidth, u, c, d, JUMP_VELOCITY, FLY_CEILING, g, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, worldYToScreenY, BLEND_ADD, BLEND_NORMAL, setBlendModeAdd, setBlendModeNormal,
-        OBJECT_TYPE_2_SOLID, OBJECT_TYPE_2_HAZARD, OBJECT_TYPE_2_DECORATIVE, OBJECT_TYPE_2_PORTAL, OBJECT_TYPE_2_PAD, OBJECT_TYPE_2_RING, OBJECT_TYPE_2_TRIGGER, OBJECT_TYPE_2_SPEED, OBJECT_TYPE_2_FLY, OBJECT_TYPE_2_CUBE
+        SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, SHIP_CAMERA_Y_OFFSET, PLAYER_GAME_CAMERA_X, setScreenWidth, TICK_DELTA, PLAYER_SPEED, TIME_SCALE, JUMP_VELOCITY, FLY_CEILING, TILE_SIZE2, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, worldYToScreenY, BLEND_ADD, BLEND_NORMAL, setBlendModeAdd, setBlendModeNormal,
+        OBJECT_TYPE2_SOLID, OBJECT_TYPE2_HAZARD, OBJECT_TYPE2_DECORATIVE, OBJECT_TYPE2_PORTAL, OBJECT_TYPE2_PAD, OBJECT_TYPE2_RING, OBJECT_TYPE2_TRIGGER, OBJECT_TYPE2_SPEED, OBJECT_TYPE2_FLY, OBJECT_TYPE2_CUBE
     };
