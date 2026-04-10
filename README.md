@@ -6,7 +6,7 @@ Play here: [geometrydash.com](https://geometrydash.com)
 [Strictly personal use only.](https://geometrydash.com/content-policy)
 
 ## About
-This is a reverse-engineered version of the game. It features my own custom representation of the file structure and can be compiled back into a singular, minified JavaScript file.
+This is a complete reverse engineered version of the Geometry Dash web demo that does NOT use AI for everything. It features my own custom representation of the file structure and can be compiled back into a singular, minified JavaScript file.
 
 > **Note:** The original source used [obfuscator.io](https://obfuscator.io/) to obfuscate the code.
 
