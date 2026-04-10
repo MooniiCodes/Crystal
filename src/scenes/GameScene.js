@@ -5,7 +5,7 @@
 import * as Phaser from 'phaser';
 import { SCREEN_WIDTH, SCREEN_HEIGHT, SHIP_CAMERA_Y_OFFSET, PLAYER_GAME_CAMERA_X, TICK_DELTA, PLAYER_SPEED, TIME_SCALE, JUMP_VELOCITY, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_CUBE, GROUND_BOUNDS_Y, BLEND_ADD, worldYToScreenY, setScreenWidth } from '../constants.js';
 import { GameState } from '../systems/GameState.js';
-import { GroundClass } from '../objects/Ground.js';
+import { LevelClass } from '../objects/Level.js';
 import { PlayerClass } from '../objects/Player.js';
 import { ID_BACKGROUND_COLOR, ID_GROUND_COLOR, ColorManager } from '../systems/ColorManager.js';
 import { AudioClass } from '../systems/AudioManager.js';
@@ -42,7 +42,7 @@ class GameScene extends Phaser.Scene {
         
         // game systems
         this._state = new GameState(),
-        this._level = new GroundClass(this, this._cameraXRef),
+        this._level = new LevelClass(this, this._cameraXRef),
         this._player = new PlayerClass(this, this._state, this._level),
         this._colorManager = new ColorManager(),
         this._audio = new AudioClass(this);

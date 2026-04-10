@@ -5,7 +5,7 @@
 // UPDATE: 30 is tile size in units, i believe
 import { PLAYER_GAME_CAMERA_X, TIME_SCALE, JUMP_VELOCITY, TILE_SIZE2, COLOR_GREEN, COLOR_BLUE, OBJECT_TYPE_SOLID, OBJECT_TYPE_HAZARD, OBJECT_TYPE_PORTAL_SHIP, OBJECT_TYPE_PORTAL_CUBE, worldYToScreenY, BLEND_ADD } from '../constants.js';
 import { findAtlasFrame } from '../systems/GameState.js';
-import { StreakClass, createSpriteLayer } from './PlayerVisuals.js';
+import { StreakClass, createSpriteLayer } from './PlayerRenderer.js';
 
 class PlayerClass {
     constructor(scene, state, level) {

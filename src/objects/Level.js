@@ -6,9 +6,9 @@ import { SCREEN_WIDTH, TILE_SIZE, SHIP_CAMERA_Y_OFFSET, PLAYER_GAME_CAMERA_X, FL
     OBJECT_TYPE2_SOLID, OBJECT_TYPE2_HAZARD, OBJECT_TYPE2_DECORATIVE, OBJECT_TYPE2_PORTAL, OBJECT_TYPE2_PAD, OBJECT_TYPE2_RING, OBJECT_TYPE2_TRIGGER, OBJECT_TYPE2_SPEED, OBJECT_TYPE2_FLY, OBJECT_TYPE2_CUBE
  } from '../constants.js';
 import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/GameState.js';
-import { parseLevel, getObjectDefinition } from '../level/LevelData.js';
+import { parseLevel, getObjectDefinition } from '../level/LevelLoader.js';
 
-class GroundClass {
+class LevelClass {
     constructor(scene, _0x35fa95) {
         this._scene = scene,
         this._cameraXRef = _0x35fa95,
@@ -984,4 +984,4 @@ class GroundClass {
     }
 }
 
-export { GroundClass };
+export { LevelClass };
