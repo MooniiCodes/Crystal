@@ -1368,7 +1368,6 @@ class GameScene extends Phaser.Scene {
                         h: 1,
                         w: startWidth
                     };
-                    console.log(beamGraphic);
 
                 scene.time.delayedCall(Math.max(0, spawnDelay), () => {
                     beamGraphic.setVisible(true), scene.tweens.add({
