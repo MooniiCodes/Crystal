@@ -858,8 +858,8 @@ for (let id of OBJECT_GLOW_ARRAY) // mark objects with glow variants as true in 
     );
 
 // get object definition by id
-function getObjectDefinition(_0x4339a6) {
-    return OBJECT_DEFINITIONS[_0x4339a6] || null;
+function getObjectDefinition(key) {
+    return OBJECT_DEFINITIONS[key] || null;
 }
 
 export { parseObject, parseLevel, getObjectDefinition, OBJECT_DEFINITIONS };
