@@ -11,7 +11,7 @@ This is a complete reverse engineered version of the vanilla Geometry Dash web d
 It features my own custom representation of the file structure based on modern game enviornments, and can be compiled back into a singular, minified JavaScript file. Everything has been organized in a way that shouldn't feel like a mess of files.
 
 > [!IMPORTANT]
-> The only modification made to the code that is not present in the vanilla game is the [domain lock being commented out](https://github.com/dogfossils/gdweb/blob/b8b682b2c8b65fd50013b8598dddd61b7018587e/src/main.js#L11), this bit of code disallows users to run the compiled script in other websites.
+> The only modification made to the code that is not present in the vanilla game is the [domain lock being commented out](https://github.com/brokemutt/gdweb/blob/1c1d347ab6baaef657b965d634abf1ead6ead42d/src/main.js#L11-L17), this bit of code disallows users to run the compiled script in other websites.
 <br>
 
 > [!NOTE]
@@ -31,4 +31,6 @@ To compile the game into a single optimized file:
 
 The final game will be generated in the `dist` folder. The contents in `src` will be compiled into one file, located in `dist/assets` called `index-game.js`.
 
-> **Note:** The original domain lock present in `main.js` was commented out.
+---
+
+A 3rd party documentation is available at https://deepwiki.com/brokemutt/gdweb, powered by DeepWiki. Information may not be accurate.
