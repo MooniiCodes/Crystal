@@ -287,7 +287,13 @@ class PlayerClass {
         }),
         
         this._aboveContainer = scene.add.container(0, 0),
-        this._aboveContainer.setDepth(13), this._aboveContainer.add(this._landEmitter1), this._aboveContainer.add(this._landEmitter2), this._landIdx = false, this._streak = new StreakClass(this._scene, "streak_01", 0.231, 10, 8, 100, COLOR_BLUE, 0.7), this._streak.addToContainer(this._gameLayer.container, 8);
+        this._aboveContainer.setDepth(13),
+        this._aboveContainer.add(this._landEmitter1),
+        this._aboveContainer.add(this._landEmitter2),
+        this._landIdx = false,
+        // streak_01 goes unused?
+        this._streak = new StreakClass(this._scene, "streak_01", 0.231, 10, 8, 100, COLOR_BLUE, 0.7),
+        this._streak.addToContainer(this._gameLayer.container, 8);
     }
     _updateParticles(cameraX, cameraY, deltaTime) { // cameraX is unused
         if (this.p.isDead) return;
@@ -645,7 +651,7 @@ class PlayerClass {
 
         const baseSpeed = 9.34740324 * 0.8,
             halfBaseSpeed = 0.5 * baseSpeed,
-            _0x1e87b0 = 1 * baseSpeed, // ?
+            baseSpeed2 = 1 * baseSpeed, // ?
             variance = 0.45,
             colW = textureSize / columns,
             rowH = textureSize / rows,
@@ -727,7 +733,7 @@ class PlayerClass {
                 const thisConfig = {
                     spr: sprite,
                     particle: pieceEmitter,
-                    xVel: halfBaseSpeed + (2 * Math.random() - 1) * _0x1e87b0,
+                    xVel: halfBaseSpeed + (2 * Math.random() - 1) * baseSpeed2,
                     yVel: -(12 + 6 * (2 * Math.random() - 1)),
                     timer: 1.4,
                     fadeTime: 0.5,
@@ -828,18 +834,22 @@ class PlayerClass {
         
         this._explosionPieces = null;
     }
-    _playPortalShine(_0x49e81f) {
+    // plays portal shine effect on world object
+    _playPortalShine(object) {
         const scene = this._scene,
-            portalScreenX = _0x49e81f.x,
-            portalScreenY = worldYToScreenY(_0x49e81f.portalY),
+            portalScreenX = object.x,
+            portalScreenY = worldYToScreenY(object.portalY),
+            
             frames = [
                 "portalshine_02_front_001.png",
                 "portalshine_02_back_001.png"
             ],
+
             containers = [
                 this._gameLayer.topContainer,
                 this._gameLayer.container
             ];
+            
         for (let i = 0; i < 2; i++) {
             const atlasFrame = findAtlasFrame(scene, frames[i]);
             if (!atlasFrame) continue;

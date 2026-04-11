@@ -1377,8 +1377,19 @@ class GameScene extends Phaser.Scene {
                         duration: duration,
                         ease: "Quad.Out",
                         onUpdate: () => {
-                            const _0x2db3d7 = startWidth + (tweenData.w - startWidth) / 4;
-                            beamGraphic.clear(), beamGraphic.fillStyle(color, 1), beamGraphic.beginPath(), beamGraphic.moveTo(-_0x2db3d7 / 2, 0), beamGraphic.lineTo(_0x2db3d7 / 2, 0), beamGraphic.lineTo(tweenData.w / 2, tweenData.h), beamGraphic.lineTo(-tweenData.w / 2, tweenData.h), beamGraphic.closePath(), beamGraphic.fillPath();
+                            const endPos = startWidth + (tweenData.w - startWidth) / 4;
+                            
+                            beamGraphic.clear(),
+                            beamGraphic.fillStyle(color, 1),
+                            beamGraphic.beginPath(),
+                            
+                            beamGraphic.moveTo(-endPos / 2, 0),
+                            beamGraphic.lineTo(endPos / 2, 0),
+                            beamGraphic.lineTo(tweenData.w / 2, tweenData.h), 
+                            beamGraphic.lineTo(-tweenData.w / 2, tweenData.h), 
+                            
+                            beamGraphic.closePath(), 
+                            beamGraphic.fillPath();
                         }
                     });
                 }),
@@ -1610,8 +1621,11 @@ class GameScene extends Phaser.Scene {
                 frame: 'GJ_menuBtn_001.png',
                 dx: 200,
                 action: () => {
-                    this._audio.playEffect("quitSound_01"), this._audio.stopMusic(), this.game.registry.set("fadeInFromBlack", true), this.cameras.main.fadeOut(400, 0, 0, 0, (_0x53bf86, _0x15310d) => {
-                        _0x15310d >= 1 && this.scene.restart();
+                    this._audio.playEffect("quitSound_01"),
+                    this._audio.stopMusic(),
+                    this.game.registry.set("fadeInFromBlack", true),
+                    this.cameras.main.fadeOut(400, 0, 0, 0, (camera, progress) => {
+                        progress >= 1 && this.scene.restart();
                     });
                 }
             }

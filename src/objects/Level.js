@@ -9,9 +9,9 @@ import { findAtlasFrame, createImageFromAtlas, GameObject } from '../systems/Gam
 import { parseLevel, getObjectDefinition } from '../level/LevelLoader.js';
 
 class LevelClass {
-    constructor(scene, _0x35fa95) {
+    constructor(scene, cameraXReference) {
         this._scene = scene,
-        this._cameraXRef = _0x35fa95,
+        this._cameraXRef = cameraXReference,
 
         this.additiveContainer = scene.add.container(0, 0).setDepth(-1),
         this.container = scene.add.container(0, 0),
@@ -741,14 +741,18 @@ class LevelClass {
         const screenY = worldYToScreenY(clampedY);
         this._endPortalContainer.y = screenY, this._endPortalShine.y = screenY, this._endPortalEmitter.y = screenY, this._endPortalGameY = clampedY;
     }
-    checkColorTriggers(_0x2b00ce) {
-        let _0x24b030 = [];
+    checkColorTriggers(playerWorldX) {
+        let triggers = [];
+
         for (; this._colorTriggerIdx < this._colorTriggers.length;) {
-            let _0x39c924 = this._colorTriggers[this._colorTriggerIdx];
-            if (!(_0x39c924.x <= _0x2b00ce)) break;
-            _0x24b030.push(_0x39c924), this._colorTriggerIdx++;
+            let trigger = this._colorTriggers[this._colorTriggerIdx];
+            if (!(trigger.x <= playerWorldX)) break;
+
+            triggers.push(trigger),
+            this._colorTriggerIdx++;
         }
-        return _0x24b030;
+        
+        return triggers;
     }
     /* other */
 

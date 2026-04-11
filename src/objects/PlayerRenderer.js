@@ -6,7 +6,7 @@ import { findAtlasFrame } from '../systems/GameState.js';
 
 // a smooth fading trailing effect for the player (behind a point)
 class StreakClass {
-    constructor(scene, _0x171c7f, fadeTime, minSegDist, strokeWidth, maxSegments, color = 0xFFFFFF, opacity = 1) {
+    constructor(scene, UNKNOWN_STRING_streak_01, fadeTime, minSegDist, strokeWidth, maxSegments, color = 0xFFFFFF, opacity = 1) {
         this._color = color,
         this._opacity = opacity,
         this._fadeDelta = 1 / fadeTime,

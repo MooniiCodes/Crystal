@@ -28,11 +28,11 @@ class BootScene extends Phaser.Scene {
             loadingBar = this.add.rectangle(screenWidth / 2, screenHeight / 2, loadingBarWidth, 8, 0xFF00)
             .setOrigin(0.5, 0.5);
             
-            loadingBar.scaleX = 0, this.load.on("progress", _0x374839 => {
-                loadingBar.scaleX = _0x374839;
+            loadingBar.scaleX = 0, this.load.on("progress", progress => {
+                loadingBar.scaleX = progress;
             }),
         
-        this.load.on("loaderror", _0x550fba => {}),
+        this.load.on("loaderror", fileObject => {}),
         // atlas
         this.load.atlas("GJ_WebSheet", 'assets/GJ_WebSheet.png', 'assets/GJ_WebSheet.json'),
         // fonts

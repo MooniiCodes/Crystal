@@ -12,7 +12,7 @@ const PHASER = Phaser;
 // it's probably here to prevent requiring the index-game.js on other domains, but the string encryption menthod sorta says otherwise
 /* 
 const HOSTNAME = window.location.hostname,
-GEOMETRY_DASH_URL = [103, 101, 111, 109, 101, 116, 114, 121, 100, 97, 115, 104, 46, 99, 111, 109].map(_0x1c1bb4 => String.fromCharCode(_0x1c1bb4)).join('');
+GEOMETRY_DASH_URL = [103, 101, 111, 109, 101, 116, 114, 121, 100, 97, 115, 104, 46, 99, 111, 109].map(code => String.fromCharCode(code)).join('');
 if (!(HOSTNAME === GEOMETRY_DASH_URL || HOSTNAME === "www." + GEOMETRY_DASH_URL || HOSTNAME.endsWith('.' + GEOMETRY_DASH_URL) || "localhost" === HOSTNAME)) throw document.body.innerHTML = '', new Error('');
 */
 
